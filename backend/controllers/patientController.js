@@ -13,7 +13,8 @@ const authPatient = asyncHandler(async (req, res) => {
   if (patient && (await patient.matchPassword(password))) {
     res.json({
       _id: patient._id,
-      name: patient.name,
+      firstName: patient.firstName,
+      lastName: patient.lastName,
       dateOfBirth: patient.dateOfBirth,
       token: generateToken(patient._id),
     });
@@ -31,7 +32,8 @@ const getPatientProfile = asyncHandler(async (req, res) => {
   if (patient) {
     res.json({
       _id: patient._id,
-      name: patient.name,
+      firstName: patient.firstName,
+      lastName: patient.lastName,
       dateOfBirth: patient.dateOfBirth,
       address: patient.address,
     });
@@ -45,7 +47,7 @@ const getPatientProfile = asyncHandler(async (req, res) => {
 //@route POST /api/patients
 //@access Public
 const registerPatient = asyncHandler(async (req, res) => {
-  const { name, email, password, phone, dateOfBirth, address } = req.body;
+  const { firstName,lastName, email, password, phone, dateOfBirth, address } = req.body;
 
   const patientExists = email
   ? await Patient.findOne({ email })
@@ -56,13 +58,14 @@ const registerPatient = asyncHandler(async (req, res) => {
     throw new Error("Patient already exists");
   }
 
-  if (email === "" || password === "" || name === "" || dateOfBirth === "" || phone === "") {
+  if (email === "" || password === "" || firstName === "" || dateOfBirth === "" || phone === "") {
     res.status(401);
     throw new Error("Field required");
   }
 
   const patient = await Patient.create({
-    name,
+    firstName,
+    lastName,
     email,
     password,
     address,
@@ -73,7 +76,8 @@ const registerPatient = asyncHandler(async (req, res) => {
   if (patient) {
     res.status(201).json({
       _id: patient._id,
-      name: patient.name,
+      firstName: patient.firstName,
+      lastName: patient.lastName,
       email: patient.email,
       phone: patient.phone,
       address: patient.address,

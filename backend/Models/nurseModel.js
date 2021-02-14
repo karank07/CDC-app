@@ -3,9 +3,12 @@ import mongoose from "mongoose";
 
 const nurseSchema = mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String,
       required: true,
+    },
+    lastName: {
+      type: String,
     },
     address: {
       type: String,
