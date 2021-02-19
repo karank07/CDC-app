@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import connectDB from './config/db.js'
 import { errorHandler, notFound } from './middleware/errorMiddleware.js'
 import patientRoutes from './routes/patientRoutes.js'
+import nurseRoutes from './routes/nurseRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -15,6 +16,8 @@ app.get('/',(req,res)=>{
 })
 
 app.use('/api/patients', patientRoutes)
+app.use('/api/nurses', nurseRoutes)
+
 
 app.use(errorHandler)
 app.use(notFound)

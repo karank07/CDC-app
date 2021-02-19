@@ -18,6 +18,10 @@ const assessmentSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isReviewed:{
+      type: Boolean,
+      default: false,
+    }
   },
   { timestamps: true }
 );
