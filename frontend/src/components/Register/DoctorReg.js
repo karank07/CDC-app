@@ -16,19 +16,22 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import DateFnsUtils from '@date-io/date-fns';
 
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import back from '../../assets/Images/Subtract.svg';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
-const DoctorReg = () => {
+const PatientReg = () => {
     const classes = useStyles();
     const [state, setState] = React.useState({
         firstName: "",
         lastName: "",
+        regNum: "",
         emailId: "",
         password: "",
         phoneNum: "(+1) -",
         dob: new Date('2000-08-18T21:11:54'),
         address: "",
-        
+
         showPassword: false
     });
 
@@ -42,28 +45,57 @@ const DoctorReg = () => {
     const handleDateChange = (date) => {
         setState({ ...state, dob: date });
     };
-    
+
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
     return (
-        <React.Fragment>
-            <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="center"
-            >
-                <Typography variant="h3" gutterBottom>
-                    Register
-                </Typography>
+        <Grid
+            container
+            className={classes.root}
+        >
+            <Grid item xs={false} sm={3} >
+                <div style={{ height: '100%' }}>
+                    <Grid
+                        container
+                        direction="column"
+                        justify="flex-start"
+
+                        style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
+                    >
+                        <div >
+                            <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
+                            <Typography className={classes.navTitle} style={{ marginTop: '50%' }} variant="h5" gutterBottom>Register as</Typography>
+                            <Typography className={classes.navText}  variant="h6" gutterBottom>Patient</Typography>
+                            <Typography className={classes.navText}  variant="h6" gutterBottom>Nurse</Typography>
+                            <Typography className={classes.navText} style={{
+                                borderBottom: 'solid',
+                                borderBottomWidth: '3px',
+                                borderBottomColor: 'white'
+                            }} variant="h6" gutterBottom>Doctor</Typography>
+                            <Grid container direction='row' className={classes.navBot}>
+                                <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon>
+                                <Typography variant="h5" >Home</Typography>
+                            </Grid>
+
+                        </div>
+                    </Grid>
+                </div>
+            </Grid>
+
+            <Grid item sm={6}>
                 <Grid
                     container
-                    direction="row"
+                    direction="column"
                     justify="center"
                     alignItems="center"
+                    style={{ height: '100%' }}
                 >
-                    <Grid item >
+                    <Typography variant="h3" gutterBottom style={{ marginBottom: '5%' }}>
+                        Register
+                    </Typography>
+
+                    <Grid container direction="row" justify="center" alignItems="center">
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">First Name</InputLabel>
                             <OutlinedInput
@@ -75,8 +107,6 @@ const DoctorReg = () => {
                                 labelWidth={80}
                             />
                         </FormControl>
-                    </Grid>
-                    <Grid item >
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">Last Name</InputLabel>
                             <OutlinedInput
@@ -88,70 +118,61 @@ const DoctorReg = () => {
                             />
                         </FormControl>
                     </Grid>
-                </Grid>
-                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Doctor Registration Number</InputLabel>
-                    <OutlinedInput
-                        id="outlined-adornment-password"
-                        type='text'
-                        value={state.regNum}
-                        onChange={handleChange('regNum')}
-                        labelWidth={200}
-                    />
-                </FormControl>
-                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Email Address</InputLabel>
-                    <OutlinedInput
-                        id="outlined-adornment-password"
-                        type='text'
-                        value={state.emailId}
-                        onChange={handleChange('emailId')}
-                        labelWidth={145}
-                    />
-                </FormControl>
-                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-                    <OutlinedInput
-                        id="outlined-adornment-password"
-                        type={state.showPassword ? 'text' : 'password'}
-                        value={state.password}
-                        onChange={handleChange('password')}
-                        endAdornment={
-                            <InputAdornment position="end">
-                                <IconButton
-                                    aria-label="toggle password visibility"
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                    edge="end"
-                                >
-                                    {state.showPassword ? <Visibility /> : <VisibilityOff />}
-                                </IconButton>
-                            </InputAdornment>
-                        }
-                        labelWidth={70}
-                    />
-                </FormControl>
-                <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                >
-                    <Grid item >
+                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password">Doctor Registration Number</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type='text'
+                            value={state.regNum}
+                            onChange={handleChange('regNum')}
+                            labelWidth={200}
+                        />
+                    </FormControl>
+                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password">Email Address</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type='text'
+                            value={state.emailId}
+                            onChange={handleChange('emailId')}
+                            labelWidth={145}
+                        />
+                    </FormControl>
+                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type={state.showPassword ? 'text' : 'password'}
+                            value={state.password}
+                            onChange={handleChange('password')}
+                            endAdornment={
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={handleClickShowPassword}
+                                        onMouseDown={handleMouseDownPassword}
+                                        edge="end"
+                                    >
+                                        {state.showPassword ? <Visibility /> : <VisibilityOff />}
+                                    </IconButton>
+                                </InputAdornment>
+                            }
+                            labelWidth={70}
+                        />
+                    </FormControl>
+                    <Grid container direction="row" justify="center" alignItems="center">
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password">Phone Number</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password"
                                 type='text'
-                                
+
                                 value={state.phoneNum}
                                 onChange={handleChange('phoneNum')}
                                 labelWidth={110}
 
                             />
                         </FormControl>
-                    </Grid>
-                    <Grid item >
                         <MuiPickersUtilsProvider utils={DateFnsUtils} >
                             <KeyboardDatePicker
                                 className={clsx(classes.margin, classes.textFieldTwo)}
@@ -169,7 +190,8 @@ const DoctorReg = () => {
                                 }}
                             />
                         </MuiPickersUtilsProvider>
-                        {/* <form className={classes.container} noValidate>
+                    </Grid>
+                    {/* <form className={classes.container} noValidate>
                             <TextField
                                 id="date"
                                 label="Birthday"
@@ -181,45 +203,57 @@ const DoctorReg = () => {
                                 }}
                             />
                         </form> */}
+
+                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                        <InputLabel htmlFor="outlined-adornment-password">Address</InputLabel>
+                        <OutlinedInput
+                            id="outlined-adornment-password"
+                            type='text'
+                            value={state.address}
+                            onChange={handleChange('address')}
+                            labelWidth={60}
+                        />
+                    </FormControl>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Button variant="text" size="large" className={clsx(classes.margin, classes.signInBtn)} color="primary">
+                            Sign in instead
+                    </Button>
+                        <Button variant="contained" size="large" className={clsx(classes.margin, classes.registerBtn)} color="primary">
+                            Register
+                    </Button>
                     </Grid>
-                </Grid>
-                <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                    <InputLabel htmlFor="outlined-adornment-password">Address</InputLabel>
-                    <OutlinedInput
-                        id="outlined-adornment-password"
-                        type='text'
-                        value={state.address}
-                        onChange={handleChange('address')}
-                        labelWidth={60}
-                    />
-                </FormControl>
-                <Grid container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
-                >
-                    <Button variant="text" size="large" className={clsx(classes.margin, classes.signInBtn)} color="primary">
-                        Sign in instead
-                    </Button>
-                    <Button variant="contained" size="large" className={clsx(classes.margin, classes.registerBtn)} color="primary">
-                        Register
-                    </Button>
-                </Grid>
+                </Grid >
             </Grid>
-        </React.Fragment>
+        </Grid>
+
     );
 }
 
 
-export default DoctorReg;
+export default PatientReg;
 
 
 const useStyles = makeStyles((theme) => ({
     root: {
-        display: "flex",
-        flexWrap: "wrap"
+        height: '100vh'
     },
-    container: {
+    navTitle: {
+        color: 'white',
+        margin: '10%',
+        marginLeft: '15%',
+        marginTop: '15%'
+    },
+    navText: {
+        color: 'white',
+        margin: '5%',
+        marginLeft: '20%',
+        // marginTop: '15%'
+    },
+    navBot: {
+        color: 'white',
+        margin: '5%',
+        marginLeft: '12%',
+        marginTop: '50%'
 
     },
     margin: {
