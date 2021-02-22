@@ -2,28 +2,6 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Nurse from "../Models/nurseModel.js";
 
-//@desc Auth Nurse and get Token
-//@route POST /api/nurses/login
-//@access Public
-const authNurse = asyncHandler(async (req, res) => {
-  const { email, password, phone } = req.body;
-  const nurse = email
-    ? await Nurse.findOne({ email })
-    : await Nurse.findOne({ phone });
-  if (nurse && (await nurse.matchPassword(password))) {
-    res.json({
-      _id: nurse._id,
-      firstName: nurse.firstName,
-      lastName: nurse.lastName,
-      dateOfBirth: nurse.dateOfBirth,
-      registrationNum: nurse.registrationNum,
-      token: generateToken(nurse._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error("Invalid credentials");
-  }
-});
 
 //@desc get nurse profile
 //@route GET /api/nurses/profile
@@ -111,4 +89,4 @@ const registerNurse = asyncHandler(async (req, res) => {
   }
 });
 
-export { authNurse, getNurseProfile, registerNurse };
+export { getNurseProfile, registerNurse };

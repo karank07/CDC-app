@@ -2,28 +2,6 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Patient from "../Models/patientModel.js";
 
-//@desc Auth Patient and get Token
-//@route POST /api/patients/login
-//@access Public
-const authPatient = asyncHandler(async (req, res) => {
-  const { email, password, phone } = req.body;
-  const patient = email
-    ? await Patient.findOne({ email })
-    : await Patient.findOne({ phone });
-  if (patient && (await patient.matchPassword(password))) {
-    res.json({
-      _id: patient._id,
-      firstName: patient.firstName,
-      lastName: patient.lastName,
-      dateOfBirth: patient.dateOfBirth,
-      token: generateToken(patient._id),
-    });
-  } else {
-    res.status(401);
-    throw new Error("Invalid credentials");
-  }
-});
-
 //@desc get patient profile
 //@route GET /api/patients/profile
 //@access Protected
@@ -167,7 +145,6 @@ const getPatientPreviousAssessments = asyncHandler(async (req, res) => {
 });
 
 export {
-  authPatient,
   getPatientProfile,
   registerPatient,
   getListOfPatients,
