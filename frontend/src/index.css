@@ -1,3 +1,13 @@
 * {
     margin: 0
 }
+
+@font-face {
+    font-family: 'ProductSans';
+    src: local('ProductSans'), url(./assets/Fonts/ProductSans/ProductSans-Regular.ttf) format('ttf');
+}
+
+@font-face {
+    font-family: 'ProductSans-Bold';
+    src: local('ProductSans-Bold'), url(./assets/Fonts/ProductSans/ProductSans-Bold.ttf) format('ttf');
+}

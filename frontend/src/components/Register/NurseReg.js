@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
@@ -20,7 +21,9 @@ import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import back from '../../assets/Images/Subtract.svg';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
-const PatientReg = () => {
+import { registerNurse } from '../../api/Api';
+
+const PatientReg = ({ history }) => {
     const classes = useStyles();
     const [state, setState] = React.useState({
         firstName: "",
@@ -64,18 +67,18 @@ const PatientReg = () => {
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
                         <div >
-                            <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
+                            <Link to={'/'} style={{ textDecoration: 'none' }}>  <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography></Link>
                             <Typography className={classes.navTitle} style={{ marginTop: '50%' }} variant="h5" gutterBottom>Register as</Typography>
-                            <Typography className={classes.navText}  variant="h6" gutterBottom>Patient</Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} style={{ textDecoration: 'none', color: 'white' }}>Patient</Link></Typography>
                             <Typography className={classes.navText} style={{
                                 borderBottom: 'solid',
                                 borderBottomWidth: '3px',
                                 borderBottomColor: 'white'
                             }} variant="h6" gutterBottom>Nurse</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom>Doctor</Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/doctor-register'} style={{ textDecoration: 'none', color: 'white' }}>Doctor</Link></Typography>
                             <Grid container direction='row' className={classes.navBot}>
                                 <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon>
-                                <Typography variant="h5" >Home</Typography>
+                                <Typography variant="h5" className={classes.text}><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Home</Link></Typography>
                             </Grid>
 
                         </div>
@@ -91,24 +94,24 @@ const PatientReg = () => {
                     alignItems="center"
                     style={{ height: '100%' }}
                 >
-                    <Typography variant="h3" gutterBottom style={{ marginBottom: '5%' }}>
+                    <Typography variant="h3" className={classes.text} gutterBottom style={{ marginBottom: '5%' }}>
                         Register
                     </Typography>
 
                     <Grid container direction="row" justify="center" alignItems="center">
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">First Name</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>First Name</InputLabel>
                             <OutlinedInput
                                 autoFocus
                                 id="outlined-adornment-password"
                                 type='text'
                                 value={state.firstName}
-                                onChange={handleChange('fristName')}
+                                onChange={handleChange('firstName')}
                                 labelWidth={80}
                             />
                         </FormControl>
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">Last Name</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Last Name</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password"
                                 type='text'
@@ -119,7 +122,7 @@ const PatientReg = () => {
                         </FormControl>
                     </Grid>
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">Nurse Registration Number</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Nurse Registration Number</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
                             type='text'
@@ -129,7 +132,7 @@ const PatientReg = () => {
                         />
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">Email Address</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Email Address</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
                             type='text'
@@ -139,7 +142,7 @@ const PatientReg = () => {
                         />
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Password</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
                             type={state.showPassword ? 'text' : 'password'}
@@ -162,7 +165,7 @@ const PatientReg = () => {
                     </FormControl>
                     <Grid container direction="row" justify="center" alignItems="center">
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
-                            <InputLabel htmlFor="outlined-adornment-password">Phone Number</InputLabel>
+                            <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Phone Number</InputLabel>
                             <OutlinedInput
                                 id="outlined-adornment-password"
                                 type='text'
@@ -205,7 +208,7 @@ const PatientReg = () => {
                         </form> */}
 
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">Address</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Address</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
                             type='text'
@@ -215,10 +218,17 @@ const PatientReg = () => {
                         />
                     </FormControl>
                     <Grid container direction="row" justify="center" alignItems="center">
-                        <Button variant="text" size="large" className={clsx(classes.margin, classes.signInBtn)} color="primary">
-                            Sign in instead
-                    </Button>
-                        <Button variant="contained" size="large" className={clsx(classes.margin, classes.registerBtn)} color="primary">
+                        <Link to={'/login'} style={{ textDecoration: 'none' }}>
+                            <Button variant="text" size="large" className={clsx(classes.margin, classes.signInBtn)} color="primary">
+                                Sign in instead
+                            </Button>
+                        </Link>
+                        <Button variant="contained" size="large" className={clsx(classes.margin, classes.registerBtn)} color="primary"
+                            onClick={() => registerNurse(state.emailId, state.firstName, state.lastName, state.password, state.dob, state.phoneNum, state.address, state.regNum).
+                                then(async function (response) {
+                                    if (response.token)
+                                        history.push('/patient')
+                                })}>
                             Register
                     </Button>
                     </Grid>
@@ -237,23 +247,29 @@ const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh'
     },
+    text: {
+        fontFamily: 'ProductSans'
+    },
     navTitle: {
         color: 'white',
         margin: '10%',
         marginLeft: '15%',
-        marginTop: '15%'
+        marginTop: '15%',
+        fontFamily: 'ProductSans'
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
+        fontFamily: 'ProductSans'
         // marginTop: '15%'
     },
     navBot: {
         color: 'white',
         margin: '5%',
         marginLeft: '12%',
-        marginTop: '50%'
+        marginTop: '50%',
+        fontFamily: 'ProductSans'
 
     },
     margin: {
@@ -268,10 +284,14 @@ const useStyles = makeStyles((theme) => ({
     registerBtn: {
         // color:'#3C76EF'
         backgroundColor: '#3C76EF',
-        color: 'white'
+        color: 'white',
+        boxShadow: 'none',
+        fontFamily: 'ProductSans'
     },
     signInBtn: {
         color: '#3C76EF',
+        boxShadow: 'none',
+        fontFamily: 'ProductSans'
     },
     textFieldTwo: {
         width: "30ch"

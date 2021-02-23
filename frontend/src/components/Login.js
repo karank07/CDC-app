@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { Link, Route } from 'react-router-dom';
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -20,7 +20,9 @@ import { styles } from '@material-ui/pickers/views/Calendar/Calendar';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-const Login = () => {
+import { loginPatient } from '../api/Api';
+
+const Login = ({ history }) => {
     const classes = useStyles();
     const [state, setState] = React.useState({
         userId: "",
@@ -54,14 +56,16 @@ const Login = () => {
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
                         <div >
-                            <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
+                            <Typography className={classes.navTitle} variant="h3" gutterBottom> <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
                             <Typography className={classes.navTitle} style={{ marginTop: '50%' }} variant="h5" gutterBottom>Register as</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom>Patient</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom>Nurse</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom>Doctor</Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} style={{ textDecoration: 'none', color: 'white' }}>Patient</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse-register'} style={{ textDecoration: 'none', color: 'white' }}>Nurse</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/doctor-register'} style={{ textDecoration: 'none', color: 'white' }}>Doctor</Link></Typography>
                             <Grid container direction='row' className={classes.navBot}>
-                                <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon>
-                                <Typography variant="h5" >Home</Typography>
+                                <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>
+                                    <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon></Link>
+                                <Typography variant="h5" className={classes.text}><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Home</Link>
+                                </Typography>
                             </Grid>
 
                         </div>
@@ -77,22 +81,22 @@ const Login = () => {
                     alignItems="center"
                     style={{ height: '100%' }}
                 >
-                    <Typography variant="h3" gutterBottom>
+                    <Typography variant="h3" gutterBottom className={classes.text}>
                         Login
                     </Typography>
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">Email ID/ Phone no.</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Email ID</InputLabel>
                         <OutlinedInput
                             autoFocus
                             id="outlined-adornment-password"
                             type='text'
                             value={state.userId}
                             onChange={handleChange('userId')}
-                            labelWidth={145}
+                            labelWidth={65}
                         />
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Password</InputLabel>
                         <OutlinedInput
                             id="outlined-adornment-password"
                             type={state.showPassword ? 'text' : 'password'}
@@ -113,7 +117,12 @@ const Login = () => {
                             labelWidth={70}
                         />
                     </FormControl>
-                    <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)} color="primary">
+                    <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)} color="primary"
+                        onClick={() => loginPatient(state.userId, state.password).
+                            then(async function (response) {
+                                if (response.token)
+                                    history.push('/patient')
+                            })}>
                         Login
                 </Button>
                 </Grid>
@@ -129,29 +138,37 @@ const useStyles = makeStyles((theme) => ({
     root: {
         height: '100vh'
     },
+    text: {
+        fontFamily: 'ProductSans'
+    },
     navTitle: {
         color: 'white',
         margin: '10%',
         marginLeft: '15%',
-        marginTop: '15%'
+        marginTop: '15%',
+        fontFamily: 'ProductSans'
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
+        fontFamily: 'ProductSans'
         // marginTop: '15%'
     },
     navBot: {
         color: 'white',
         margin: '5%',
         marginLeft: '12%',
-        marginTop: '50%'
+        marginTop: '50%',
+        fontFamily: 'ProductSans'
 
     },
     loginBtn: {
         // color:'#3C76EF'
         backgroundColor: '#3C76EF',
-        color: 'white'
+        color: 'white',
+        boxShadow: 'none',
+        fontFamily: 'ProductSans'
     },
     margin: {
         margin: theme.spacing(1)
