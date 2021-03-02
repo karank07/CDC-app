@@ -32,19 +32,6 @@ import { loginPatient } from '../api/Api';
 
 const Home = ({ history }) => {
     const classes = useStyles();
-    const [state, setState] = React.useState({
-        userId: "",
-        password: "",
-        showPassword: false
-    });
-
-    const handleChange = (prop) => (event) => {
-        setState({ ...state, [prop]: event.target.value });
-    };
-
-    const handleClickShowPassword = () => {
-        setState({ ...state, showPassword: !state.showPassword });
-    };
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -52,29 +39,30 @@ const Home = ({ history }) => {
     return (
         <Grid
             container
-            className={classes.root}
-        >
-            <Grid item xs={false} sm={3} >
-                <div style={{ height: '100%' }}>
-                    <Grid
-                        container
-                        direction="column"
-                        justify="flex-start"
-
-                        style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
-                    >
-                        <div >
-                            <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
-                            <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom><Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>Login</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Nurse</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Doctor</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>About Us</Link></Typography>
-                        </div>
-                    </Grid>
-                </div>
+            className={classes.root}>
+            <Grid item xs={false} sm={3} style={{ height: '100%' }}>
+                <Grid
+                    container
+                    direction="column"
+                    justify="flex-start"
+                    style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}>
+                    <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
+                    <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom>
+                        <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>Login</Link>
+                    </Typography>
+                    <Typography className={classes.navText} variant="h6" gutterBottom>
+                        <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Nurse</Link>
+                    </Typography>
+                    <Typography className={classes.navText} variant="h6" gutterBottom>
+                        <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Doctor</Link>
+                    </Typography>
+                    <Typography className={classes.navText} variant="h6" gutterBottom>
+                        <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>About Us</Link>
+                    </Typography>
+                </Grid>
             </Grid>
 
-            <Grid item sm={9}>
+            <Grid item sm={9} style={{ marginLeft: '-3%' }}>
                 <Grid
                     container
                     direction="row"
@@ -224,6 +212,8 @@ const useStyles = makeStyles((theme) => ({
         // marginTop: '15%'
     },
     navBot: {
+        position: 'absolute',
+        bottom: 10,
         color: 'white',
         margin: '5%',
         marginLeft: '12%',

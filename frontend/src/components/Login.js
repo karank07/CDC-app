@@ -88,7 +88,6 @@ const Login = ({ history }) => {
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Email ID</InputLabel>
                         <OutlinedInput
                             autoFocus
-                            id="outlined-adornment-password"
                             type='text'
                             value={state.userId}
                             onChange={handleChange('userId')}
@@ -121,7 +120,10 @@ const Login = ({ history }) => {
                         onClick={() => loginPatient(state.userId, state.password).
                             then(async function (response) {
                                 if (response.token)
-                                    history.push('/patient')
+                                    history.push({
+                                        pathname: '/patient',
+                                        state: { detail: response }
+                                    })
                             })}>
                         Login
                 </Button>

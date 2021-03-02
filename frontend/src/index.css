@@ -1,5 +1,5 @@
 * {
-    margin: 0
+    margin: 0; font-family: DotGothic16
 }
 
 @font-face {
@@ -8,6 +8,17 @@
 }
 
 @font-face {
-    font-family: 'ProductSans-Bold';
-    src: local('ProductSans-Bold'), url(./assets/Fonts/ProductSans/ProductSans-Bold.ttf) format('ttf');
+    font-family: 'ProductSans';
+    src: local('ProductSans'), url(./assets/Fonts/ProductSans/ProductSans-Regular.ttf) format('ttf');
+}
+
+@font-face {
+    font-family: 'ProductSans';
+    font-weight: 900;
+    src: local('ProductSans'), url(./assets/Fonts/ProductSans/ProductSans-Bold.ttf) format('ttf');
+}
+
+@font-face {
+    font-family: 'DotGothic16';
+    src: local('DotGothic16'), url(./assets/Fonts/ProductSans/DotGothic16-Regular.ttf) format('ttf');
 }
