@@ -115,7 +115,7 @@ const getPatientPreviousAssessments = asyncHandler(async (req, res) => {
     if(patient.assessments.length!==0){
       res.json(patient.assessments)
     }else{
-      res.json({message:'No previous assessments to show'})
+      res.json([])
     }
   }
   else{
