@@ -31,7 +31,7 @@ const PatientReg = ({ history }) => {
         regNum: "",
         emailId: "",
         password: "",
-        phoneNum: "(+1) -",
+        phoneNum: "",
         dob: new Date('2000-08-18T21:11:54'),
         address: "",
 

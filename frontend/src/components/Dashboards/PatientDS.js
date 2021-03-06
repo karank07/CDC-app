@@ -27,7 +27,6 @@ import { getAssessmentData } from '../../api/Api';
 
 import back from '../../assets/Images/Subtract.svg';
 import pds1 from '../../assets/Images/pds1.png'
-import { get } from 'mongoose';
 
 const PatientDS = ({ history }) => {
     const classes = useStyles();
@@ -37,18 +36,25 @@ const PatientDS = ({ history }) => {
         dob: history.location.state.detail.dateOfBirth,
         assessmentData: []
     });
-    useEffect(() => {
-        async function fetchMyAPI() {
+    const fetchMyAPI=async()=> {
+        if(state.firstName){
             let response = await getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
-            setState({ ...state, assessmentData: response })
+        console.log("REs", response)
+        setState({ ...state, assessmentData: response })
         }
+        else{
+            console.log("oops")
+        }
+        
+    }
+    useEffect(() => {
         fetchMyAPI()
-    }, [])
+    },[])
     // useEffect(() => {
-
-    //     let response = getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
-    //     console.log("res", response)
-    //     setState({ ...state, assessmentData: response })
+    //     console.log("test")
+    //     // let response = getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
+    //     // console.log("res", response)
+    //     // setState({ ...state, assessmentData: response })
     // }, []);
     console.log("My", state.assessmentData)
     const handleMouseDownPassword = (event) => {
@@ -70,9 +76,9 @@ const PatientDS = ({ history }) => {
                         <div >
                             <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
                             <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: 'white' }}>Dashboard</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>Take self assessment</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>Personal details</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>About Us</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Self-assessment'} style={{ textDecoration: 'none', color: 'white' }}>Take self assessment</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>Personal details</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
                         </div>
                     </Grid>
@@ -112,10 +118,12 @@ const PatientDS = ({ history }) => {
                                 letterSpacing: "0.01em",
                                 overflow: 'visible',
                                 color: '#3C4161',
-                            }}>Hey, You have got an appointment with Dr. Lorem Ipsum on {moment(state.assessmentData[0].appointment[0].scheduledAt).format('Do MMMM, YYYY')}</Typography>
+                            }}>Hey, You have got an appointment with Dr. Lorem Ipsum on  
+                            {state.assessmentData.length>0 && moment(state.assessmentData[0].appointment[0].scheduledAt).format(' Do MMMM, YYYY')}
+                            </Typography>
                             <Grid container>
                                 <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)}
-                                    style={{ boxShadow: 'none', marginLeft: '15%',width:'25%' }}
+                                    style={{ boxShadow: 'none', marginLeft: '15%', width: '25%' }}
                                     color="primary"
                                 >
                                     Cancel appointment

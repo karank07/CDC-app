@@ -119,12 +119,20 @@ const Login = ({ history }) => {
                     <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)} color="primary"
                         onClick={() => loginPatient(state.userId, state.password).
                             then(async function (response) {
-                                if (response.token)
+                                if (response.token && response.type == 'patient') {
                                     history.push({
                                         pathname: '/patient',
                                         state: { detail: response }
                                     })
-                            })}>
+                                } else if (response.token && response.type == 'nurse') {
+                                    history.push({
+                                        pathname: '/nurse',
+                                        state: { detail: response }
+                                    })
+                                }
+                            }
+
+                            )}>
                         Login
                 </Button>
                 </Grid>

@@ -57,7 +57,7 @@ const Home = ({ history }) => {
                         <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Doctor</Link>
                     </Typography>
                     <Typography className={classes.navText} variant="h6" gutterBottom>
-                        <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>About Us</Link>
+                        <Link to={'/'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link>
                     </Typography>
                 </Grid>
             </Grid>
@@ -149,7 +149,6 @@ const Home = ({ history }) => {
                                     </Typography>
                                 </CardContent>
                             </Card>
-
                         </Grid>
                         <Grid container justify="center" alignItems="center" style={{ marginTop: '5%' }}>
                             <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
