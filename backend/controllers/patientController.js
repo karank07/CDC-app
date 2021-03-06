@@ -94,7 +94,6 @@ const postPatientAssessment = asyncHandler(async (req, res) => {
     age: req.body.age,
     symptomsSet1: req.body.symptomsSet1,
     symptomsSet2: req.body.symptomsSet2,
-    appointment: [req.body.appointment]
   };
   if (patient) {
     patient.assessments.unshift(newAssessmentData);
