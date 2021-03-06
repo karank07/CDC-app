@@ -12,7 +12,7 @@ const API_LOG = true;
 
 axios.interceptors.request.use(request => {
     if (API_LOG)
-        console.log('API request=',request);
+        console.log('API request=', request);
     return request
 });
 
@@ -60,6 +60,12 @@ export async function postRequest(url, data) {
 export async function getRequest(url) {
     let authToken = null;
     authToken = 'bearer ' + authToken;
+    let response = await executeRequest(requestType.GET, url, { Authorization: authToken }, null, null);
+    return response;
+}
+export async function getRequestWithHeader(url, token) {
+    let authToken = null;
+    authToken = 'Bearer ' + token;
     let response = await executeRequest(requestType.GET, url, { Authorization: authToken }, null, null);
     return response;
 }
