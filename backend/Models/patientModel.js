@@ -33,7 +33,7 @@ const assessmentSchema = mongoose.Schema(
       type: String,
     },
     age: {
-      type: Number,
+      type: String,
     },
     symptomsSet1: {
       type: String,
