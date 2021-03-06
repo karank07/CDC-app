@@ -2,6 +2,7 @@ import jwt from "jsonwebtoken";
 import Patient from "../Models/patientModel.js";
 import Nurse from "../Models/nurseModel.js";
 import Doctor from "../Models/doctorModel.js";
+import Admin from "../Models/adminModel.js";
 import asyncHandler from "express-async-handler";
 
 const protect = asyncHandler(async (req, res, next) => {
@@ -19,7 +20,8 @@ const protect = asyncHandler(async (req, res, next) => {
       req.user =
         (await Patient.findById(decoded.id).select("-password")) ||
         (await Nurse.findById(decoded.id).select("-password")) ||
-        (await Doctor.findById(decoded.id).select("-password"));
+        (await Doctor.findById(decoded.id).select("-password")) ||
+        (await Admin.findById(decoded.id).select("-password"));
 
       next();
     } catch (error) {
@@ -35,13 +37,42 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-const admin = (req,res,next) =>{
-  if(req.user && req.user.registrationNum){
-    next()
-  }else{
-    res.status(400)
-    throw new Error('Not authorized as an Admin')
+const admin = (req, res, next) => {
+  if (
+    req.user &&
+    req.user.registrationNum &&
+    req.user.registrationNum.charAt(0) === "A"
+  ) {
+    next();
+  } else {
+    res.status(400);
+    throw new Error("Not authorized as an Admin");
   }
-}
+};
 
-export { protect, admin };
+const nurseAdmin = (req, res, next) => {
+  if (
+    req.user &&
+    req.user.registrationNum &&
+    req.user.registrationNum.startsWith("N")
+  ) {
+    next();
+  } else {
+    res.status(400);
+    throw new Error("Not authorized as Nurse");
+  }
+};
+const doctorAdmin = (req, res, next) => {
+  if (
+    req.user &&
+    req.user.registrationNum &&
+    req.user.registrationNum.startsWith("D")
+  ) {
+    next();
+  } else {
+    res.status(400);
+    throw new Error("Not authorized as Doctor");
+  }
+};
+
+export { protect, admin, nurseAdmin, doctorAdmin };
