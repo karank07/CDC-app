@@ -1,27 +1,58 @@
 import mongoose from "mongoose";
 import bcrypt from 'bcryptjs';
 
+const appointmentSchema = mongoose.Schema(
+  {
+   nurse:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Nurses'
+   },
+   nurseName:{
+     type:String
+   },
+   doctor:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Doctors'
+   },
+   doctorName:{
+    type:String
+  },
+   scheduledAt:{
+       type: Date,
+       required:true,
+   },
+  },
+);
+
 const assessmentSchema = mongoose.Schema(
   {
+    name:{
+      type:String,
+    },
     difficultyBreathing: {
-      type: Boolean,
-      default: false,
+      type: String,
     },
     age: {
       type: Number,
     },
     symptomsSet1: {
-      type: Boolean,
-      default: false,
+      type: String,
     },
     symptomsSet2: {
-      type: Boolean,
-      default: false,
+      type: String,
     },
     isReviewed:{
       type: Boolean,
-      default: false,
-    }
+      required: true,
+      default: false
+    },
+    isForwarded:{
+      type: Boolean,
+    },
+    isRejected:{
+      type: Boolean
+    },
+    appointment: [appointmentSchema],
   },
   { timestamps: true }
 );
@@ -56,12 +87,6 @@ const patientSchema = mongoose.Schema(
       required: true,
     },
     assessments: [assessmentSchema],
-    appointments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Appointments",
-      },
-    ],
   },
   {
     timestamps: true,

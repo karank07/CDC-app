@@ -24,7 +24,7 @@ const getPatientProfile = asyncHandler(async (req, res) => {
 });
 
 //@desc register new patient
-//@route POST /api/patients
+//@route POST /api/patients/register
 //@access Public
 const registerPatient = asyncHandler(async (req, res) => {
   const {
@@ -84,36 +84,17 @@ const registerPatient = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc get list of patients to review assessments
-//@route GET /api/patients/listForReview
-//@access Protected (Nurse or Doctor)
-const getListOfPatients = asyncHandler(async (req, res) => {
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
-      }
-    : {};
-  const allPatients = await Patient.find({ ...keyword });
-  const patients = allPatients.filter(
-    (patient, i) => patient.assessments.length !== 0 && patient.assessments[0].isReviewed===false
-  );
-  res.json(patients)
-});
-
 //@desc post assessment for the logged in patient
-//@route POST /api/patients/:id/assessment
+//@route POST /api/patients/give-assessment
 //@access Protected
 const postPatientAssessment = asyncHandler(async (req, res) => {
-  const patient = await Patient.findById(req.params.id);
+  const patient = await Patient.findById(req.user._id);
   const newAssessmentData = {
     difficultyBreathing: req.body.difficultyBreathing,
     age: req.body.age,
     symptomsSet1: req.body.symptomsSet1,
     symptomsSet2: req.body.symptomsSet2,
-    isReviewed:false
+    appointment: [req.body.appointment]
   };
   if (patient) {
     patient.assessments.unshift(newAssessmentData);
@@ -127,10 +108,10 @@ const postPatientAssessment = asyncHandler(async (req, res) => {
 });
 
 //@desc get list of previous assessments of patient
-//@route GET /api/patients/:id/assessment
+//@route GET /api/patients/previous-assessments
 //@access Protected 
 const getPatientPreviousAssessments = asyncHandler(async (req, res) => {
-  const patient = await Patient.findById(req.params.id)
+  const patient = await Patient.findById(req.user._id)
   if(patient){
     if(patient.assessments.length!==0){
       res.json(patient.assessments)
@@ -144,10 +125,30 @@ const getPatientPreviousAssessments = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc (delete) cancel scheduled appointment
+//@route DELETE /api/patients/cancel-appointment/:id
+//@access Protected 
+const cancelAppointment = asyncHandler(async (req, res) => {
+  const patient = await Patient.findOne({"assessments.appointment._id":req.params.id})
+  if(patient){
+    if(patient.assessments.length!==0 && patient.assessments[0].appointment[0]){
+      patient.assessments[0].appointment = []
+      await patient.save()
+      res.json({message:'Appointment has been cancelled'})
+    }else{
+      res.json({message:'No appointments'})
+    }
+  }
+  else{
+    res.status(404)
+    throw new Error('Patient not found')
+  }
+});
+
 export {
   getPatientProfile,
   registerPatient,
-  getListOfPatients,
   postPatientAssessment,
-  getPatientPreviousAssessments
+  getPatientPreviousAssessments,
+  cancelAppointment
 };
