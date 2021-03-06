@@ -1,16 +1,17 @@
 import express from "express";
 const router = express.Router();
 import {
-  getListOfPatients,
+  cancelAppointment,
   getPatientPreviousAssessments,
   getPatientProfile,
   postPatientAssessment,
   registerPatient,
 } from "../controllers/patientController.js";
-import { protect, admin } from "../middleware/authMiddleware.js";
+import { protect, admin, nurseAdmin } from "../middleware/authMiddleware.js";
 
-router.route("/").post(registerPatient);
-router.route("/listForReview").get(protect, admin, getListOfPatients)
+router.route("/register").post(registerPatient);
 router.route("/profile").get(protect, getPatientProfile);
-router.route("/:id/assessment").post(protect,postPatientAssessment).get(protect,getPatientPreviousAssessments)
+router.route("/give-assessment").post(protect,postPatientAssessment)
+router.route("/previous-assessments").get(protect,getPatientPreviousAssessments)
+router.route("/cancel-appointment/:id").delete(protect,cancelAppointment)
 export default router;
