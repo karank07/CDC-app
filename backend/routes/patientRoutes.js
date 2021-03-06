@@ -7,7 +7,7 @@ import {
   postPatientAssessment,
   registerPatient,
 } from "../controllers/patientController.js";
-import { protect, admin, nurseAdmin } from "../middleware/authMiddleware.js";
+import { protect } from "../middleware/authMiddleware.js";
 
 router.route("/register").post(registerPatient);
 router.route("/profile").get(protect, getPatientProfile);
