@@ -20,7 +20,7 @@ import { styles } from '@material-ui/pickers/views/Calendar/Calendar';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { loginPatient } from '../api/Api';
+import { loginPatient, getPreviousAssessmentData, getListForReview } from '../api/Api';
 
 const Login = ({ history }) => {
     const classes = useStyles();
@@ -120,18 +120,19 @@ const Login = ({ history }) => {
                         onClick={() => loginPatient(state.userId, state.password).
                             then(async function (response) {
                                 if (response.token && response.type == 'patient') {
+                                    let assesmentData = await getPreviousAssessmentData();
                                     history.push({
                                         pathname: '/patient',
-                                        state: { detail: response }
+                                        state: { detail: response, assesmentData: assesmentData }
                                     })
                                 } else if (response.token && response.type == 'nurse') {
+                                    let patientData = await getListForReview();
                                     history.push({
                                         pathname: '/nurse',
-                                        state: { detail: response }
+                                        state: { detail: response, patientData }
                                     })
                                 }
                             }
-
                             )}>
                         Login
                 </Button>
@@ -149,20 +150,20 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-        fontFamily: 'ProductSans'
+        
     },
     navTitle: {
         color: 'white',
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-        fontFamily: 'ProductSans'
+        
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-        fontFamily: 'ProductSans'
+        
         // marginTop: '15%'
     },
     navBot: {
@@ -170,7 +171,7 @@ const useStyles = makeStyles((theme) => ({
         margin: '5%',
         marginLeft: '12%',
         marginTop: '50%',
-        fontFamily: 'ProductSans'
+
 
     },
     loginBtn: {
@@ -178,7 +179,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#3C76EF',
         color: 'white',
         boxShadow: 'none',
-        fontFamily: 'ProductSans'
+        
     },
     margin: {
         margin: theme.spacing(1)

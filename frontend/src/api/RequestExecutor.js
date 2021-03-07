@@ -1,6 +1,7 @@
 import axios from "axios";
 
 
+
 const requestType = {
     POST: 'post',
     GET: 'get',
@@ -9,6 +10,15 @@ const requestType = {
 };
 
 const API_LOG = true;
+
+// let token;
+// export function setToken(token) {
+//     token = token;
+// }
+
+// export function clearToken() {
+//     token = null;
+// }
 
 axios.interceptors.request.use(request => {
     if (API_LOG)
@@ -55,32 +65,35 @@ export async function postRequest(url, data) {
     let response = await executeRequest(requestType.POST, url, null, null, data);
     return response;
 }
-
-
-export async function getRequest(url) {
-    let authToken = null;
-    authToken = 'bearer ' + authToken;
-    let response = await executeRequest(requestType.GET, url, { Authorization: authToken }, null, null);
+export async function postRequestWithHeader(url, data, token) {
+    let authToken = token;
+    authToken = 'Bearer ' + authToken;
+    let response = await executeRequest(requestType.POST, url, { Authorization: authToken }, null, data);
     return response;
 }
+
+export async function getRequest(url) {
+    let response = await executeRequest(requestType.GET, url, null, null, null);
+    return response;
+}
+
 export async function getRequestWithHeader(url, token) {
-    let authToken = null;
+    let authToken = token;
     authToken = 'Bearer ' + token;
     let response = await executeRequest(requestType.GET, url, { Authorization: authToken }, null, null);
     return response;
 }
 
-
-export async function putRequest(url, data) {
-    let authToken = null;
-    authToken = 'bearer ' + authToken;
+export async function putRequest(url, data, token) {
+    let authToken = token;
+    authToken = 'Bearer ' + authToken;
     let response = await executeRequest(requestType.PUT, url, { authorization: authToken }, null, data);
     return response;
 }
 
-export async function deleteRequest(url, data) {
-    let authToken = null;
-    authToken = 'bearer ' + authToken;
-    let response = await executeRequest(requestType.DELETE, url, { authorization: authToken }, null, data);
+export async function deleteRequest(url, token) {
+    let authToken = token;
+    authToken = 'Bearer ' + authToken;
+    let response = await executeRequest(requestType.DELETE, url, { authorization: authToken }, null, null);
     return response;
 }

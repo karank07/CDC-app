@@ -28,7 +28,7 @@ import one from '../assets/Images/1.png';
 import two from '../assets/Images/2.png';
 import three from '../assets/Images/3.png';
 import four from '../assets/Images/4.png';
-import { loginPatient } from '../api/Api';
+import { loginPatient, checkIfLogin } from '../api/Api';
 
 const Home = ({ history }) => {
     const classes = useStyles();
@@ -154,8 +154,13 @@ const Home = ({ history }) => {
                             <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
                                 style={{ boxShadow: 'none' }}
                                 color="primary"
-                                onClick={() =>
-                                    history.push('/self-assessment')
+                                onClick={() => {
+                                    if (checkIfLogin())
+                                        history.push('/self-assessment')
+                                    else
+                                        history.push('/login')
+                                }
+
                                 }>
                                 Take Self Assessment
                              </Button>
@@ -185,7 +190,7 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-        fontFamily: 'ProductSans'
+
     },
     paper: {
         height: 230,
@@ -201,13 +206,13 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-        fontFamily: 'ProductSans'
+         
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-        fontFamily: 'ProductSans'
+         
         // marginTop: '15%'
     },
     navBot: {
@@ -235,13 +240,13 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontFamily: 'ProductSans'
+         
 
     },
     cardText: {
         color: '#3C4161',
         textAlign: 'center',
         marginTop: '2%',
-        fontFamily: 'ProductSans'
+         
     }
 }));

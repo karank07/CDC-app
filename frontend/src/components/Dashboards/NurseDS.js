@@ -29,10 +29,11 @@ import moment from 'moment';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { getAssessmentData } from '../../api/Api';
+import { postReviewAssessment, postScheduleAppointment, getListForReview } from '../../api/Api';
 
 import back from '../../assets/Images/Subtract.svg';
 import pds1 from '../../assets/Images/pds1.png'
+import list from '../../assets/Images/list.png'
 
 const rows = [
     createData('Frozen yoghurt', 159),
@@ -41,29 +42,31 @@ const rows = [
     createData('Cupcake', 305,),
     createData('Gingerbread', 356),
 ];
-function createData(name, date) {
-    return { name, date };
+function createData(name, createdAt) {
+    return { name, createdAt };
 }
 const NurseDS = ({ history }) => {
     const classes = useStyles();
     const [state, setState] = React.useState({
         firstName: history.location.state.detail.firstName,
         lastName: history.location.state.detail.lastName,
-        patientData: []
+        patientData: history.location.state.patientData,
+        index: 0
     });
-    const fetchMyAPI = async () => {
-        if (state.firstName) {
-            let response = await getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
-            setState({ ...state, assessmentData: response })
-        }
-        else {
-            console.log("oops")
-        }
 
-    }
-    useEffect(() => {
-        fetchMyAPI()
-    }, [])
+    // const fetchMyAPI = async () => {
+    //     if (state.firstName) {
+    //         let response = await getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
+    //         setState({ ...state, assessmentData: response })
+    //     }
+    //     else {
+    //         console.log("oops")
+    //     }
+
+    // }
+    // useEffect(() => {
+    //     fetchMyAPI()
+    // }, [])
 
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
@@ -83,7 +86,10 @@ const NurseDS = ({ history }) => {
                         <div >
                             <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
                             <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: 'white' }}>Dashboard</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Patient-list'} style={{ textDecoration: 'none', color: 'white' }}>List of patients</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={{
+                                pathname: '/Patient-list',
+                                state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                            }} style={{ textDecoration: 'none', color: 'white' }}>List of patients</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/login'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>Personal details</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
@@ -109,15 +115,15 @@ const NurseDS = ({ history }) => {
                         </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item sm={7} style={{ marginTop: 10, height: '5%' }}>
+                    <Grid item sm={7} style={{ marginTop: '-4%', height: '5%' }}>
                         <Typography variant="h4" gutterBottom className={classes.text}>
                             Self-assessment reports of patients
                         </Typography>
                     </Grid>
                     {/* <Grid item sm={11} style={{ height: '80%', marginTop: 20 }}> */}
-                    <Grid container justify='center' alignItems='center' direction='column' style={{ marginBottom: 30, width: '100%', height: '60%', backgroundColor: '#F2F6F8', borderRadius: 30 }}>
+                    <Grid container justify='center' alignItems='center' direction='column' style={{ marginBottom: 30, width: '100%', height: '60%', backgroundColor: '#F2F6F8', borderRadius: 30, marginTop: '-5%' }}>
                         <Grid container style={{ margin: 10, marginLeft: 20, width: '40%', height: '60%', }}>
-                            <TableContainer component={Paper} elevation='none' style={{ borderRadius: 15, }}>
+                            <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, height: '100%' }}>
                                 <Table className={classes.table} size="medium" aria-label="a dense table">
                                     <TableHead>
                                         <TableRow style={{ backgroundColor: '#F2F6F8', borderRadius: 10 }}>
@@ -126,12 +132,13 @@ const NurseDS = ({ history }) => {
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
-                                        {rows.map((row) => (
-                                            <TableRow key={row.name} >
+                                        {state.patientData.map((row, index) => (
+                                            < TableRow key={row.name} >
                                                 <TableCell component="th" scope="row" className={classes.tableText}>
-                                                    {row.name}
+                                                    <Button className={classes.tableText} style={state.index == index ? { borderColor: '#3C4161' } : { borderColor: 'white' }} variant={'outlined'} fullWidth
+                                                        onClick={() => setState({ ...state, index: index })}> {row.name}</Button>
                                                 </TableCell>
-                                                <TableCell align="right" className={classes.tableText}>{row.date}</TableCell>
+                                                <TableCell align="right" className={classes.tableText}>{moment(row.assessment.createdAt).format('DD-MM-YYYY')}</TableCell>
 
                                             </TableRow>
                                         ))}
@@ -139,13 +146,13 @@ const NurseDS = ({ history }) => {
                                 </Table>
                             </TableContainer>
                         </Grid>
-                        <Grid container style={{ backgroundColor: '#FFFFFF', height: '85%', margin: 30, width: '50%', borderRadius: 15, }}>
-                            <TableContainer component={Paper} elevation='none' style={{ borderRadius: 15, margin: 20, marginBottom: 0 }}>
+                        <Grid container style={{ backgroundColor: '#FFFFFF', height: '90%', margin: 30, width: '50%', borderRadius: 15, }}>
+                            <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, margin: 20, marginBottom: -10 }}>
                                 <Table className={classes.table} size="medium" aria-label="a dense table">
                                     <TableHead>
                                         <TableRow style={{ borderRadius: 10 }}>
-                                            <TableCell className={classes.description} style={{ textAlign: 'center' }} width='100%'>Annah Hathway</TableCell>
-                                            <TableCell className={classes.description} ></TableCell>
+                                            <TableCell className={classes.description} colSpan={2} style={{ textAlign: 'center' }} width='100%'>{state.patientData[state.index].name}</TableCell>
+                                            {/* <TableCell className={classes.description} ></TableCell> */}
                                         </TableRow>
                                     </TableHead>
                                     <TableBody >
@@ -153,25 +160,25 @@ const NurseDS = ({ history }) => {
                                             <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }} width='70%'>
                                                 Trouble in breathing
                                                 </TableCell>
-                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none' }}>Yes</TableCell>
+                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none', textTransform: 'capitalize' }}>{state.patientData[state.index].assessment.difficultyBreathing}</TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }}>
                                                 Age
                                                 </TableCell>
-                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none' }}>19</TableCell>
+                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none' }}>{state.patientData[state.index].assessment.age}</TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }}>
                                                 Symptoms like Fever, loss of smell, cough, shortness of breath, touble breathing, sore throat or runny nose
                                                 </TableCell>
-                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none' }}>No</TableCell>
+                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none', textTransform: 'capitalize' }}>{state.patientData[state.index].assessment.symptomsSet1}</TableCell>
                                         </TableRow>
                                         <TableRow>
                                             <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }}>
                                                 Symptoms like Stomach ache, Nausea or Vomiting, Diarrhea, fatigue, loss of appetite, muscle pain, Headaches
                                                 </TableCell>
-                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none' }}>No</TableCell>
+                                            <TableCell align="right" className={classes.description} style={{ borderBottom: 'none', textTransform: 'capitalize' }}>{state.patientData[state.index].assessment.symptomsSet2}</TableCell>
                                         </TableRow>
                                     </TableBody>
                                 </Table>
@@ -181,16 +188,38 @@ const NurseDS = ({ history }) => {
                                     style={{
                                         textTransform: ' none', boxShadow: 'none', width: '40%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10
                                     }}
-                                    color="primary" >
+                                    onClick={() => history.push({
+                                        pathname: '/schedule-appointment',
+                                        state: { detail: history.location.state.detail, patientData: state.patientData, name: state.patientData[state.index].name, id: state.patientData[state.index].assessment._id }
+                                    })}
+                                    color="primary">
                                     Schedule an appointment
                                         </Button>
                                 <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
                                     style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10 }}
+                                    onClick={() => postReviewAssessment(true, false, true, state.patientData[state.index].assessment._id).
+                                        then(async function (response) {
+                                            if (response.assessment.isForwarded) {
+                                                window.alert('Appointment has been successfully forwarded to a Doctor.')
+                                                let patientData = await getListForReview();
+                                                setState({ ...state, patientData: patientData })
+                                            }
+                                        }
+                                        )}
                                     color="primary">
                                     Forwad to a Doctor
                                          </Button>
                                 <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
                                     style={{ textTransform: ' none', boxShadow: 'none', width: '20%', borderRadius: 10 }}
+                                    onClick={() => postReviewAssessment(false, true, true, state.patientData[state.index].assessment._id).
+                                        then(async function (response) {
+                                            if (response.assessment.isRejected) {
+                                                window.alert('Appointment has been successfully rejected and the patient will be notified.')
+                                                let patientData = await getListForReview();
+                                                setState({ ...state, patientData: patientData })
+                                            }
+                                        }
+                                        )}
                                     color="primary">
                                     Reject
                                          </Button>
@@ -222,6 +251,7 @@ const useStyles = makeStyles((theme) => ({
         marginHorizontal: 20
     },
     tableText: {
+        textTransform:'capitalize',
         color: '#3C4161',
         fontSize: 20,
         textAlign: 'center'
@@ -244,14 +274,14 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-        fontFamily: 'ProductSans'
+         
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
         fontWeight: 'black',
-        fontFamily: 'ProductSans'
+         
 
         // marginTop: '15%'
     },
@@ -281,13 +311,13 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontFamily: 'ProductSans'
+         
 
     },
     cardText: {
         color: '#3C4161',
         textAlign: 'center',
         marginTop: '2%',
-        fontFamily: 'ProductSans'
+         
     }
 }));

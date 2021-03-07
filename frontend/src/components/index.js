@@ -7,3 +7,4 @@ export { default as SaTool } from './SaTool';
 export { default as NurseDS } from './Dashboards/NurseDS';
 export { default as PatientDS } from './Dashboards/PatientDS';
 export { default as PatientList } from './PatientList';
+export { default as AppointmentScheduler } from './AppointmentScheduler';

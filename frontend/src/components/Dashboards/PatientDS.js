@@ -19,14 +19,16 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
 import moment from 'moment';
-
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { getAssessmentData } from '../../api/Api';
+import { getPreviousAssessmentData, logout, cancelAppointment } from '../../api/Api';
 
 import back from '../../assets/Images/Subtract.svg';
 import pds1 from '../../assets/Images/pds1.png'
+import pds2 from '../../assets/Images/pds2.png'
 
 const PatientDS = ({ history }) => {
     const classes = useStyles();
@@ -34,22 +36,17 @@ const PatientDS = ({ history }) => {
         firstName: history.location.state.detail.firstName,
         lastName: history.location.state.detail.lastName,
         dob: history.location.state.detail.dateOfBirth,
-        assessmentData: []
+        assessmentData: history.location.state.assesmentData,
+        index: 1
     });
-    const fetchMyAPI=async()=> {
-        if(state.firstName){
-            let response = await getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
-        console.log("REs", response)
-        setState({ ...state, assessmentData: response })
-        }
-        else{
-            console.log("oops")
-        }
-        
-    }
-    useEffect(() => {
-        fetchMyAPI()
-    },[])
+    //  {/* {!state.assessmentData.length > 0 && ('appointment' in state.assessmentData[0]) && state.assessmentData[0].appointment.length == 0 && */ }
+    // const fetchMyAPI = async () => {
+    //     let response = await getPreviousAssessmentData();
+    //     await setState({ ...state, assessmentData: response })
+    // }
+    // useEffect(() => {
+    //     fetchMyAPI()
+    // }, [])
     // useEffect(() => {
     //     console.log("test")
     //     // let response = getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
@@ -79,7 +76,7 @@ const PatientDS = ({ history }) => {
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Self-assessment'} style={{ textDecoration: 'none', color: 'white' }}>Take self assessment</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>Personal details</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} onClick={() => logout()} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
                         </div>
                     </Grid>
                 </div>
@@ -102,38 +99,131 @@ const PatientDS = ({ history }) => {
                         </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item sm={11} style={{ height: '40%' }}>
-                        <Grid container justify="flex-start"
-                            alignContent="center"
-                            direction="row"
-                            style={{ backgroundImage: `url(${pds1})`, backgroundRepeat: 'no-repeat', height: '100%', width: '100%' }}>
-                            <Typography style={{
-                                maxWidth: '60%',
-                                fontFamily: 'ProductSans',
-                                fontWeight: 'bold',
-                                fontSize: 28,
-                                // lineHeight: 46,
-                                margin: 20,
-                                marginLeft: '5%',
-                                letterSpacing: "0.01em",
-                                overflow: 'visible',
-                                color: '#3C4161',
-                            }}>Hey, You have got an appointment with Dr. Lorem Ipsum on  
-                            {state.assessmentData.length>0 && moment(state.assessmentData[0].appointment[0].scheduledAt).format(' Do MMMM, YYYY')}
-                            </Typography>
-                            <Grid container>
-                                <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)}
-                                    style={{ boxShadow: 'none', marginLeft: '15%', width: '25%' }}
-                                    color="primary"
-                                >
-                                    Cancel appointment
-                             </Button>
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    <Grid item sm={10} style={{ height: '40%' }}>
-                        <Grid container>
 
+
+                    {state.assessmentData.length > 0 && 'appointment' in state.assessmentData[0] && state.assessmentData[0].appointment.length > 0 ?
+                        (
+                            <Grid item sm={11} style={{ height: '40%' }}>
+                                <Grid container justify="flex-start"
+                                    alignContent="center"
+                                    direction="row"
+                                    style={{ backgroundImage: `url(${pds1})`, backgroundRepeat: 'no-repeat', height: '100%', width: '100%' }}>
+                                    <Typography style={{
+                                        maxWidth: '60%',
+                                        fontWeight: 'bold',
+                                        fontSize: 28,
+                                        // lineHeight: 46,
+                                        margin: 20,
+                                        marginLeft: '5%',
+                                        letterSpacing: "0.01em",
+                                        overflow: 'visible',
+                                        color: '#3C4161',
+                                    }}>Hey, You have got an appointment with {(state.assessmentData[0].appointment[0].doctorName || state.assessmentData[0].appointment[0].nurseName)} on
+                            {moment(state.assessmentData[0].appointment[0].scheduledAt).format(' Do MMMM, YYYY')}
+                                    </Typography>
+                                    <Grid container>
+                                        <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                            style={{ borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%' }}
+                                            color="primary"
+                                            onClick={() => cancelAppointment(state.assessmentData[0].appointment[0]._id).
+                                                then(async function (response) {
+                                                    let assesmentData = await getPreviousAssessmentData();
+                                                    setState({ ...state, assessmentData: assesmentData });
+                                                })}
+                                        >
+                                            Cancel appointment
+                             </Button>
+                                    </Grid>
+                                </Grid>
+                            </Grid>) :
+
+
+                        (
+                            <Grid item sm={11} style={{ height: '40%', marginTop: '-10%' }}>
+                                <Grid container justify="flex-start"
+                                    alignContent="center"
+                                    direction="row"
+                                    style={{ backgroundImage: `url(${pds2})`, backgroundRepeat: 'no-repeat', height: '100%', width: '100%' }}>
+                                    <Typography style={{
+                                        maxWidth: '60%',
+                                        fontWeight: 'bold',
+                                        fontSize: 28,
+                                        // lineHeight: 46,
+                                        margin: 20,
+                                        marginLeft: '5%',
+                                        marginTop: '10%',
+                                        letterSpacing: "0.01em",
+                                        overflow: 'visible',
+                                        color: '#3C4161',
+                                    }}>
+                                        Take COVID-19 symptoms self assessment
+                            </Typography>
+                                    <Grid container>
+                                        <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                            style={{ borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%', backgroundColor: '#3C4161', color: 'white' }}
+                                            // color="primary"
+                                            onClick={() => history.push('/Self-assessment')}
+                                        >
+                                            Take Self Assessment
+                             </Button>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        )}
+                    <Grid item sm={10} style={{ height: '40%', marginTop: '-4%' }}>
+                        <Typography variant="h4" gutterBottom className={classes.text}>
+                            Previous Assessments
+                        </Typography>
+                        <Grid container justify="space-evenly" alignItems='center'>
+                            {state.assessmentData.length > 0 &&
+                                <ArrowLeftIcon fontSize='large' />}
+                            {state.assessmentData.length > 0 ? state.assessmentData.map((data) => (
+                                <Card className={classes.paper}>
+                                    <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                                        <Typography variant="body2" style={{ marginTop: '5%' }} className={classes.cardText}>
+                                            Assessment taken on
+                                    </Typography>
+                                        <Typography variant="body1" className={classes.cardTitle}>
+                                            {moment(data.createdAt).format('DD-MMMM-YYYY')}
+                                        </Typography>
+                                        <Typography variant="body2" className={classes.cardText}>
+                                            Result
+                                    </Typography>
+                                        <Typography variant="body1" className={classes.cardTitle}>
+                                            {data.isReviewed ==false ? 'Pending' : data.isForwarded ? 'Pending' : data.isRejected ? 'Safe' : data.appointment.length == 0 ? 'Appointment Cancelled' : 'Got an appointment'}
+                                        </Typography>
+
+                                    </CardContent>
+                                </Card>
+                            ))
+                                : <Typography variant="h6" gutterBottom style={{ color: '#9296A6', marginTop:'5%' }} className={classes.text}>
+                                    You do not have any previous assessments, start by  clicking on 'Take self assessment'.
+                               </Typography>
+                            } {state.assessmentData.length > 0 &&
+                                <ArrowRightIcon fontSize='large' />
+                            }
+                            {/* <Card className={classes.paper}>
+                                <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+
+                                    <Typography variant="body1" className={classes.cardTitle}>
+                                        Genral symptoms
+                                    </Typography>
+                                    <Typography variant="body2" className={classes.cardText}>
+                                        loss of smell or appetite, fatigue or muscle pain
+                                    </Typography>
+                                </CardContent>
+                            </Card>
+                            <Card className={classes.paper}>
+                                <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+
+                                    <Typography variant="body1" className={classes.cardTitle}>
+                                        Respiratory symptoms
+                                    </Typography>
+                                    <Typography variant="body2" className={classes.cardText}>
+                                        Cough, difficulty in breathing, Sore throat, Runny nose
+                                    </Typography>
+                                </CardContent>
+                            </Card> */}
                         </Grid>
                     </Grid>
                 </Grid>
@@ -154,9 +244,23 @@ const useStyles = makeStyles((theme) => ({
     text: {
         fontFamily: 'DotGothic16'
     },
+    cardTitle: {
+        marginTop: '8%',
+        color: '#3C4161',
+        textAlign: 'center',
+        fontWeight: 'bold',
+
+
+    },
+    cardText: {
+        color: '#3C4161',
+        textAlign: 'center',
+        marginTop: '2%',
+
+    },
     paper: {
-        height: 230,
-        width: 230,
+        height: 200,
+        width: 200,
         borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center',
@@ -168,14 +272,14 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-        fontFamily: 'ProductSans'
+
     },
     navText: {
         color: 'white',
         margin: '5%',
-        marginLeft: '20%',
+        marginLeft: '13%',
         fontWeight: 'black',
-        fontFamily: 'ProductSans'
+
 
         // marginTop: '15%'
     },
@@ -205,13 +309,13 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontFamily: 'ProductSans'
+
 
     },
     cardText: {
         color: '#3C4161',
         textAlign: 'center',
         marginTop: '2%',
-        fontFamily: 'ProductSans'
+
     }
 }));

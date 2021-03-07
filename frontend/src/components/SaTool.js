@@ -33,13 +33,13 @@ import one from '../assets/Images/1.png';
 import two from '../assets/Images/2.png';
 import three from '../assets/Images/3.png';
 import four from '../assets/Images/4.png';
-import { loginPatient } from '../api/Api';
+import { postAssessment, getPreviousAssessmentData } from '../api/Api';
 
 const SaTool = ({ history }) => {
     const classes = useStyles();
     const [state, setState] = React.useState({
         difficultyBreathing: '',
-        age: 31,
+        age: "",
         symptomsSet1: '',
         symptomsSet2: ''
 
@@ -122,6 +122,47 @@ const SaTool = ({ history }) => {
                         <React.Fragment>
                             <Grid item sm={9}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
+                                    Please select an age range
+                        </Typography>
+
+                            </Grid>
+                            <Grid container justify="center" alignItems="center" style={{ margin: 20 }}>
+                                <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                    style={state.age == '6 months–5 years' ? { backgroundColor: '#3C76EF', width: '18%' } : { backgroundColor: '#8DADF0', }}
+                                    color="primary"
+                                    startIcon={state.age == '6 months–5 years' ? <CheckRoundedIcon /> : null}
+                                    onClick={() =>
+                                        setState({ ...state, age: '6 months–5 years' })
+                                    }>
+                                    6 months–5 years
+                             </Button>
+
+                                <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                    color="primary"
+                                    style={state.age == '6–17 years' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                    startIcon={state.age == '6–17 years' ? <CheckRoundedIcon /> : null}
+                                    onClick={() =>
+                                        setState({ ...state, age: '6–17 years' })
+                                    }
+                                >
+                                    6–17 years
+                        </Button>
+                                <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                    style={state.age == '18 years+' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                    color="primary"
+                                    startIcon={state.age == '18 years+' ? <CheckRoundedIcon /> : null}
+                                    onClick={() =>
+                                        setState({ ...state, age: '18 years+' })
+                                    }>
+                                    18 years+
+                             </Button>
+                            </Grid>
+                        </React.Fragment>
+                    }
+                    {state.difficultyBreathing == 'no' && state.age == '18 years+' &&
+                        < React.Fragment >
+                            <Grid item sm={9}>
+                                <Typography variant="h6" gutterBottom className={classes.text}>
                                     Are you experiencing <b>ANY</b> of the following symptoms?
                         </Typography>
                                 <Typography variant="h6" className={classes.listText}>
@@ -170,7 +211,59 @@ const SaTool = ({ history }) => {
                             </Grid>
                         </React.Fragment>
                     }
-                    {/* {state.difficultyBreathing == 'no' &&
+                    {state.difficultyBreathing == 'no' && state.age == '6–17 years' &&
+                        < React.Fragment >
+                            <Grid item sm={9}>
+                                <Typography variant="h6" gutterBottom className={classes.text}>
+                                    Does your child have <b>ANY</b> of the following symptoms?
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Fever (oral temperature 38.1°C (100.6°F) or higher)
+                            </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Sudden loss of sense of smell (anosmia) without nasal congestion, with or without loss of taste
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Recent cough or worsening of a chronic cough
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Shortness of breath
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Trouble breathing
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Sore throat
+                        </Typography>
+                                <Typography variant="h6" gutterBottom className={classes.listText}>
+                                    Runny nose or congestion (of unknown cause)
+                        </Typography>
+                            </Grid>
+                            <Grid container justify="center" alignItems="center" style={{ margin: 20 }}>
+                                <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                    style={state.symptomsSet1 == 'yes' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                    color="primary"
+                                    startIcon={state.symptomsSet1 == 'yes' ? <CheckRoundedIcon /> : null}
+                                    onClick={() =>
+                                        setState({ ...state, symptomsSet1: 'yes' })
+                                    }>
+                                    Yes
+                             </Button>
+
+                                <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                    color="primary"
+                                    style={state.symptomsSet1 == 'no' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                    startIcon={state.symptomsSet1 == 'no' ? <CheckRoundedIcon /> : null}
+                                    onClick={() =>
+                                        setState({ ...state, symptomsSet1: 'no' })
+                                    }
+                                >
+                                    No
+                        </Button>
+                            </Grid>
+                        </React.Fragment>
+                    }
+                    {state.difficultyBreathing == 'no' && state.age == '6 months–5 years' &&
                         <React.Fragment>
                             <Grid item sm={9}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
@@ -224,12 +317,64 @@ const SaTool = ({ history }) => {
                         </Button>
                             </Grid>
                         </React.Fragment>
-                    } */}
-                    {state.symptomsSet1 == 'no' &&
+                    }
+                    {state.symptomsSet1 == 'no' && state.age == '18 years+' &&
                         <React.Fragment>
                             <Grid item sm={9}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
                                     Are you experiencing <b>at least 2</b> of the following symptoms?
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Stomach aches
+                            </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Nausea or vomiting
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Diarrhea
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Major fatigue
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Significant loss of appetite
+                        </Typography>
+                                <Typography variant="h6" className={classes.listText}>
+                                    Generalized muscle pain (not related to physical exertion)
+                        </Typography>
+                                <Typography variant="h6" gutterBottom className={classes.listText}>
+                                    Headache
+                        </Typography>
+                            </Grid>
+                            <Grid container justify="center" alignItems="center" style={{ margin: 20 }}>
+                                <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                    style={state.symptomsSet2 == 'yes' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                    color="primary"
+                                    startIcon={state.symptomsSet2 == 'yes' ? <CheckRoundedIcon /> : null}
+                                    onClick={() =>
+                                        setState({ ...state, symptomsSet2: 'yes' })
+                                    }>
+                                    Yes
+                             </Button>
+
+                                <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                    color="primary"
+                                    startIcon={state.symptomsSet2 == 'no' ? <CheckRoundedIcon /> : null}
+                                    style={state.symptomsSet2 == 'no' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                    onClick={() =>
+                                        setState({ ...state, symptomsSet2: 'no' })
+                                    }
+                                >
+                                    No
+                        </Button>
+                            </Grid>
+                        </React.Fragment>
+                    }
+                    {state.symptomsSet1 == 'no' && state.age == '6–17 years' &&
+                        < React.Fragment >
+                            <Grid item sm={9}>
+                                <Typography variant="h6" gutterBottom className={classes.text}>
+                                    Does your child have any <b>at least 2</b> of the following symptoms?
                         </Typography>
                                 <Typography variant="h6" className={classes.listText}>
                                     Stomach aches
@@ -286,11 +431,20 @@ const SaTool = ({ history }) => {
                             color="primary"
                             style={{ width: '20%' }}
                             onClick={() =>
-                                history.push('/patient')
-                            }
-                            disabled={state.difficultyBreathing == 'yes' ? false : state.symptomsSet1 == 'yes' ? false : state.symptomsSet2.length == 0 }
+                                postAssessment(state.difficultyBreathing, state.age, state.symptomsSet1, state.symptomsSet2).
+                                    then(async function (response) {
+                                        window.alert('Your assessment has been submitted.')
+                                        if (response) {
+                                            let assesmentData = await getPreviousAssessmentData();
+                                            history.push({
+                                                pathname: '/patient',
+                                                state: { detail: response, assesmentData: assesmentData }
+                                            })
+                                        }
+                                    })}
+                            disabled={state.difficultyBreathing == 'yes' ? false : state.symptomsSet1 == 'yes' ? false : state.symptomsSet2.length == 0}
                         >
-                            submit
+                            Submit
                              </Button>
                     </Grid>
 
@@ -310,12 +464,10 @@ const useStyles = makeStyles((theme) => ({
         overflowY: 'scroll'
     },
     text: {
-        fontFamily: 'ProductSans'
+         
     },
     listText: {
-        fontFamily: 'ProductSans',
         marginLeft: 20
-
     },
     paper: {
         height: 230,
@@ -331,26 +483,26 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-        fontFamily: 'ProductSans'
+         
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-        fontFamily: 'ProductSans'
+         
         // marginTop: '15%'
     },
     navBot: {
         color: 'white',
         margin: '5%',
         marginLeft: '12%',
-        marginTop: '50%'
+        marginTop: '180%'
 
     },
     loginBtn: {
         // color:'#3C76EF'
         width: '15%',
-
+        textTransform: 'none',
         color: 'white',
         boxShadow: 'none'
     },
@@ -365,13 +517,13 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-        fontFamily: 'ProductSans'
+         
 
     },
     cardText: {
         color: '#3C4161',
         textAlign: 'center',
         marginTop: '2%',
-        fontFamily: 'ProductSans'
+         
     }
 }));

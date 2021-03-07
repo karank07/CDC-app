@@ -25,39 +25,37 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import moment from 'moment';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { getPatientList } from '../api/Api';
+import { postScheduleAppointment, getListForReview, postReviewAssessment } from '../api/Api';
 
 import back from '../assets/Images/Subtract.svg';
 import pds1 from '../assets/Images/pds1.png'
 
-const testrows = [
-    createData('Frozen yoghurt', 159),
-    createData('Ice cream sandwich', 237,),
-    createData('Eclair', 262,),
-    createData('Cupcake', 305,),
-    createData('Gingerbread', 356),
-];
-function createData(name, dateOfBirth, email, phone, address) {
-    return { name, dateOfBirth, email, phone, address };
-}
-const PatientList = ({ history }) => {
+
+const AppointmentScheduler = ({ history }) => {
     const classes = useStyles();
     const [state, setState] = React.useState({
         // firstName: history.location.state.detail.firstName,
         // lastName: history.location.state.detail.lastName,
+        date: '2021-03-11T10:30',
         patientList: []
     });
-    const fetchMyAPI = async () => {
-        let response = await getPatientList();
-        await setState({ ...state, patientList: response })
-    }
-    useEffect(() => {
-        fetchMyAPI()
-    }, [])
+    const handleChange = (prop) => (event) => {
+        setState({ ...state, [prop]: event.target.value });
+    };
+
+    // const fetchMyAPI = async () => {
+    //     let response = await getPatientList();
+    //     await setState({ ...state, patientList: response })
+    // }
+    // useEffect(() => {
+    //     fetchMyAPI()
+    // }, [])
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
@@ -79,8 +77,10 @@ const PatientList = ({ history }) => {
                                 pathname: '/nurse',
                                 state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
                             }} style={{ textDecoration: 'none', color: 'white' }}>Dashboard</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Patient-list'} style={{ textDecoration: 'none', color: 'white' }}>List of patients</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>Personal details</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={{
+                                pathname: '/Patient-list',
+                                state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                            }} style={{ textDecoration: 'none', color: 'white' }}>List of patients</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
                         </div>
@@ -88,50 +88,59 @@ const PatientList = ({ history }) => {
                 </div>
             </Grid>
 
-            <Grid item sm={9} style={{ marginLeft: '-3%', width: '100%' }}>
+            <Grid item sm={9} style={{ marginLeft: '-3%', width: '100%', height: '95%' }}>
                 <Grid
                     container
                     direction="row"
                     style={{ marginTop: '4%', height: '80%' }}>
                     <Grid item sm={7} style={{ height: '10%' }}>
-                        <Typography variant="h3" gutterBottom className={classes.text}>
-                            List of patients
+                        <Typography gutterBottom style={{ fontSize: 54 }} className={classes.text}>
+                            Schedule An Appointment for
                             </Typography>
                     </Grid>
-                    {/* <Grid item sm={7} style={{ marginTop: 10, height: '10%' }}>
+                    <Grid item sm={7} style={{ marginTop: 30, height: '10%' }}>
                         <Typography variant="h4" gutterBottom className={classes.text}>
-                            search bar
+                            {history.location.state.name}
                         </Typography>
-                    </Grid> */}
+                    </Grid>
                     <Grid item sm={11} style={{ height: '100%' }}>
-                        <Grid container justify='center' alignItems='center' style={{ backgroundColor: '#F2F6F8', borderRadius: 30 }}>
+                        <Grid container justify='space-evenly' alignItems='center' direction='column' style={{ height: '70%', backgroundColor: '#F2F6F8', borderRadius: 30, padding: 40 }}>
+                            <Typography variant="h5" gutterBottom className={classes.text}>
+                                Here, You can schedule an appointment of patient with you on the specific and date and time. Patient will be notified once the appointment is scheduled.
+                            </Typography>
 
-                            <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, margin: 20 }}>
-                                <Table className={classes.table} size="medium" aria-label="a dense table">
-                                    <TableHead>
-                                        <TableRow style={{ backgroundColor: '#F2F6F8', borderRadius: 10 }}>
-                                            <TableCell className={classes.tableText}>Name</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Date of Birth</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Email ID</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Phone number</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Address</TableCell>
-                                        </TableRow>
-                                    </TableHead>
-                                    <TableBody>
-                                        {state.patientList.map((row) => (
-                                            <TableRow key={row.name} >
-                                                <TableCell component="th" scope="row" className={classes.tableText}>
-                                                    {row.firstName + " " + row.lastName}
-                                                </TableCell>
-                                                <TableCell align="right" className={classes.tableText}>{moment(row.dateOfBirth).format('DD-MM-YYYY')}</TableCell>
-                                                <TableCell align="right" className={classes.tableText}>{row.email}</TableCell>
-                                                <TableCell align="right" className={classes.tableText}>{row.phone}</TableCell>
-                                                <TableCell align="right" className={classes.tableText}>{row.address}</TableCell>
-                                            </TableRow>
-                                        ))}
-                                    </TableBody>
-                                </Table>
-                            </TableContainer>
+                            <TextField
+                                id="date"
+                                label="Next appointment"
+                                type="datetime-local"
+                                variant='outlined'
+                                // defaultValue={state.date}
+                                value={state.date}
+                                className={classes.textField}
+                                onChange={handleChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                            <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
+                                style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10 }}
+                                onClick={() => postScheduleAppointment(state.date, history.location.state.id).
+                                    then(async function (response) {
+                                        window.alert('Appointment has been successfully scheduled')
+                                        if (response.appointment.scheduledAt) {
+                                            let isReviewed = await postReviewAssessment(false, false, true, history.location.state.id)
+                                            let patientData = await getListForReview();
+                                            history.push({
+                                                pathname: '/nurse',
+                                                state: { detail: history.location.state.detail, patientData }
+                                            })
+
+                                        }
+                                    }
+                                    )}
+                                color="primary">
+                                Schedule an appointment
+                                         </Button>
 
 
                         </Grid>
@@ -142,7 +151,7 @@ const PatientList = ({ history }) => {
     );
 }
 
-export default PatientList;
+export default AppointmentScheduler;
 
 
 const useStyles = makeStyles((theme) => ({

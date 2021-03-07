@@ -248,20 +248,20 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-        fontFamily: 'ProductSans'
+         
     },
     navTitle: {
         color: 'white',
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-        fontFamily: 'ProductSans'
+         
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-        fontFamily: 'ProductSans'
+         
         // marginTop: '15%'
     },
     navBot: {
@@ -269,7 +269,7 @@ const useStyles = makeStyles((theme) => ({
         margin: '5%',
         marginLeft: '12%',
         marginTop: '50%',
-        fontFamily: 'ProductSans'
+         
 
     },
     margin: {
@@ -286,12 +286,12 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#3C76EF',
         color: 'white',
         boxShadow: 'none',
-        fontFamily: 'ProductSans'
+         
     },
     signInBtn: {
         color: '#3C76EF',
         boxShadow: 'none',
-        fontFamily: 'ProductSans'
+         
     },
     textFieldTwo: {
         width: "30ch"

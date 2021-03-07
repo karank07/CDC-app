@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import { Home, Login, PatientReg, NurseReg, DoctorReg, PatientDS, NurseDS, SaTool, PatientList } from './components';
+import { Home, Login, PatientReg, NurseReg, DoctorReg, PatientDS, NurseDS, SaTool, PatientList, AppointmentScheduler } from './components';
 
 class App extends React.Component {
     render() {
@@ -21,6 +21,7 @@ class App extends React.Component {
                     <Route path="/nurse" component={NurseDS} exact />
                     <Route path="/Self-assessment" component={SaTool} exact />
                     <Route path="/Patient-list" component={PatientList} exact />
+                    <Route path="/schedule-appointment" component={AppointmentScheduler} exact />
                 </div >
             </Router>
         );
