@@ -124,7 +124,7 @@ const getAssessmentsToReview = asyncHandler(async (req, res) => {
       }
     }))
   } else {
-    res.json({ message: "No patients to review" });
+    res.json([]);
   }
 });
 
