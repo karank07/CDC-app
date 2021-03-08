@@ -1,7 +1,7 @@
 * {
     margin: 0;
     -ms-overflow-style: none;
-    font-family: 'product_sans_blackregular';
+    /* font-family: 'product_sansregular'; */
 }
 
 ::-webkit-scrollbar {

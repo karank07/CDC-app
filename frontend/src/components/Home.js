@@ -46,7 +46,7 @@ const Home = ({ history }) => {
                     direction="column"
                     justify="flex-start"
                     style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}>
-                    <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
+                    <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
                     <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom>
                         <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>Login</Link>
                     </Typography>
@@ -57,7 +57,7 @@ const Home = ({ history }) => {
                         <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Doctor</Link>
                     </Typography>
                     <Typography className={classes.navText} variant="h6" gutterBottom>
-                        <Link to={'/'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link>
+                        <Link style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link>
                     </Typography>
                 </Grid>
             </Grid>
@@ -68,7 +68,7 @@ const Home = ({ history }) => {
                     direction="row"
                     style={{ marginTop: '4%' }}>
                     <Grid item sm={6}>
-                        <Typography variant="h3" gutterBottom className={classes.text}>
+                        <Typography variant="h2" gutterBottom className={classes.title}>
                             Welcome to CDC
                         </Typography>
                         <Typography variant="h6" gutterBottom style={{ color: '#9296A6' }} className={classes.text}>
@@ -76,11 +76,11 @@ const Home = ({ history }) => {
                         </Typography>
                     </Grid>
                     <Grid item sm={4} >
-                        <Grid container style={{ marginTop: '-15%', marginLeft: '32%', backgroundImage: `url(${homeImg})`, backgroundRepeat: 'no-repeat', height: 429 }}>
+                        <Grid container style={{ marginTop: '-15%', marginLeft: '40%', backgroundImage: `url(${homeImg})`, backgroundRepeat: 'no-repeat', height: 429 }}>
                         </Grid>
                     </Grid>
-                    <Grid item sm={6} >
-                        <Typography variant="h5" gutterBottom style={{ marginTop: '-16%' }} className={classes.text}>
+                    <Grid item sm={7} >
+                        <Typography variant="h4" gutterBottom style={{ marginTop: '-14%' }} className={classes.title}>
                             COVID-19 Symptom Self-Assessment Tool
                         </Typography>
                         <Typography variant="h6" gutterBottom style={{ color: '#9296A6' }} className={classes.text}>
@@ -126,7 +126,7 @@ const Home = ({ history }) => {
                                         image={three}
                                         title="Respiratory symptoms"
                                     />
-                                    <Typography variant="body1" className={classes.cardTitle}>
+                                    <Typography variant="body1" className={classes.cardTitle} style={{ marginTop: '-2%' }}>
                                         Respiratory symptoms
                                     </Typography>
                                     <Typography variant="body2" className={classes.cardText}>
@@ -137,11 +137,11 @@ const Home = ({ history }) => {
                             <Card className={classes.paper}>
                                 <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                                     <CardMedia
-                                        style={{ height: 83, width: 65, marginLeft: '35%', marginTop: '5%' }}
+                                        style={{ height: 83, width: 65, marginLeft: '35%', marginTop: '3%' }}
                                         image={four}
                                         title="Gastrointestinal symptoms"
                                     />
-                                    <Typography variant="body1" className={classes.cardTitle} style={{ marginTop: '12%' }}>
+                                    <Typography variant="body1" className={classes.cardTitle} style={{ marginTop: '8%' }}>
                                         Gastrointestinal symptoms
                                     </Typography>
                                     <Typography variant="body2" className={classes.cardText}>
@@ -160,7 +160,7 @@ const Home = ({ history }) => {
                                     else
                                         history.push('/login')
                                 }
-
+                                
                                 }>
                                 Take Self Assessment
                              </Button>
@@ -190,7 +190,13 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-
+        fontFamily: 'product_sans_lightregular',
+        letterSpacing:'2%'
+    },
+    title: {
+        fontFamily: 'product_sans_blackregular',
+        color: '#3c4161',
+        letterSpacing: 0.4
     },
     paper: {
         height: 230,
@@ -206,13 +212,13 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-         
+        fontFamily: 'product_sans_blackregular'
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-         
+        fontFamily: 'product_sansbold'
         // marginTop: '15%'
     },
     navBot: {
@@ -221,13 +227,17 @@ const useStyles = makeStyles((theme) => ({
         color: 'white',
         margin: '5%',
         marginLeft: '12%',
-        marginTop: '50%'
-
+        marginTop: '50%',
+        fontFamily: 'product_sans_blackregular'
     },
     loginBtn: {
         // color:'#3C76EF'
         backgroundColor: '#3C76EF',
-        color: 'white'
+        color: 'white',
+        fontFamily: 'product_sans_lightregular',
+        textTransform: 'capitalize',
+        fontSize: 19,
+        
     },
     margin: {
         margin: theme.spacing(1)
@@ -240,13 +250,15 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-         
+        fontFamily: 'product_sans_blackregular',
+        fontSize: 19
 
     },
     cardText: {
-        color: '#3C4161',
+        color: '#787e91',
         textAlign: 'center',
         marginTop: '2%',
-         
+        fontFamily: 'product_sansregular',
+
     }
 }));

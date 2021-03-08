@@ -58,9 +58,9 @@ const Login = ({ history }) => {
                         <div >
                             <Typography className={classes.navTitle} variant="h3" gutterBottom> <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
                             <Typography className={classes.navTitle} style={{ marginTop: '50%' }} variant="h5" gutterBottom>Register as</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} style={{ textDecoration: 'none', color: 'white' }}>Patient</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse-register'} style={{ textDecoration: 'none', color: 'white' }}>Nurse</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/doctor-register'} style={{ textDecoration: 'none', color: 'white' }}>Doctor</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} className={classes.link}>Patient</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse-register'} className={classes.link}>Nurse</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/doctor-register'} className={classes.link}>Doctor</Link></Typography>
                             <Grid container direction='row' className={classes.navBot}>
                                 <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>
                                     <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon></Link>
@@ -81,7 +81,7 @@ const Login = ({ history }) => {
                     alignItems="center"
                     style={{ height: '100%' }}
                 >
-                    <Typography variant="h3" gutterBottom className={classes.text}>
+                    <Typography variant="h2" gutterBottom className={classes.title}>
                         Login
                     </Typography>
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
@@ -116,7 +116,7 @@ const Login = ({ history }) => {
                             labelWidth={70}
                         />
                     </FormControl>
-                    <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)} color="primary"
+                    <Button variant="contained" size="large" className={classes.loginBtn} color="primary"
                         onClick={() => loginPatient(state.userId, state.password).
                             then(async function (response) {
                                 if (response.token && response.type == 'patient') {
@@ -150,36 +150,46 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-        
+        fontFamily: 'product_sansregular'
+    },
+    title: {
+        fontFamily: 'product_sans_blackregular',
+        color: '#3c4161',
+        letterSpacing: 0.4
     },
     navTitle: {
         color: 'white',
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-        
+        fontFamily: 'product_sans_blackregular'
+    },
+    link: {
+        textDecoration: 'none', color: 'white', fontFamily: 'product_sansregular'
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-        
-        // marginTop: '15%'
+        fontFamily: 'product_sansregular'
     },
     navBot: {
         color: 'white',
         margin: '5%',
         marginLeft: '12%',
         marginTop: '50%',
-
+        fontFamily: 'product_sans_blackregular'
 
     },
     loginBtn: {
-        // color:'#3C76EF'
         backgroundColor: '#3C76EF',
         color: 'white',
         boxShadow: 'none',
-        
+        textTransform: 'capitalize',
+        fontFamily: 'product_sans_blackregular',
+        width: '25%',
+        marginTop: '5%',
+        fontSize: 19
     },
     margin: {
         margin: theme.spacing(1)

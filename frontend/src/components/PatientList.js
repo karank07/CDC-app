@@ -73,16 +73,38 @@ const PatientList = ({ history }) => {
                         justify="flex-start"
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
-                        <div >
-                            <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
-                            <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom><Link to={{
-                                pathname: '/nurse',
-                                state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
-                            }} style={{ textDecoration: 'none', color: 'white' }}>Dashboard</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Patient-list'} style={{ textDecoration: 'none', color: 'white' }}>List of patients</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>Personal details</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
+                        <div style={{ height: '100%' }}>
+                            <Grid
+                                container
+                                direction="column"
+                                justify="flex-start"
+                                style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
+                            >
+                                <Typography className={classes.navTitle} variant="h3" gutterBottom>
+                                    <Link to={'/'} className={classes.link}>CDC</Link></Typography>
+                                <Typography style={{ marginTop: '25%' }} className={classes.navText} variant="h6" gutterBottom>
+                                    <Link to={{
+                                        pathname: '/nurse',
+                                        state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                                    }}
+                                        className={classes.link} >
+                                        Dashboard
+                                        </Link>
+                                </Typography>
+                                <Typography className={classes.navText} variant="h6" gutterBottom><Link
+                                    style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}
+                                    to={{
+                                        pathname: '/Patient-list',
+                                        state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                                    }} className={classes.link}>List of patients</Link></Typography>
+                                <Typography className={classes.navText} variant="h6" gutterBottom>
+                                    <Link style={{ color: '#C0C0C0' }} className={classes.link}>Personal details</Link></Typography>
+                                <Typography className={classes.navText} variant="h6" gutterBottom>
+                                    <Link style={{ color: '#C0C0C0' }} className={classes.link}>About Us</Link></Typography>
+                                <Typography className={classes.navBot} variant="h6" gutterBottom>
+                                    <Link to={'/'} className={classes.link}>Logout</Link></Typography>
+
+                            </Grid>
                         </div>
                     </Grid>
                 </div>
@@ -94,7 +116,7 @@ const PatientList = ({ history }) => {
                     direction="row"
                     style={{ marginTop: '4%', height: '80%' }}>
                     <Grid item sm={7} style={{ height: '10%' }}>
-                        <Typography variant="h3" gutterBottom className={classes.text}>
+                        <Typography variant="h3" gutterBottom className={classes.title}>
                             List of patients
                             </Typography>
                     </Grid>
@@ -106,15 +128,19 @@ const PatientList = ({ history }) => {
                     <Grid item sm={11} style={{ height: '100%' }}>
                         <Grid container justify='center' alignItems='center' style={{ backgroundColor: '#F2F6F8', borderRadius: 30 }}>
 
-                            <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, margin: 20 }}>
-                                <Table className={classes.table} size="medium" aria-label="a dense table">
+                            <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, margin: 20, height: 700 }}>
+                                <Table stickyHeader className={classes.table} style={{ backgroundColor: 'transparent' }} size="medium" aria-label="a dense table">
                                     <TableHead>
                                         <TableRow style={{ backgroundColor: '#F2F6F8', borderRadius: 10 }}>
-                                            <TableCell className={classes.tableText}>Name</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Date of Birth</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Email ID</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Phone number</TableCell>
-                                            <TableCell align="right" className={classes.tableText}>Address</TableCell>
+                                            <TableCell style={{ fontFamily: 'product_sansbold' }} className={classes.tableText}>Name</TableCell>
+                                            <TableCell width='20%' align="right" style={{ fontFamily: 'product_sansbold' }} className={classes.tableText}>
+                                                Date of Birth</TableCell>
+                                            <TableCell align="right" style={{ fontFamily: 'product_sansbold' }} className={classes.tableText}>
+                                                Email ID</TableCell>
+                                            <TableCell width='20%' align="right" style={{ fontFamily: 'product_sansbold' }} className={classes.tableText}>
+                                                Phone number</TableCell>
+                                            <TableCell align="right" style={{ fontFamily: 'product_sansbold' }} className={classes.tableText}>
+                                                Address</TableCell>
                                         </TableRow>
                                     </TableHead>
                                     <TableBody>
@@ -150,7 +176,17 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-
+        fontFamily: 'product_sans_lightregular',
+        letterSpacing: 0.5,
+        lineHeight: 1.3
+    },
+    link: {
+        textDecoration: 'none', color: 'white', fontFamily: 'product_sansbold'
+    },
+    title: {
+        fontFamily: 'product_sans_blackregular',
+        color: '#3c4161',
+        letterSpacing: 0.4
     },
     description: {
         color: '#000000',
@@ -158,9 +194,11 @@ const useStyles = makeStyles((theme) => ({
         marginHorizontal: 20
     },
     tableText: {
+        textTransform: 'capitalize',
         color: '#3C4161',
         fontSize: 20,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'product_sansregular'
     },
     table: {
 
@@ -180,24 +218,21 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-         
+        fontFamily: 'product_sans_blackregular'
     },
+
     navText: {
         color: 'white',
         margin: '5%',
-        marginLeft: '20%',
-        fontWeight: 'black',
-         
-
-        // marginTop: '15%'
+        marginLeft: '15%',
+        fontFamily: 'product_sansbold'
     },
     navBot: {
-        position: 'absolute',
-        bottom: 10,
         color: 'white',
         margin: '5%',
-        marginLeft: '12%',
-        marginTop: '50%'
+        marginLeft: '15%',
+        marginTop: '40%',
+        fontFamily: 'product_sans_blackregular'
 
     },
     loginBtn: {
@@ -217,13 +252,13 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-         
+
 
     },
     cardText: {
         color: '#3C4161',
         textAlign: 'center',
         marginTop: '2%',
-         
+
     }
 }));

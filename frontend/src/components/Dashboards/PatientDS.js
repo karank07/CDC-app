@@ -70,14 +70,16 @@ const PatientDS = ({ history }) => {
                         justify="flex-start"
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
-                        <div >
-                            <Typography className={classes.navTitle} variant="h3" gutterBottom>CDC</Typography>
-                            <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: 'white' }}>Dashboard</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Self-assessment'} style={{ textDecoration: 'none', color: 'white' }}>Take self assessment</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>Personal details</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} onClick={() => logout()} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
-                        </div>
+
+                        <Typography className={classes.navTitle} variant="h3" gutterBottom> <Link to={'/patient'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
+                        <Typography style={{ marginTop: '30%' }} className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} className={classes.link}>Dashboard</Link></Typography>
+                        <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Self-assessment'} className={classes.link}>Take self<br></br> assessment</Link></Typography>
+                        <Typography className={classes.navText} variant="h6" gutterBottom><Link style={{ color: '#C0C0C0' }} className={classes.link}>Personal <br />details</Link></Typography>
+                        <Typography className={classes.navText} variant="h6" gutterBottom>
+                            <Link style={{ color: '#C0C0C0' }} className={classes.link}>About Us</Link>
+                        </Typography>
+                        <Typography className={classes.navBot} variant="h6" gutterBottom><Link to={'/'} onClick={() => logout()} className={classes.link}>Logout</Link></Typography>
+
                     </Grid>
                 </div>
             </Grid>
@@ -91,7 +93,7 @@ const PatientDS = ({ history }) => {
                         <Grid
                             container
                             direction="row">
-                            <Typography variant="h3" gutterBottom className={classes.text}>
+                            <Typography variant="h2" gutterBottom className={classes.title}>
                                 Hello, {state.firstName}
                             </Typography>
                             <Typography variant="h6" gutterBottom style={{ color: '#9296A6' }} className={classes.text}>
@@ -103,7 +105,7 @@ const PatientDS = ({ history }) => {
 
                     {state.assessmentData.length > 0 && 'appointment' in state.assessmentData[0] && state.assessmentData[0].appointment.length > 0 ?
                         (
-                            <Grid item sm={11} style={{ height: '40%' }}>
+                            <Grid item sm={11} style={{ height: '40%', marginTop: '3%' }}>
                                 <Grid container justify="flex-start"
                                     alignContent="center"
                                     direction="row"
@@ -113,6 +115,7 @@ const PatientDS = ({ history }) => {
                                         fontWeight: 'bold',
                                         fontSize: 28,
                                         // lineHeight: 46,
+                                        fontFamily: 'product_sansbold',
                                         margin: 20,
                                         marginLeft: '5%',
                                         letterSpacing: "0.01em",
@@ -139,7 +142,7 @@ const PatientDS = ({ history }) => {
 
 
                         (
-                            <Grid item sm={11} style={{ height: '40%', marginTop: '-10%' }}>
+                            <Grid item sm={11} style={{ height: '40%', marginBottom: '5%' }}>
                                 <Grid container justify="flex-start"
                                     alignContent="center"
                                     direction="row"
@@ -149,20 +152,24 @@ const PatientDS = ({ history }) => {
                                         fontWeight: 'bold',
                                         fontSize: 28,
                                         // lineHeight: 46,
+                                        fontFamily: 'product_sansbold',
                                         margin: 20,
-                                        marginLeft: '5%',
                                         marginTop: '10%',
+                                        marginLeft: '5%',
                                         letterSpacing: "0.01em",
                                         overflow: 'visible',
                                         color: '#3C4161',
                                     }}>
                                         Take COVID-19 symptoms self assessment
-                            </Typography>
+                                </Typography>
                                     <Grid container>
                                         <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
                                             style={{ borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%', backgroundColor: '#3C4161', color: 'white' }}
                                             // color="primary"
-                                            onClick={() => history.push('/Self-assessment')}
+                                            onClick={() => history.push({
+                                                pathname: '/Self-assessment',
+                                                state: { detail: history.location.state.detail }
+                                            })}
                                         >
                                             Take Self Assessment
                              </Button>
@@ -171,7 +178,7 @@ const PatientDS = ({ history }) => {
                             </Grid>
                         )}
                     <Grid item sm={10} style={{ height: '40%', marginTop: '-4%' }}>
-                        <Typography variant="h4" gutterBottom className={classes.text}>
+                        <Typography variant="h5" gutterBottom className={classes.title}>
                             Previous Assessments
                         </Typography>
                         <Grid container justify="space-evenly" alignItems='center'>
@@ -180,23 +187,23 @@ const PatientDS = ({ history }) => {
                             {state.assessmentData.length > 0 ? state.assessmentData.map((data) => (
                                 <Card className={classes.paper}>
                                     <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-                                        <Typography variant="body2" style={{ marginTop: '5%' }} className={classes.cardText}>
+                                        <Typography variant="body2" style={{ marginTop: '15%' }} className={classes.cardText}>
                                             Assessment taken on
                                     </Typography>
                                         <Typography variant="body1" className={classes.cardTitle}>
                                             {moment(data.createdAt).format('DD-MMMM-YYYY')}
                                         </Typography>
-                                        <Typography variant="body2" className={classes.cardText}>
+                                        <Typography variant="body2" className={classes.cardText} style={{ marginTop: '15%' }}>
                                             Result
                                     </Typography>
                                         <Typography variant="body1" className={classes.cardTitle}>
-                                            {data.isReviewed ==false ? 'Pending' : data.isForwarded ? 'Pending' : data.isRejected ? 'Safe' : data.appointment.length == 0 ? 'Appointment Cancelled' : 'Got an appointment'}
+                                            {data.isReviewed == false ? 'Pending' : data.isForwarded ? 'Pending' : data.isRejected ? 'Safe' : data.appointment.length == 0 ? 'Appointment Cancelled' : 'Got an appointment'}
                                         </Typography>
 
                                     </CardContent>
                                 </Card>
                             ))
-                                : <Typography variant="h6" gutterBottom style={{ color: '#9296A6', marginTop:'5%' }} className={classes.text}>
+                                : <Typography variant="h6" gutterBottom style={{ color: '#9296A6', marginTop: '5%' }} className={classes.text}>
                                     You do not have any previous assessments, start by  clicking on 'Take self assessment'.
                                </Typography>
                             } {state.assessmentData.length > 0 &&
@@ -242,25 +249,20 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-        fontFamily: 'DotGothic16'
+        fontFamily: 'product_sans_lightregular',
+        letterSpacing: '2%'
     },
-    cardTitle: {
-        marginTop: '8%',
-        color: '#3C4161',
-        textAlign: 'center',
-        fontWeight: 'bold',
-
-
+    link: {
+        textDecoration: 'none', color: 'white', fontFamily: 'product_sansbold'
     },
-    cardText: {
-        color: '#3C4161',
-        textAlign: 'center',
-        marginTop: '2%',
-
+    title: {
+        fontFamily: 'product_sans_blackregular',
+        color: '#3c4161',
+        letterSpacing: 0.4
     },
     paper: {
-        height: 200,
-        width: 200,
+        height: 230,
+        width: 230,
         borderRadius: 12,
         alignItems: 'center',
         justifyContent: 'center',
@@ -272,31 +274,34 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-
+        fontFamily: 'product_sans_blackregular'
     },
+    
     navText: {
         color: 'white',
         margin: '5%',
-        marginLeft: '13%',
-        fontWeight: 'black',
-
-
-        // marginTop: '15%'
+        marginLeft: '15%',
+        fontFamily: 'product_sansbold'
     },
     navBot: {
-        position: 'absolute',
-        bottom: 10,
         color: 'white',
         margin: '5%',
-        marginLeft: '12%',
-        marginTop: '50%'
+        marginLeft: '15%',
+        marginTop: '40%',
+        fontFamily: 'product_sans_blackregular'
 
     },
     loginBtn: {
-        // color:'#3C76EF'
         // backgroundColor: '#3C76EF',
-        color: '#3C4161',
-        border: '2px solid',
+        color: '#3c4161',
+        boxShadow: 'none',
+        textTransform: 'capitalize',
+        fontFamily: 'product_sansregular',
+        width: '25%',
+        marginTop: '5%',
+        fontSize: 19,
+        borderColor: '#3c4161',
+        borderWidth: 2
     },
     margin: {
         margin: theme.spacing(1)
@@ -305,17 +310,18 @@ const useStyles = makeStyles((theme) => ({
         width: "50ch"
     },
     cardTitle: {
-        marginTop: '8%',
+        marginTop: '1%',
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-
-
+        fontFamily: 'product_sans_blackregular',
+        fontSize: 19
     },
     cardText: {
-        color: '#3C4161',
+        color: '#3c4161',
         textAlign: 'center',
         marginTop: '2%',
-
+        fontSize: 18,
+        fontFamily: 'product_sans_lightregular',
     }
 }));

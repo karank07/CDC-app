@@ -69,13 +69,9 @@ const PatientReg = ({ history }) => {
                         <div >
                             <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
                             <Typography className={classes.navTitle} style={{ marginTop: '50%' }} variant="h5" gutterBottom>Register as</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} style={{ textDecoration: 'none', color: 'white' }}>Patient</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse-register'} style={{ textDecoration: 'none', color: 'white' }}>Nurse</Link></Typography>
-                            <Typography className={classes.navText} style={{
-                                borderBottom: 'solid',
-                                borderBottomWidth: '3px',
-                                borderBottomColor: 'white'
-                            }} variant="h6" gutterBottom>Doctor</Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} className={classes.link}>Patient</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse-register'} className={classes.link}>Nurse</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/doctor-register'} className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>Doctor</Link></Typography>
                             <Grid container direction='row' className={classes.navBot}>
                                 <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon>
                                 <Typography variant="h5" className={classes.text}><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Home</Link></Typography>
@@ -94,7 +90,7 @@ const PatientReg = ({ history }) => {
                     alignItems="center"
                     style={{ height: '100%' }}
                 >
-                    <Typography variant="h3" className={classes.text} gutterBottom style={{ marginBottom: '5%' }}>
+                    <Typography variant="h2" className={classes.title} gutterBottom style={{ marginBottom: '5%' }}>
                         Register
                     </Typography>
 
@@ -217,13 +213,16 @@ const PatientReg = ({ history }) => {
                             labelWidth={60}
                         />
                     </FormControl>
-                    <Grid container direction="row" justify="center" alignItems="center">
+                    <Grid container direction="row" justify="center" alignItems="center" style={{marginTop:'5%'}}>
                         <Link to={'/login'} style={{ textDecoration: 'none' }}>
                             <Button variant="text" size="large" className={clsx(classes.margin, classes.signInBtn)} color="primary"
                                 onClick={() => registerDoctor(state.emailId, state.firstName, state.lastName, state.password, state.dob, state.phoneNum, state.address, state.regNum).
                                     then(async function (response) {
-                                        if (response.token)
-                                            history.push('/patient')
+                                        if (response.token) {
+                                            window.alert('Registeration Successful')
+                                            // history.push('/patient')
+                                        }
+
                                     })} >
                                 Sign in instead
                             </Button>
@@ -248,20 +247,29 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-         
+        fontFamily: 'product_sansregular'
+    },
+    title: {
+        fontFamily: 'product_sans_blackregular',
+        color: '#3c4161',
+        letterSpacing: 0.4
+    },
+    link: {
+        textDecoration: 'none', color: 'white', fontFamily: 'product_sansregular'
     },
     navTitle: {
         color: 'white',
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-         
+        fontFamily: 'product_sans_blackregular'
+
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-         
+        fontFamily: 'product_sans_blackregular'
         // marginTop: '15%'
     },
     navBot: {
@@ -269,7 +277,7 @@ const useStyles = makeStyles((theme) => ({
         margin: '5%',
         marginLeft: '12%',
         marginTop: '50%',
-         
+        fontFamily: 'product_sans_blackregular'
 
     },
     margin: {
@@ -286,12 +294,19 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: '#3C76EF',
         color: 'white',
         boxShadow: 'none',
-         
+        fontFamily: 'product_sans_lightregular',
+        textTransform: 'capitalize',
+        paddingHorizontal:'5%',
+        width:'20%',
+        fontSize:19
+
     },
     signInBtn: {
         color: '#3C76EF',
         boxShadow: 'none',
-         
+        fontFamily: 'product_sans_lightregular',
+        textTransform: 'capitalize',
+        fontSize:19
     },
     textFieldTwo: {
         width: "30ch"

@@ -60,7 +60,7 @@ const SaTool = ({ history }) => {
         <Grid
             container
             className={classes.root}>
-            <Grid item xs={false} sm={3} >
+            {/* <Grid item xs={false} sm={3} >
                 <div style={{ height: '100%' }}>
                     <Grid
                         container
@@ -78,15 +78,25 @@ const SaTool = ({ history }) => {
                         </div>
                     </Grid>
                 </div>
-            </Grid>
-            <Grid item sm={9}>
+            </Grid> */}
+            <Grid item sm={12}>
+                <AppBar position="fixed" color='white' elevation={0}>
+                    <Toolbar>
+
+                        <Link to={'/'} style={{ textDecoration: 'none', color: '#364161' }}>
+                            <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon></Link>
+                        <Typography variant="h5" className={classes.text}><Link to={'/'} style={{ textDecoration: 'none', color: '#364161' }}>Home</Link>
+                        </Typography>
+
+                    </Toolbar>
+                </AppBar>
                 <Grid
                     container
                     direction="row"
                     justify="center"
                     alignContent="center"
-                    style={{ marginTop: '4%', }}>
-                    <Grid item sm={9}>
+                    style={{ marginTop: '8%', }}>
+                    <Grid item sm={8}>
                         <Typography variant="h6" gutterBottom className={classes.text}>
                             Are you having difficulty breathing? For example, do you feel like you’re out of breath or suffocating?
                         </Typography>
@@ -101,7 +111,7 @@ const SaTool = ({ history }) => {
                         <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
                             style={state.difficultyBreathing == 'yes' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
                             color="primary"
-                            startIcon={state.difficultyBreathing == 'yes' ? <CheckRoundedIcon /> : null}
+                            startIcon={state.difficultyBreathing == 'yes' ? <CheckRoundedIcon fontSize='large' color='#28c37f' /> : null}
                             onClick={() =>
                                 setState({ ...state, difficultyBreathing: 'yes' })
                             }>
@@ -120,7 +130,7 @@ const SaTool = ({ history }) => {
                     </Grid>
                     {state.difficultyBreathing == 'no' &&
                         <React.Fragment>
-                            <Grid item sm={9}>
+                            <Grid item sm={8}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
                                     Please select an age range
                         </Typography>
@@ -161,7 +171,7 @@ const SaTool = ({ history }) => {
                     }
                     {state.difficultyBreathing == 'no' && state.age == '18 years+' &&
                         < React.Fragment >
-                            <Grid item sm={9}>
+                            <Grid item sm={8}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
                                     Are you experiencing <b>ANY</b> of the following symptoms?
                         </Typography>
@@ -213,7 +223,7 @@ const SaTool = ({ history }) => {
                     }
                     {state.difficultyBreathing == 'no' && state.age == '6–17 years' &&
                         < React.Fragment >
-                            <Grid item sm={9}>
+                            <Grid item sm={8}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
                                     Does your child have <b>ANY</b> of the following symptoms?
                         </Typography>
@@ -265,7 +275,7 @@ const SaTool = ({ history }) => {
                     }
                     {state.difficultyBreathing == 'no' && state.age == '6 months–5 years' &&
                         <React.Fragment>
-                            <Grid item sm={9}>
+                            <Grid item sm={8}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
                                     Is your child experiencing <b>ANY</b> of the following symptoms?
                         </Typography>
@@ -320,7 +330,7 @@ const SaTool = ({ history }) => {
                     }
                     {state.symptomsSet1 == 'no' && state.age == '18 years+' &&
                         <React.Fragment>
-                            <Grid item sm={9}>
+                            <Grid item sm={8}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
                                     Are you experiencing <b>at least 2</b> of the following symptoms?
                         </Typography>
@@ -372,7 +382,7 @@ const SaTool = ({ history }) => {
                     }
                     {state.symptomsSet1 == 'no' && state.age == '6–17 years' &&
                         < React.Fragment >
-                            <Grid item sm={9}>
+                            <Grid item sm={8}>
                                 <Typography variant="h6" gutterBottom className={classes.text}>
                                     Does your child have any <b>at least 2</b> of the following symptoms?
                         </Typography>
@@ -422,10 +432,11 @@ const SaTool = ({ history }) => {
                             </Grid>
                         </React.Fragment>
                     }
-                    <Grid container justify="center" alignItems="center" style={{ margin: 20 }}>
+                    <Grid container direction='column' justify="center" alignItems="center" style={{ margin: 20 }}>
                         <img
                             src={line} alt="circularProgress" style={{ marginBottom: 20 }}
                         />
+                        
                         <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
                             // style={{ backgroundColor: '#3C76EF', }}
                             color="primary"
@@ -438,7 +449,7 @@ const SaTool = ({ history }) => {
                                             let assesmentData = await getPreviousAssessmentData();
                                             history.push({
                                                 pathname: '/patient',
-                                                state: { detail: response, assesmentData: assesmentData }
+                                                state: { detail: history.location.state.detail, assesmentData: assesmentData }
                                             })
                                         }
                                     })}
@@ -464,10 +475,14 @@ const useStyles = makeStyles((theme) => ({
         overflowY: 'scroll'
     },
     text: {
-         
+        fontFamily: 'product_sansbold',
+        color: '#3c4161',
+        fontSize: 24
     },
     listText: {
-        marginLeft: 20
+        marginLeft: 20,
+        color: '#3c4161',
+        fontFamily: 'product_sansregular'
     },
     paper: {
         height: 230,
@@ -483,13 +498,13 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-         
+
     },
     navText: {
         color: 'white',
         margin: '5%',
         marginLeft: '20%',
-         
+
         // marginTop: '15%'
     },
     navBot: {
@@ -504,7 +519,8 @@ const useStyles = makeStyles((theme) => ({
         width: '15%',
         textTransform: 'none',
         color: 'white',
-        boxShadow: 'none'
+        boxShadow: 'none',
+        fontSize: 19
     },
     margin: {
         margin: theme.spacing(1)
@@ -517,13 +533,13 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-         
+
 
     },
     cardText: {
         color: '#3C4161',
         textAlign: 'center',
         marginTop: '2%',
-         
+
     }
 }));

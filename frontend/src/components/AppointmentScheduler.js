@@ -71,39 +71,39 @@ const AppointmentScheduler = ({ history }) => {
                         justify="flex-start"
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
-                        <div >
-                            <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
-                            <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom><Link to={{
-                                pathname: '/nurse',
-                                state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
-                            }} style={{ textDecoration: 'none', color: 'white' }}>Dashboard</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={{
-                                pathname: '/Patient-list',
-                                state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
-                            }} style={{ textDecoration: 'none', color: 'white' }}>List of patients</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse'} style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Logout</Link></Typography>
-                        </div>
+
+                        <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} className={classes.link} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
+                        <Typography style={{ marginTop: '30%' }} className={classes.navText} variant="h6" gutterBottom><Link to={{
+                            pathname: '/nurse',
+                            state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                        }} className={classes.link}>Dashboard</Link></Typography>
+                        <Typography className={classes.navText} variant="h6" gutterBottom><Link to={{
+                            pathname: '/Patient-list',
+                            state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                        }} className={classes.link}>List of patients</Link></Typography>
+                        <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse'} className={classes.link} style={{ color: '#C0C0C0' }}>About Us</Link></Typography>
+                        <Typography className={classes.navBot} variant="h6" gutterBottom><Link to={'/'} className={classes.link} style={{ color: 'white' }}>Logout</Link></Typography>
+
                     </Grid>
                 </div>
             </Grid>
 
-            <Grid item sm={9} style={{ marginLeft: '-3%', width: '100%', height: '95%' }}>
+            <Grid item sm={9} style={{ marginLeft: '-3%', width: '100%', height: '95%', marginTop: '1.5%' }}>
                 <Grid
                     container
                     direction="row"
                     style={{ marginTop: '4%', height: '80%' }}>
                     <Grid item sm={7} style={{ height: '10%' }}>
-                        <Typography gutterBottom style={{ fontSize: 54 }} className={classes.text}>
+                        <Typography gutterBottom style={{ fontSize: 40, fontFamily: 'product_sans_lightregular', letterSpacing: 1, color: '#364161' }} className={classes.text}>
                             Schedule An Appointment for
                             </Typography>
                     </Grid>
-                    <Grid item sm={7} style={{ marginTop: 30, height: '10%' }}>
-                        <Typography variant="h4" gutterBottom className={classes.text}>
+                    <Grid item sm={7} style={{ marginTop: '-1%', height: '10%' }}>
+                        <Typography variant="h2" gutterBottom className={classes.title}>
                             {history.location.state.name}
                         </Typography>
                     </Grid>
-                    <Grid item sm={11} style={{ height: '100%' }}>
+                    <Grid item sm={11} style={{ height: 657, marginTop: '5%' }}>
                         <Grid container justify='space-evenly' alignItems='center' direction='column' style={{ height: '70%', backgroundColor: '#F2F6F8', borderRadius: 30, padding: 40 }}>
                             <Typography variant="h5" gutterBottom className={classes.text}>
                                 Here, You can schedule an appointment of patient with you on the specific and date and time. Patient will be notified once the appointment is scheduled.
@@ -111,10 +111,14 @@ const AppointmentScheduler = ({ history }) => {
 
                             <TextField
                                 id="date"
-                                label="Next appointment"
+                                // label="Next appointment"
                                 type="datetime-local"
                                 variant='outlined'
-                                // defaultValue={state.date}
+                                InputProps={{
+                                    classes: {
+                                        input: classes.textDate,
+                                    },
+                                }}
                                 value={state.date}
                                 className={classes.textField}
                                 onChange={handleChange}
@@ -123,7 +127,7 @@ const AppointmentScheduler = ({ history }) => {
                                 }}
                             />
                             <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
-                                style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10 }}
+                                style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10, marginTop: 30 }}
                                 onClick={() => postScheduleAppointment(state.date, history.location.state.id).
                                     then(async function (response) {
                                         window.alert('Appointment has been successfully scheduled')
@@ -159,20 +163,40 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh'
     },
     text: {
-
+        fontFamily: 'product_sansbold',
+        color: '#364161',
+        letterSpacing: 0.5,
+        lineHeight: 1.3
+    },
+    textDate: {
+        fontFamily: 'product_sansbold',
+        color: '#364161',
+        letterSpacing: 0.5,
+        lineHeight: 1.3,
+        fontSize: 19
+    },
+    link: {
+        textDecoration: 'none', color: 'white', fontFamily: 'product_sansbold'
+    },
+    title: {
+        fontFamily: 'product_sans_blackregular',
+        color: '#3c4161',
+        letterSpacing: 0.4
     },
     description: {
         color: '#000000',
         fontSize: 18,
-        marginHorizontal: 20
+        marginHorizontal: 20,
+        fontFamily: 'product_sans_lightregular'
     },
     tableText: {
+        textTransform: 'capitalize',
         color: '#3C4161',
         fontSize: 20,
-        textAlign: 'center'
+        textAlign: 'center',
+        fontFamily: 'product_sansregular'
     },
     table: {
-
         mixWidth: 450,
     },
     paper: {
@@ -189,31 +213,35 @@ const useStyles = makeStyles((theme) => ({
         margin: '10%',
         marginLeft: '15%',
         marginTop: '15%',
-         
+        fontFamily: 'product_sans_blackregular'
     },
+
     navText: {
         color: 'white',
         margin: '5%',
-        marginLeft: '20%',
-        fontWeight: 'black',
-         
-
-        // marginTop: '15%'
+        marginLeft: '15%',
+        fontFamily: 'product_sansbold'
     },
     navBot: {
-        position: 'absolute',
-        bottom: 10,
         color: 'white',
         margin: '5%',
-        marginLeft: '12%',
-        marginTop: '50%'
+        marginLeft: '15%',
+        marginTop: '70%',
+        fontFamily: 'product_sans_blackregular'
 
     },
     loginBtn: {
-        // color:'#3C76EF'
         // backgroundColor: '#3C76EF',
-        color: '#3C4161',
-        border: '2px solid',
+        color: '#3c4161',
+        boxShadow: 'none',
+        textTransform: 'capitalize',
+        fontFamily: 'product_sansbold',
+        width: '25%',
+        marginTop: '5%',
+        fontSize: 19,
+        letterSpacing: 0.4,
+        borderColor: '#3c4161',
+        borderWidth: 2
     },
     margin: {
         margin: theme.spacing(1)
@@ -226,13 +254,13 @@ const useStyles = makeStyles((theme) => ({
         color: '#3C4161',
         textAlign: 'center',
         fontWeight: 'bold',
-         
+        fontFamily: 'product_sans_blackregular',
 
     },
     cardText: {
         color: '#3C4161',
         textAlign: 'center',
         marginTop: '2%',
-         
+        fontFamily: 'product_sansregular'
     }
 }));
