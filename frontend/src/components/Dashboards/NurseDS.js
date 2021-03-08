@@ -29,7 +29,7 @@ import moment from 'moment';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { postReviewAssessment, postScheduleAppointment, getListForReview } from '../../api/Api';
+import { postReviewAssessment, postScheduleAppointment, getListForReview, logout } from '../../api/Api';
 
 import back from '../../assets/Images/Subtract.svg';
 import pds1 from '../../assets/Images/pds1.png'
@@ -50,7 +50,8 @@ const NurseDS = ({ history }) => {
     const [state, setState] = React.useState({
         firstName: history.location.state.detail.firstName,
         lastName: history.location.state.detail.lastName,
-        patientData: history.location.state.patientData ,
+        patientData: history.location.state.patientData,
+        // patientData: [],
         index: 0
     });
 
@@ -89,14 +90,14 @@ const NurseDS = ({ history }) => {
                             <Link to={'/nurse'} className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>Dashboard</Link></Typography>
                         <Typography className={classes.navText} variant="h6" gutterBottom><Link to={{
                             pathname: '/Patient-list',
-                            state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                            state: { detail: history.location.state.detail, patientData: state.patientData }
                         }} className={classes.link}>List of patients</Link></Typography>
                         <Typography className={classes.navText} variant="h6" gutterBottom>
                             <Link style={{ color: '#C0C0C0' }} className={classes.link}>Personal details</Link></Typography>
                         <Typography className={classes.navText} variant="h6" gutterBottom>
                             <Link style={{ color: '#C0C0C0' }} className={classes.link}>About Us</Link></Typography>
                         <Typography className={classes.navBot} variant="h6" gutterBottom>
-                            <Link to={'/'} className={classes.link}>Logout</Link></Typography>
+                            <Link to={'/'} onClick={() => logout()} className={classes.link}>Logout</Link></Typography>
 
                     </Grid>
                 </div>
@@ -106,7 +107,7 @@ const NurseDS = ({ history }) => {
                 <Grid
                     container
                     direction="row"
-                    style={{ marginTop: '4%', height: '100%' }}>
+                    style={{ marginTop: '4%', height: 800 }}>
                     <Grid item sm={7} style={{ height: '15%' }}>
                         <Grid
                             container
@@ -115,22 +116,34 @@ const NurseDS = ({ history }) => {
                                 Hello, {state.firstName}
                             </Typography>
                             <Typography variant="h6" gutterBottom style={{ color: '#9296A6', marginTop: '-2%', fontSize: 19 }} className={classes.text}>
-                                Welcome to your personal dashboard! Here, you can see the self-assessment reports of patients as well as schedule an appointment or reject the patient.
+                                Welcome to your personal dashboard! Click on the patient to review their assesments. You can also schedule an appointment, forward it to a doctor or reject it, to let the patient know there is nothing to worry.
                         </Typography>
                         </Grid>
                     </Grid>
-                    <Grid item sm={7} style={{ marginTop: '-4%', height: '5%' }}>
-                        <Typography style={{ fontSize: 28, fontFamily: 'product_sansbold' }} gutterBottom className={classes.title}>
+                    <Grid item sm={7} style={{ height: 20 }}>
+                        <Typography style={{ fontSize: 28, fontFamily: 'product_sansbold', marginTop: 20 }} gutterBottom className={classes.title}>
                             Self-assessment reports of patients
                         </Typography>
                     </Grid>
                     {state.patientData.length == 0 ?
-                        <Typography>No data</Typography>
+                        < Grid container justify='center' alignItems='center' direction='column' style={{ marginBottom: 10, width: '95%', height: 500, backgroundColor: '#F2F6F8', borderRadius: 30, }}>
+                            <Typography variant="h5" gutterBottom style={{ color: '#8e8e8e', letterSpacing: 0.7 }} className={classes.text}>There are no self assesment reports to show.</Typography>
+                        </ Grid>
                         :
 
-                        < Grid container justify='center' alignItems='center' direction='column' style={{ marginBottom: 10, width: '100%', height: '60%', backgroundColor: '#F2F6F8', borderRadius: 30, marginTop: '-7%' }}>
+                        < Grid container justify='center' alignItems='center' direction='column' style={{ marginBottom: 10, width: '100%', height: 550, backgroundColor: '#F2F6F8', borderRadius: 30, marginTop: 30 }}>
 
-                            <Grid container style={{ margin: 10, marginLeft: 20, width: '40%', height: '60%', }}>
+                            <Grid container style={{ margin: 10, marginLeft: 20, width: '40%', height: '80%', }}>
+                                {/* <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, marginLeft: 60 }}>
+                                    <Table className={classes.table} size="medium" aria-label="a dense table">
+                                        <TableHead>
+                                            <TableRow style={{ backgroundColor: '#F2F6F8', borderRadius: 10, }}>
+                                                <TableCell className={classes.tableText} style={{ fontFamily: 'product_sans_blackregular' }} >Name</TableCell>
+                                                <TableCell align="right" className={classes.tableText} style={{ fontFamily: 'product_sans_blackregular' }}>Assessment date</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                    </Table>
+                                </TableContainer> */}
                                 <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, height: '100%' }}>
                                     <Table className={classes.table} size="medium" aria-label="a dense table">
                                         <TableHead>
@@ -142,7 +155,7 @@ const NurseDS = ({ history }) => {
                                         <TableBody>
                                             {state.patientData.map((row, index) => (
 
-                                                < TableRow key={row.name} style={state.index == index ? { borderLeft: "solid 15px #364161", } : null}>
+                                                < TableRow key={row.name} style={state.index == index ? { borderLeft: 'solid 15px #364161', } : null}>
                                                     <TableCell component="th" scope="row" className={classes.tableText}>
                                                         <Button className={classes.tableText} style={{ border: 'none', backgroundColor: 'transparent', }} variant={'outlined'} fullWidth
                                                             onClick={() => setState({ ...state, index: index })}> {row.name}</Button>
@@ -206,12 +219,12 @@ const NurseDS = ({ history }) => {
                                         </Button>
                                     <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
                                         style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10, lineHeight: 1.3 }}
-                                        onClick={() => postReviewAssessment(true, false, true, state.patientData[state.index].assessment._id).
+                                        onClick={() => postReviewAssessment(true, false, false, state.patientData[state.index].assessment._id).
                                             then(async function (response) {
                                                 if (response.assessment.isForwarded) {
                                                     window.alert('Appointment has been successfully forwarded to a Doctor.')
                                                     let patientData = await getListForReview();
-                                                    setState({ ...state, patientData: patientData })
+                                                    setState({ ...state, index: 0, patientData: patientData })
                                                 }
                                             }
                                             )}
@@ -225,7 +238,7 @@ const NurseDS = ({ history }) => {
                                                 if (response.assessment.isRejected) {
                                                     window.alert('Appointment has been successfully rejected and the patient will be notified.')
                                                     let patientData = await getListForReview();
-                                                    setState({ ...state, patientData: patientData })
+                                                    setState({ ...state, index: 0, patientData: patientData })
                                                 }
                                             }
                                             )}

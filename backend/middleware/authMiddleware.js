@@ -20,8 +20,8 @@ const protect = asyncHandler(async (req, res, next) => {
       req.user =
         (await Patient.findById(decoded.id).select("-password")) ||
         (await Nurse.findById(decoded.id).select("-password")) ||
-        (await Doctor.findById(decoded.id).select("-password")) ||
-        (await Admin.findById(decoded.id).select("-password"));
+        (await Doctor.findById(decoded.id).select("-password"));
+        // ||(await Admin.findById(decoded.id).select("-password"));
 
       next();
     } catch (error) {

@@ -48,13 +48,13 @@ const Home = ({ history }) => {
                     style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}>
                     <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
                     <Typography style={{ marginTop: '50%' }} className={classes.navText} variant="h6" gutterBottom>
-                        <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>Login</Link>
+                        <Link to={{ pathname: '/login', state: { fromHome: false } }} style={{ textDecoration: 'none', color: 'white' }}>Login</Link>
                     </Typography>
                     <Typography className={classes.navText} variant="h6" gutterBottom>
-                        <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Nurse</Link>
+                        <Link to={{ pathname: '/login', state: { fromHome: false } }} style={{ textDecoration: 'none', color: 'white' }}>For Nurse</Link>
                     </Typography>
                     <Typography className={classes.navText} variant="h6" gutterBottom>
-                        <Link to={'/login'} style={{ textDecoration: 'none', color: 'white' }}>For Doctor</Link>
+                        <Link to={{ pathname: '/login', state: { fromHome: false } }} style={{ textDecoration: 'none', color: 'white' }}>For Doctor</Link>
                     </Typography>
                     <Typography className={classes.navText} variant="h6" gutterBottom>
                         <Link style={{ textDecoration: 'none', color: '#C0C0C0' }}>About Us</Link>
@@ -158,9 +158,9 @@ const Home = ({ history }) => {
                                     if (checkIfLogin())
                                         history.push('/self-assessment')
                                     else
-                                        history.push('/login')
+                                        history.push({ pathname: '/login', state: { fromHome: true } })
                                 }
-                                
+
                                 }>
                                 Take Self Assessment
                              </Button>
@@ -191,7 +191,7 @@ const useStyles = makeStyles((theme) => ({
     },
     text: {
         fontFamily: 'product_sans_lightregular',
-        letterSpacing:'2%'
+        letterSpacing: '2%'
     },
     title: {
         fontFamily: 'product_sans_blackregular',
@@ -237,7 +237,7 @@ const useStyles = makeStyles((theme) => ({
         fontFamily: 'product_sans_lightregular',
         textTransform: 'capitalize',
         fontSize: 19,
-        
+
     },
     margin: {
         margin: theme.spacing(1)
