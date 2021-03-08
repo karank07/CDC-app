@@ -48,6 +48,7 @@ const assessmentSchema = mongoose.Schema(
     },
     isForwarded:{
       type: Boolean,
+      default: false
     },
     isRejected:{
       type: Boolean
