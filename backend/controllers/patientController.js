@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Patient from "../Models/patientModel.js";
+import moment from "moment"
 
 //@desc get patient profile
 //@route GET /api/patients/profile
@@ -34,7 +35,7 @@ const updatePatientProfile = asyncHandler(async (req, res) => {
     user.lastName = req.body.lastName || user.lastName;
     user.phone = req.body.phone || user.phone;
     user.address = req.body.address || user.address;
-    user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+    user.dateOfBirth = moment(req.body.dateOfBirth).format() || user.dateOfBirth;
     user.email = req.body.email || user.email;
 
     const updatedUser = await user.save();
@@ -59,7 +60,7 @@ const updatePatientProfile = asyncHandler(async (req, res) => {
 //@route POST /api/patients/register
 //@access Public
 const registerPatient = asyncHandler(async (req, res) => {
-  const {
+  let {
     firstName,
     lastName,
     email,
@@ -88,7 +89,7 @@ const registerPatient = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Field required");
   }
-
+  dateOfBirth = moment(dateOfBirth).format()
   const patient = await Patient.create({
     firstName,
     lastName,

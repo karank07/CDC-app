@@ -2,13 +2,14 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Doctor from "../Models/doctorModel.js";
 import Patient from "../Models/patientModel.js";
+import moment from "moment"
 
 
 //@desc register new Doctor
 //@route POST /api/doctors/register
 //@access Public
 const registerDoctor = asyncHandler(async (req, res) => {
-  const {
+  let {
     firstName,
     lastName,
     email,
@@ -39,7 +40,7 @@ const registerDoctor = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Field required");
   }
-
+  dateOfBirth=moment(dateOfBirth).format()
   const doctor = await Doctor.create({
     firstName,
     lastName,
@@ -128,7 +129,7 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
   const newAppointment = {
     doctor: "" + req.user._id,
     doctorName: "Dr. " + req.user.firstName + " " + req.user.lastName,
-    scheduledAt: req.body.date,
+    scheduledAt: moment(req.body.date).format(),
   };
   if (patient) {
     const i = patient.assessments.findIndex((x) => x._id == req.params.id);

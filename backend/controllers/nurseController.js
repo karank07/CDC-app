@@ -2,6 +2,7 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Nurse from "../Models/nurseModel.js";
 import Patient from "../Models/patientModel.js";
+import moment from 'moment'
 
 //@desc get nurse profile
 //@route GET /api/nurses/profile
@@ -28,7 +29,7 @@ const getNurseProfile = asyncHandler(async (req, res) => {
 //@route POST /api/nurses/register
 //@access Public
 const registerNurse = asyncHandler(async (req, res) => {
-  const {
+  let {
     firstName,
     lastName,
     email,
@@ -59,7 +60,7 @@ const registerNurse = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Field required");
   }
-
+  dateOfBirth=moment(dateOfBirth).format()
   const nurse = await Nurse.create({
     firstName,
     lastName,
@@ -161,7 +162,7 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
   const newAppointment = {
     nurse: "" + req.user._id,
     nurseName: "" + req.user.firstName + " " + req.user.lastName,
-    scheduledAt: req.body.date,
+    scheduledAt: moment(req.body.date).format(),
   };
   if (patient) {
     const i = patient.assessments.findIndex((x) => x._id == req.params.id);
