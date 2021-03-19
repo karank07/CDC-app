@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, Route } from 'react-router-dom';
 import clsx from 'clsx';
 import Button from '@material-ui/core/Button';
@@ -56,6 +56,11 @@ const SaTool = ({ history }) => {
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
+    useEffect(() => {
+        if (history.location.state.assesmentData.length > 0 && history.location.state.assesmentData[0].isReviewed == false ) {
+            history.push({ pathname: '/patient', state: { detail: history.location.state.detail, assesmentData: history.location.state.assesmentData } })
+        }
+    }, [])
     return (
         <Grid
             container
@@ -80,12 +85,12 @@ const SaTool = ({ history }) => {
                 </div>
             </Grid> */}
             <Grid item sm={12}>
-                <AppBar position="fixed" color='white' elevation={0}>
+                <AppBar position="fixed" color='transparent' elevation={0}>
                     <Toolbar>
 
-                        <Link to={'/'} style={{ textDecoration: 'none', color: '#364161' }}>
+                        <Link to={{ pathname: '/patient', state: { detail: history.location.state.detail, assesmentData: history.location.state.assesmentData } }} style={{ textDecoration: 'none', color: '#364161' }}>
                             <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon></Link>
-                        <Typography variant="h5" className={classes.text}><Link to={'/'} style={{ textDecoration: 'none', color: '#364161' }}>Home</Link>
+                        <Typography variant="h5" className={classes.text}><Link to={{ pathname: '/patient', state: { detail: history.location.state.detail, assesmentData: history.location.state.assesmentData } }} style={{ textDecoration: 'none', color: '#364161' }}>Home</Link>
                         </Typography>
 
                     </Toolbar>
@@ -436,7 +441,7 @@ const SaTool = ({ history }) => {
                         <img
                             src={line} alt="circularProgress" style={{ marginBottom: 20 }}
                         />
-                        
+
                         <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
                             // style={{ backgroundColor: '#3C76EF', }}
                             color="primary"

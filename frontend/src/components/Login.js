@@ -58,7 +58,8 @@ const Login = ({ history }) => {
                         <div >
                             <Typography className={classes.navTitle} variant="h3" gutterBottom> <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
                             <Typography className={classes.navTitle} style={{ marginTop: '50%' }} variant="h5" gutterBottom>Register as</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} className={classes.link}>Patient</Link></Typography>
+                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={{ pathname: '/patient-register', state: { fromHome: history.location.state.fromHome } }}
+                                className={classes.link}>Patient</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse-register'} className={classes.link}>Nurse</Link></Typography>
                             <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/doctor-register'} className={classes.link}>Doctor</Link></Typography>
                             <Grid container direction='row' className={classes.navBot}>
@@ -121,7 +122,12 @@ const Login = ({ history }) => {
                             then(async function (response) {
                                 if (response.token && response.type == 'patient') {
                                     let assesmentData = await getPreviousAssessmentData();
-                                    history.push({
+                                    if (history.location.state.fromHome)
+                                        history.push({
+                                            pathname: '/Self-assessment',
+                                            state: { detail: response, assesmentData: assesmentData }
+                                        })
+                                    else history.push({
                                         pathname: '/patient',
                                         state: { detail: response, assesmentData: assesmentData }
                                     })

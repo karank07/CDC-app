@@ -71,14 +71,21 @@ const PatientDS = ({ history }) => {
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
 
-                        <Typography className={classes.navTitle} variant="h3" gutterBottom> <Link to={'/patient'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
-                        <Typography style={{ marginTop: '30%' }} className={classes.navText} variant="h6" gutterBottom><Link to={'/patient'} className={classes.link}>Dashboard</Link></Typography>
-                        <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/Self-assessment'} className={classes.link}>Take self<br></br> assessment</Link></Typography>
-                        <Typography className={classes.navText} variant="h6" gutterBottom><Link style={{ color: '#C0C0C0' }} className={classes.link}>Personal <br />details</Link></Typography>
+                        <Typography className={classes.navTitle} variant="h3" gutterBottom>
+                            <Link to={'/patient'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
+                        <Typography style={{ marginTop: '30%' }} className={classes.navText} variant="h6" gutterBottom>
+                            <Link to={'/patient'} className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>Dashboard</Link></Typography>
+                        {state.assessmentData.length > 0 && (state.assessmentData[0].isReviewed != false && state.assessmentData[0].appointment.length == 0) &&
+                            <Typography className={classes.navText} variant="h6" gutterBottom>
+                                <Link to={{ pathname: '/Self-assessment', state: { detail: history.location.state.detail, assesmentData: state.assessmentData } }} className={classes.link}>Take self assessment</Link></Typography>}
+
+                        <Typography className={classes.navText} variant="h6" gutterBottom>
+                            <Link style={{ color: '#C0C0C0' }} className={classes.link}>Personal details</Link></Typography>
                         <Typography className={classes.navText} variant="h6" gutterBottom>
                             <Link style={{ color: '#C0C0C0' }} className={classes.link}>About Us</Link>
                         </Typography>
-                        <Typography className={classes.navBot} variant="h6" gutterBottom><Link to={'/'} onClick={() => logout()} className={classes.link}>Logout</Link></Typography>
+                        <Typography className={classes.navBot} variant="h6" gutterBottom>
+                            <Link to={'/'} onClick={() => logout()} className={classes.link}>Logout</Link></Typography>
 
                     </Grid>
                 </div>
@@ -88,7 +95,7 @@ const PatientDS = ({ history }) => {
                 <Grid
                     container
                     direction="row"
-                    style={{ marginTop: '4%', height: '100%' }}>
+                    style={{ marginTop: '4%', height: 900 }}>
                     <Grid item sm={7} style={{ height: '10%' }}>
                         <Grid
                             container
@@ -138,8 +145,8 @@ const PatientDS = ({ history }) => {
                              </Button>
                                     </Grid>
                                 </Grid>
-                            </Grid>) :
-
+                            </Grid>)
+                        :
 
                         (
                             <Grid item sm={11} style={{ height: '40%', marginBottom: '5%' }}>
@@ -160,15 +167,15 @@ const PatientDS = ({ history }) => {
                                         overflow: 'visible',
                                         color: '#3C4161',
                                     }}>
-                                        Take COVID-19 symptoms self assessment
-                                </Typography>
+                                        {state.assessmentData.length > 0 && (state.assessmentData[0].isReviewed == false) ? 'Please wait for the assessment to be reviewed' : 'Take COVID-19 symptoms self assessment'}
+                                    </Typography>
                                     <Grid container>
                                         <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
-                                            style={{ borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%', backgroundColor: '#3C4161', color: 'white' }}
-                                            // color="primary"
+                                            disabled={state.assessmentData.length > 0 && state.assessmentData[0].isReviewed == false}
+                                            style={state.assessmentData.length > 0 && state.assessmentData[0].isReviewed == false ? { borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%', backgroundColor: '#8e8e8e', color: 'white' } : { borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%', backgroundColor: '#3C4161', color: 'white' }}
                                             onClick={() => history.push({
                                                 pathname: '/Self-assessment',
-                                                state: { detail: history.location.state.detail }
+                                                state: { detail: history.location.state.detail, assesmentData: state.assessmentData }
                                             })}
                                         >
                                             Take Self Assessment
@@ -182,9 +189,9 @@ const PatientDS = ({ history }) => {
                             Previous Assessments
                         </Typography>
                         <Grid container justify="space-evenly" alignItems='center'>
-                            {state.assessmentData.length > 0 &&
-                                <ArrowLeftIcon fontSize='large' />}
-                            {state.assessmentData.length > 0 ? state.assessmentData.map((data) => (
+                            {/* {state.assessmentData.length > 0 &&
+                                <ArrowLeftIcon fontSize='large' />} */}
+                            {state.assessmentData.length > 0 ? state.assessmentData.map((data, index) => index < 4 ? (
                                 <Card className={classes.paper}>
                                     <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
                                         <Typography variant="body2" style={{ marginTop: '15%' }} className={classes.cardText}>
@@ -197,40 +204,20 @@ const PatientDS = ({ history }) => {
                                             Result
                                     </Typography>
                                         <Typography variant="body1" className={classes.cardTitle}>
-                                            {data.isReviewed == false ? 'Pending' : data.isForwarded ? 'Pending' : data.isRejected ? 'Safe' : data.appointment.length == 0 ? 'Appointment Cancelled' : 'Got an appointment'}
+                                            {data.isReviewed == false ? 'Pending' : data.isForwarded ? 'Pending' : data.isRejected ? 'No signs of concern' : data.appointment.length == 0 ? 'Appointment Cancelled' : 'Appointment scheduled'}
                                         </Typography>
 
                                     </CardContent>
                                 </Card>
-                            ))
+                            ) : null)
                                 : <Typography variant="h6" gutterBottom style={{ color: '#9296A6', marginTop: '5%' }} className={classes.text}>
                                     You do not have any previous assessments, start by  clicking on 'Take self assessment'.
                                </Typography>
-                            } {state.assessmentData.length > 0 &&
-                                <ArrowRightIcon fontSize='large' />
                             }
-                            {/* <Card className={classes.paper}>
-                                <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
+                            {/* {state.assessmentData.length > 0 &&
+                                <ArrowRightIcon fontSize='large' />
+                            } */}
 
-                                    <Typography variant="body1" className={classes.cardTitle}>
-                                        Genral symptoms
-                                    </Typography>
-                                    <Typography variant="body2" className={classes.cardText}>
-                                        loss of smell or appetite, fatigue or muscle pain
-                                    </Typography>
-                                </CardContent>
-                            </Card>
-                            <Card className={classes.paper}>
-                                <CardContent style={{ height: '100%', justifyContent: 'center', alignItems: 'center' }}>
-
-                                    <Typography variant="body1" className={classes.cardTitle}>
-                                        Respiratory symptoms
-                                    </Typography>
-                                    <Typography variant="body2" className={classes.cardText}>
-                                        Cough, difficulty in breathing, Sore throat, Runny nose
-                                    </Typography>
-                                </CardContent>
-                            </Card> */}
                         </Grid>
                     </Grid>
                 </Grid>
@@ -261,6 +248,7 @@ const useStyles = makeStyles((theme) => ({
         letterSpacing: 0.4
     },
     paper: {
+        marginTop: '1%',
         height: 230,
         width: 230,
         borderRadius: 12,
@@ -276,18 +264,18 @@ const useStyles = makeStyles((theme) => ({
         marginTop: '15%',
         fontFamily: 'product_sans_blackregular'
     },
-    
+
     navText: {
         color: 'white',
         margin: '5%',
-        marginLeft: '15%',
+        marginLeft: '12%',
         fontFamily: 'product_sansbold'
     },
     navBot: {
         color: 'white',
         margin: '5%',
         marginLeft: '15%',
-        marginTop: '40%',
+        marginTop: '60%',
         fontFamily: 'product_sans_blackregular'
 
     },

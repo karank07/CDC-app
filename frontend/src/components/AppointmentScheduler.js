@@ -46,7 +46,7 @@ const AppointmentScheduler = ({ history }) => {
         patientList: []
     });
     const handleChange = (prop) => (event) => {
-        setState({ ...state, [prop]: event.target.value });
+        setState({ ...state, date: event.target.value });
     };
 
     // const fetchMyAPI = async () => {
@@ -75,11 +75,11 @@ const AppointmentScheduler = ({ history }) => {
                         <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} className={classes.link} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
                         <Typography style={{ marginTop: '30%' }} className={classes.navText} variant="h6" gutterBottom><Link to={{
                             pathname: '/nurse',
-                            state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                            state: { detail: history.location.state.detail, patientData: state.patientList }
                         }} className={classes.link}>Dashboard</Link></Typography>
                         <Typography className={classes.navText} variant="h6" gutterBottom><Link to={{
                             pathname: '/Patient-list',
-                            state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
+                            state: { detail: history.location.state.detail, patientData: state.patientList }
                         }} className={classes.link}>List of patients</Link></Typography>
                         <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse'} className={classes.link} style={{ color: '#C0C0C0' }}>About Us</Link></Typography>
                         <Typography className={classes.navBot} variant="h6" gutterBottom><Link to={'/'} className={classes.link} style={{ color: 'white' }}>Logout</Link></Typography>
@@ -121,7 +121,7 @@ const AppointmentScheduler = ({ history }) => {
                                 }}
                                 value={state.date}
                                 className={classes.textField}
-                                onChange={handleChange}
+                                onChange={handleChange()}
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -130,8 +130,9 @@ const AppointmentScheduler = ({ history }) => {
                                 style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10, marginTop: 30 }}
                                 onClick={() => postScheduleAppointment(state.date, history.location.state.id).
                                     then(async function (response) {
-                                        window.alert('Appointment has been successfully scheduled')
-                                        if (response.appointment.scheduledAt) {
+
+                                        if (response.message == true) {
+                                            window.alert('Appointment has been successfully scheduled')
                                             let isReviewed = await postReviewAssessment(false, false, true, history.location.state.id)
                                             let patientData = await getListForReview();
                                             history.push({
@@ -139,7 +140,7 @@ const AppointmentScheduler = ({ history }) => {
                                                 state: { detail: history.location.state.detail, patientData }
                                             })
 
-                                        }
+                                        } else window.alert(response.message)
                                     }
                                     )}
                                 color="primary">

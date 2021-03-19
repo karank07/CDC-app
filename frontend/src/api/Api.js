@@ -18,7 +18,7 @@ import {
 let token = null;
 
 export async function getAssessmentData() {
-  let responseData = getRequestWithHeader(PATIENT_PROFILE, token);
+  let responseData =await getRequestWithHeader(PATIENT_PROFILE, token);
   return responseData;
 }
 
@@ -31,23 +31,23 @@ export function logout() {
 }
 
 export async function getPreviousAssessmentData() {
-  let responseData = getRequestWithHeader(PREVIOUS_APPOINTMENT, token);
+  let responseData =await getRequestWithHeader(PREVIOUS_APPOINTMENT, token);
   return responseData;
 }
 
 
 export async function getListForReview() {
-  let responseData = getRequestWithHeader(REVIEW_ASSESSMENT, token);
+  let responseData =await getRequestWithHeader(REVIEW_ASSESSMENT, token);
   return responseData;
 }
 
 export async function cancelAppointment(id) {
-  let responseData = deleteRequest(CANCEL_APPOINTMENT + '/' + id, token);
+  let responseData =await deleteRequest(CANCEL_APPOINTMENT + '/' + id, token);
   return responseData;
 }
 
 export async function getPatientList() {
-  let responseData = getRequestWithHeader(PATIENT_LIST, token);
+  let responseData =await getRequestWithHeader(PATIENT_LIST, token);
   return responseData;
 }
 
@@ -58,7 +58,7 @@ export async function postAssessment(difficultyBreathing, age, symptomsSet1, sym
     symptomsSet1,
     symptomsSet2
   };
-  let responseData = postRequestWithHeader(POST_APPOINTMENT, data, token);
+  let responseData =await postRequestWithHeader(POST_APPOINTMENT, data, token);
   return responseData;
 }
 
@@ -68,7 +68,7 @@ export async function postReviewAssessment(isForwarded, isRejected, isReviewed, 
     isRejected,
     isReviewed
   };
-  let responseData = postRequestWithHeader(REVIEW_ASSESSMENT_BYID + '/' + id, data, token);
+  let responseData =await postRequestWithHeader(REVIEW_ASSESSMENT_BYID + '/' + id, data, token);
   return responseData;
 }
 
@@ -76,7 +76,7 @@ export async function postScheduleAppointment(date, id) {
   let data = {
     date
   };
-  let responseData = postRequestWithHeader(SCHEDULE_APPOINTMENT + '/' + id, data, token);
+  let responseData =await postRequestWithHeader(SCHEDULE_APPOINTMENT + '/' + id, data, token);
   return responseData;
 }
 
@@ -91,8 +91,8 @@ export async function registerPatient(email, firstName, lastName, password, date
     phone,
     address
   };
-  responseData = postRequest(PATIENT_REGISTER, data);
-  token = responseData.token;
+  responseData =await postRequest(PATIENT_REGISTER, data);
+  token = await responseData.token;
   return responseData;
 }
 
@@ -108,8 +108,8 @@ export async function registerNurse(email, firstName, lastName, password, dateOf
     address,
     registrationNum
   };
-  responseData = postRequest(NURSE_REGISTER, data);
-  token = responseData.token;
+  responseData =await postRequest(NURSE_REGISTER, data);
+  token = await responseData.token;
   return responseData;
 }
 
@@ -126,7 +126,7 @@ export async function registerDoctor(email, firstName, lastName, password, dateO
     address,
     registrationNum
   };
-  responseData = postRequest(DOCTOR_REGISTER, data);
+  responseData =await postRequest(DOCTOR_REGISTER, data);
   token = responseData.token;
   return responseData;
 }

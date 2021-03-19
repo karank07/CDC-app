@@ -88,7 +88,7 @@ const PatientReg = ({ history }) => {
                     direction="column"
                     justify="center"
                     alignItems="center"
-                    style={{ height: '100%' }}
+                    style={{ height: '100%', marginLeft:'8%' }}
                 >
                     <Typography variant="h2" className={classes.title} gutterBottom style={{ marginBottom: '5%' }}>
                         Register

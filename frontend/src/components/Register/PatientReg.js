@@ -91,7 +91,7 @@ const PatientReg = ({ history }) => {
                     direction="column"
                     justify="center"
                     alignItems="center"
-                    style={{ height: '100%' }}
+                    style={{ height: '100%', marginLeft: '8%' }}
                 >
                     <Typography variant="h2" gutterBottom className={classes.title} style={{ marginBottom: '5%' }}>
                         Register
@@ -219,7 +219,12 @@ const PatientReg = ({ history }) => {
                                         if (response.token) {
                                             window.alert('Resgisteration successful')
                                             let assesmentData = await getPreviousAssessmentData();
-                                            history.push({
+                                            if (history.location.state.fromHome)
+                                                history.push({
+                                                    pathname: '/Self-assessment',
+                                                    state: { detail: response, assesmentData: assesmentData }
+                                                })
+                                            else history.push({
                                                 pathname: '/patient',
                                                 state: { detail: response, assesmentData: assesmentData }
                                             })

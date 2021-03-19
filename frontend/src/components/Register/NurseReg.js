@@ -88,7 +88,7 @@ const PatientReg = ({ history }) => {
                     direction="column"
                     justify="center"
                     alignItems="center"
-                    style={{ height: '100%' }}
+                    style={{ height: '100%', marginLeft:'8%' }}
                 >
                     <Typography variant="h2" className={classes.title} gutterBottom style={{ marginBottom: '5%' }}>
                         Register
@@ -99,7 +99,7 @@ const PatientReg = ({ history }) => {
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>First Name</InputLabel>
                             <OutlinedInput
                                 autoFocus
-                                id="outlined-adornment-password"
+                                // id="outlined-adornment-password"
                                 type='text'
                                 value={state.firstName}
                                 onChange={handleChange('firstName')}
@@ -109,7 +109,7 @@ const PatientReg = ({ history }) => {
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Last Name</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
+                                // id="outlined-adornment-password"
                                 type='text'
                                 value={state.lastName}
                                 onChange={handleChange('lastName')}
@@ -120,7 +120,7 @@ const PatientReg = ({ history }) => {
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Nurse Registration Number</InputLabel>
                         <OutlinedInput
-                            id="outlined-adornment-password"
+                            // id="outlined-adornment-password"
                             type='text'
                             value={state.regNum}
                             onChange={handleChange('regNum')}
@@ -130,7 +130,7 @@ const PatientReg = ({ history }) => {
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Email Address</InputLabel>
                         <OutlinedInput
-                            id="outlined-adornment-password"
+                            // id="outlined-adornment-password"
                             type='text'
                             value={state.emailId}
                             onChange={handleChange('emailId')}
@@ -163,7 +163,7 @@ const PatientReg = ({ history }) => {
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Phone Number</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
+                                // id="outlined-adornment-password"
                                 type='text'
 
                                 value={state.phoneNum}
@@ -206,7 +206,7 @@ const PatientReg = ({ history }) => {
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Address</InputLabel>
                         <OutlinedInput
-                            id="outlined-adornment-password"
+                            // id="outlined-adornment-password"
                             type='text'
                             value={state.address}
                             onChange={handleChange('address')}

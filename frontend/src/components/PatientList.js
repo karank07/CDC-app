@@ -29,7 +29,7 @@ import moment from 'moment';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { getPatientList } from '../api/Api';
+import { getPatientList, logout } from '../api/Api';
 
 import back from '../assets/Images/Subtract.svg';
 import pds1 from '../assets/Images/pds1.png'
@@ -102,7 +102,7 @@ const PatientList = ({ history }) => {
                                 <Typography className={classes.navText} variant="h6" gutterBottom>
                                     <Link style={{ color: '#C0C0C0' }} className={classes.link}>About Us</Link></Typography>
                                 <Typography className={classes.navBot} variant="h6" gutterBottom>
-                                    <Link to={'/'} className={classes.link}>Logout</Link></Typography>
+                                    <Link to={'/'} className={classes.link} onClick={() => logout()}>Logout</Link></Typography>
 
                             </Grid>
                         </div>
