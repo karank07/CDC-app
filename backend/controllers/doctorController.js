@@ -146,4 +146,20 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerDoctor, getForwardedAssessments, reviewForwardedAssessment , scheduleAppointment };
+//@desc Get list of patients
+//@route GET /api/doctors/patient-list
+//@access Protected doctorAdmin
+const getPatientList = asyncHandler(async (req, res) => {
+  const keyword = req.query.keyword
+  ? {
+      name: {
+        $regex: req.query.keyword,
+        $options: 'i',
+      },
+    }
+  : {}
+  const patientList = await Patient.find({...keyword}).select("-password")
+  res.json(patientList)
+})
+
+export { registerDoctor, getForwardedAssessments, reviewForwardedAssessment , scheduleAppointment, getPatientList };
