@@ -105,7 +105,7 @@ const reviewForwardedAssessment = asyncHandler(async (req, res) => {
     const i = patient.assessments.findIndex((x) => x._id == req.params.id);
     patient.assessments[i].isReviewed = isReviewed;
     patient.assessments[i].isRejected = isRejected || false;
-    patient.assessments[i].isForwarded = isForwarded || false;
+    patient.assessments[i].isForwarded = true;
     const reviewedPatient = await patient.save();
     if (reviewedPatient) {
       res.json({
@@ -138,6 +138,7 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
       res.json({
         "patient._id": patient._id,
         appointment: updatedPatient.assessments[i].appointment[0],
+        "message":true
       });
     } else {
       res.status(400);
