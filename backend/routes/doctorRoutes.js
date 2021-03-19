@@ -8,5 +8,5 @@ router.post('/register',registerDoctor)
 router.route("/forwarded-assessments").get(protect,doctorAdmin,getForwardedAssessments)
 router.route("/review-assessments/:id").post(protect,doctorAdmin,reviewForwardedAssessment)
 router.route("/schedule-appointment/:id").post(protect,doctorAdmin,scheduleAppointment)
-router.route("/patient-list").get(doctorAdmin, getPatientList)
+router.route("/patient-list").get(protect,doctorAdmin, getPatientList)
 export default router
