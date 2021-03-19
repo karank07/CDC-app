@@ -100,7 +100,7 @@ const getForwardedAssessments = asyncHandler(async (req, res) => {
 //@access Protected
 const reviewForwardedAssessment = asyncHandler(async (req, res) => {
   const patient = await Patient.findOne({ "assessments._id": req.params.id });
-  const { isRejected, isForwarded, isReviewed } = req.body;
+  const { isRejected, isReviewed } = req.body;
   if (patient) {
     const i = patient.assessments.findIndex((x) => x._id == req.params.id);
     patient.assessments[i].isReviewed = isReviewed;
