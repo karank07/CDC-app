@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import Patient from "../Models/patientModel.js";
 import Nurse from "../Models/nurseModel.js";
 import Doctor from "../Models/doctorModel.js";
-// import Admin from "../Models/adminModel.js";
+import Admin from "../Models/adminModel.js";
 import asyncHandler from "express-async-handler";
 
 const protect = asyncHandler(async (req, res, next) => {
@@ -37,18 +37,18 @@ const protect = asyncHandler(async (req, res, next) => {
   }
 });
 
-// const admin = (req, res, next) => {
-//   if (
-//     req.user &&
-//     req.user.registrationNum &&
-//     req.user.registrationNum.charAt(0) === "A"
-//   ) {
-//     next();
-//   } else {
-//     res.status(400);
-//     throw new Error("Not authorized as an Admin");
-//   }
-// };
+const admin = (req, res, next) => {
+  if (
+    req.user &&
+    req.user.registrationNum &&
+    req.user.registrationNum.charAt(0) === "A"
+  ) {
+    next();
+  } else {
+    res.status(400);
+    throw new Error("Not authorized as an Admin");
+  }
+};
 
 const nurseAdmin = (req, res, next) => {
   if (
@@ -75,5 +75,5 @@ const doctorAdmin = (req, res, next) => {
   }
 };
 
-export { protect, nurseAdmin, doctorAdmin };
-// export admin
+export { protect, nurseAdmin, doctorAdmin , admin};
+
