@@ -91,7 +91,7 @@ const getForwardedAssessments = asyncHandler(async (req, res) => {
       })
     );
   } else {
-    res.json({ message: "No patients to review" });
+    res.json([]);
   }
 });
 
