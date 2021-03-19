@@ -46,6 +46,7 @@ const updatePatientProfile = asyncHandler(async (req, res) => {
       email: updatedUser.email,
       phone: updatedUser.phone,
       address: updatedUser.address,
+      message: true,
       token: generateToken(updatedUser._id),
     });
   } else {
