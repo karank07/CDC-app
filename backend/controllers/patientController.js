@@ -23,6 +23,37 @@ const getPatientProfile = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc Update Patient Profile
+//@route PUT /api/patients/profile
+//@access Protected
+const updatePatientProfile = asyncHandler(async (req, res) => {
+  const user = await Patient.findById(req.user._id);
+
+  if (user) {
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.phone = req.body.phone || user.phone;
+    user.address = req.body.address || user.address;
+    user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+    user.email = req.body.email || user.email;
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      dateOfBirth: updatedUser.dateOfBirth,
+      email: updatedUser.email,
+      phone: updatedUser.phone,
+      address: updatedUser.address,
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error("Patient not Found");
+  }
+});
+
 //@desc register new patient
 //@route POST /api/patients/register
 //@access Public
@@ -149,5 +180,6 @@ export {
   registerPatient,
   postPatientAssessment,
   getPatientPreviousAssessments,
-  cancelAppointment
+  cancelAppointment,
+  updatePatientProfile
 };
