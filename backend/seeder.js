@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import patients from "./data/patients.js";
+import admins from "./data/admins.js";
 import Patient from "./Models/patientModel.js";
+import Admin from "./Models/adminModel.js";
 
 dotenv.config();
 connectDB();
@@ -13,6 +15,7 @@ const importData = async () => {
 
     await Patient.insertMany(patients);
 
+    // await Admin.insertMany(admins)
 
     console.log("DATA IMPORTED...");
     process.exit();

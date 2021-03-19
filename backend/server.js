@@ -6,6 +6,7 @@ import loginRoute from "./routes/loginRoute.js";
 import patientRoutes from "./routes/patientRoutes.js";
 import nurseRoutes from "./routes/nurseRoutes.js";
 import doctorRoutes from "./routes/doctorRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js"
 
 
 dotenv.config();
@@ -22,6 +23,8 @@ app.use("/api/user/login", loginRoute);
 app.use("/api/patients", patientRoutes);
 app.use("/api/nurses", nurseRoutes);
 app.use("/api/doctors", doctorRoutes);
+app.use("/api/admins", adminRoutes);
+
 
 app.use(errorHandler);
 app.use(notFound);
