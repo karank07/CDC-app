@@ -2,8 +2,7 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Doctor from "../Models/doctorModel.js";
 import Patient from "../Models/patientModel.js";
-import moment from "moment"
-
+import moment from "moment";
 
 //@desc register new Doctor
 //@route POST /api/doctors/register
@@ -40,7 +39,7 @@ const registerDoctor = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Field required");
   }
-  dateOfBirth=moment(dateOfBirth).format()
+  dateOfBirth = moment(dateOfBirth).format();
   const doctor = await Doctor.create({
     firstName,
     lastName,
@@ -67,6 +66,39 @@ const registerDoctor = asyncHandler(async (req, res) => {
   } else {
     res.status(400);
     throw new Error("Invalid doctor data");
+  }
+});
+
+//@desc Update Doctor Profile
+//@route PUT /api/doctors/profile
+//@access Protected
+const updateDoctorProfile = asyncHandler(async (req, res) => {
+  const user = await Doctor.findById(req.user._id);
+
+  if (user) {
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.phone = req.body.phone || user.phone;
+    user.address = req.body.address || user.address;
+    user.dateOfBirth =
+      moment(req.body.dateOfBirth).format() || user.dateOfBirth;
+    user.email = req.body.email || user.email;
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      dateOfBirth: updatedUser.dateOfBirth,
+      email: updatedUser.email,
+      phone: updatedUser.phone,
+      address: updatedUser.address,
+      message: true,
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error("Patient not Found");
   }
 });
 
@@ -139,7 +171,7 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
       res.json({
         "patient._id": patient._id,
         appointment: updatedPatient.assessments[i].appointment[0],
-        "message":true
+        message: true,
       });
     } else {
       res.status(400);
@@ -153,15 +185,22 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
 //@access Protected doctorAdmin
 const getPatientList = asyncHandler(async (req, res) => {
   const keyword = req.query.keyword
-  ? {
-      name: {
-        $regex: req.query.keyword,
-        $options: 'i',
-      },
-    }
-  : {}
-  const patientList = await Patient.find({...keyword}).select("-password")
-  res.json(patientList)
-})
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
+  const patientList = await Patient.find({ ...keyword }).select("-password");
+  res.json(patientList);
+});
 
-export { registerDoctor, getForwardedAssessments, reviewForwardedAssessment , scheduleAppointment, getPatientList };
+export {
+  registerDoctor,
+  getForwardedAssessments,
+  reviewForwardedAssessment,
+  scheduleAppointment,
+  getPatientList,
+  updateDoctorProfile,
+};

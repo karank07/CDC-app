@@ -25,6 +25,38 @@ const getNurseProfile = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc Update Nurse Profile
+//@route PUT /api/nurses/profile
+//@access Protected
+const updateNurseProfile = asyncHandler(async (req, res) => {
+  const user = await Nurse.findById(req.user._id);
+
+  if (user) {
+    user.firstName = req.body.firstName || user.firstName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.phone = req.body.phone || user.phone;
+    user.address = req.body.address || user.address;
+    user.dateOfBirth = moment(req.body.dateOfBirth).format() || user.dateOfBirth;
+    user.email = req.body.email || user.email;
+
+    const updatedUser = await user.save();
+    res.json({
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      lastName: updatedUser.lastName,
+      dateOfBirth: updatedUser.dateOfBirth,
+      email: updatedUser.email,
+      phone: updatedUser.phone,
+      address: updatedUser.address,
+      message: true,
+      token: generateToken(updatedUser._id),
+    });
+  } else {
+    res.status(404);
+    throw new Error("Nurse not Found");
+  }
+});
+
 //@desc register new Nurse
 //@route POST /api/nurses/register
 //@access Public
@@ -191,5 +223,6 @@ export {
   getAssessmentsToReview,
   reviewAssessment,
   scheduleAppointment,
-  getPatientList
+  getPatientList,
+  updateNurseProfile
 };
