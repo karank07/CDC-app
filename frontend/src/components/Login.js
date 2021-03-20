@@ -15,15 +15,32 @@ import TextField from '@material-ui/core/TextField';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import back from '../assets/Images/Subtract.svg';
 import { styles } from '@material-ui/pickers/views/Calendar/Calendar';
-
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { loginPatient, getPreviousAssessmentData, getListForReview } from '../api/Api';
+import { loginPatient, getPreviousAssessmentData, getListForReview, getForwardedAssessmentData } from '../api/Api';
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const Login = ({ history }) => {
     const classes = useStyles();
+    
+    const [error, setError] = React.useState(false);
+
+    const handleClickError = () => {
+        setError(true);
+    };
+    
+    const handleCloseError = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setError(false);
+    };
     const [state, setState] = React.useState({
         userId: "",
         password: "",
@@ -80,7 +97,7 @@ const Login = ({ history }) => {
                     direction="column"
                     justify="center"
                     alignItems="center"
-                    style={{ height: '100%' }}
+                    style={{ height: '100%',marginLeft:'10%' }}
                 >
                     <Typography variant="h2" gutterBottom className={classes.title}>
                         Login
@@ -121,29 +138,47 @@ const Login = ({ history }) => {
                         onClick={() => loginPatient(state.userId, state.password).
                             then(async function (response) {
                                 if (response.token && response.type == 'patient') {
-                                    let assesmentData = await getPreviousAssessmentData();
+                                    
+                                    let assessmentData = await getPreviousAssessmentData();
                                     if (history.location.state.fromHome)
                                         history.push({
                                             pathname: '/Self-assessment',
-                                            state: { detail: response, assesmentData: assesmentData }
+                                            state: { detail: response, assessmentData: assessmentData }
                                         })
                                     else history.push({
                                         pathname: '/patient',
-                                        state: { detail: response, assesmentData: assesmentData }
+                                        state: { detail: response, assessmentData: assessmentData }
                                     })
                                 } else if (response.token && response.type == 'nurse') {
+                                    
                                     let patientData = await getListForReview();
                                     history.push({
                                         pathname: '/nurse',
                                         state: { detail: response, patientData }
                                     })
-                                }
+                                } else if (response.token && response.type == 'doctor') {
+                                    
+                                    let patientData = await getForwardedAssessmentData();
+                                    history.push({
+                                        pathname: '/doctor',
+                                        state: { detail: response, patientData }
+                                    })
+                                } else handleClickError()
                             }
                             )}>
                         Login
                 </Button>
+                    <Typography variant="h6" gutterBottom style={{ color: '#8e8e8e', marginTop: 20 }} className={classes.text}>
+                        New User? Check 'Register As' section
+                    </Typography>
                 </Grid>
             </Grid>
+            <Snackbar open={error} autoHideDuration={4000} onClose={handleCloseError}>
+                <Alert onClose={handleCloseError} severity="error">
+                    Please check Email and Password again.
+            </Alert>
+            </Snackbar>
+            
         </Grid >
     );
 }

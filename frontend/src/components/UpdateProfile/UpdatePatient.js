@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-
 import clsx from 'clsx';
+
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -19,15 +19,19 @@ import DateFnsUtils from '@date-io/date-fns';
 import MuiAlert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import line from '../../assets/Images/navline.png';
+
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import back from '../../assets/Images/Subtract.svg';
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/pickers';
 
-import { registerDoctor, getForwardedAssessmentData } from '../../api/Api';
+import { updatePatient, getPreviousAssessmentData, logout } from '../../api/Api';
+
 
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
 function validateName(name) {
     if (name.length == 0)
         return true;
@@ -47,7 +51,7 @@ function validateEmail(email) {
     const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(String(email).toLowerCase());
 }
-const DoctorReg = ({ history }) => {
+const UpdatePatient = ({ history }) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -59,9 +63,7 @@ const DoctorReg = ({ history }) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setOpen(false);
-
     };
     const [error, setError] = React.useState(false);
 
@@ -76,16 +78,14 @@ const DoctorReg = ({ history }) => {
         setError(false);
     };
     const [state, setState] = React.useState({
-        firstName: "",
-        lastName: "",
-        regNum: "",
-        emailId: "",
-        password: "",
-        phoneNum: "",
-        dob: '',
-        address: "",
+        firstName: history.location.state.detail.firstName,
+        lastName: history.location.state.detail.lastName,
 
-        showPassword: false
+        emailId: history.location.state.detail.email,
+        phoneNum: history.location.state.detail.phone,
+        dob: history.location.state.detail.dateOfBirth,
+        address: history.location.state.detail.address,
+        assessmentData: history.location.state.assessmentData
     });
 
     const handleChange = (prop) => (event) => {
@@ -116,35 +116,71 @@ const DoctorReg = ({ history }) => {
 
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
-                        <div >
-                            <Typography className={classes.navTitle} variant="h3" gutterBottom><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
-                            <Typography className={classes.navTitle} style={{ marginTop: '50%' }} variant="h5" gutterBottom>Register as</Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/patient-register'} className={classes.link}>Patient</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/nurse-register'} className={classes.link}>Nurse</Link></Typography>
-                            <Typography className={classes.navText} variant="h6" gutterBottom><Link to={'/doctor-register'} className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>Doctor</Link></Typography>
-                            <Grid container direction='row' className={classes.navBot}>
-                                <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon>
-                                <Typography variant="h5" className={classes.text}><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Home</Link></Typography>
-                            </Grid>
 
-                        </div>
+                        <Typography className={classes.navTitle} variant="h3" gutterBottom>
+                            <Link to={{
+                                pathname: '/patient',
+                                state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                            }}
+                                style={{ textDecoration: 'none', color: 'white' }}>
+                                CDC
+                            </Link>
+                        </Typography>
+
+                        <Typography style={{ marginTop: '30%' }} className={classes.navText} variant="h6" gutterBottom>
+                            <Link to={{
+                                pathname: '/patient',
+                                state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                            }}
+                                className={classes.link} >
+                                Dashboard
+                            </Link>
+                        </Typography>
+
+                        <Typography className={classes.navText} variant="h6" gutterBottom>
+                            <Link to={{
+                                pathname: '/update-patient',
+                                state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                            }}
+                                style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}
+                                className={classes.link}>
+                                Personal details
+                            </Link>
+                        </Typography>
+
+                        <Typography className={classes.navText} variant="h6" gutterBottom>
+                            <Link style={{ color: '#C0C0C0' }} className={classes.link}>
+                                About Us
+                                </Link>
+                        </Typography>
+
+                        <Typography className={classes.navBot} variant="h6" gutterBottom>
+                            <Link to={'/'} onClick={() => logout()} className={classes.link}>
+                                Logout
+                                </Link>
+                        </Typography>
+
                     </Grid>
                 </div>
-            </Grid>
+            </Grid >
 
             <Grid item sm={6}>
+                <Typography variant="h2" className={classes.title} style={{ marginTop: '6%', marginLeft: '-6%' }}>
+                    Hello, {state.firstName}
+                </Typography>
+                <Typography variant="h6" gutterBottom style={{ color: '#9296A6', marginLeft: '-5.5%' }} className={classes.text}>
+                    Here, you can update your personal information.
+                </Typography>
                 <Grid
                     container
                     direction="column"
                     justify="center"
                     alignItems="center"
-                    style={{ height: '100%', marginLeft: '8%' }}
+                    style={{ height: '70%', marginLeft: '8%' }}
                 >
-                    <Typography variant="h2" className={classes.title} gutterBottom style={{ marginBottom: '5%' }}>
-                        Register
-                    </Typography>
 
-                    <Grid container direction="row" justify="center" alignItems="center">
+
+                    <Grid container direction="row" justify="center" alignItems="center" style={{ marginBottom: 10 }}>
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined" error={!validateName(state.firstName)}>
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>First Name</InputLabel>
                             <OutlinedInput
@@ -160,7 +196,7 @@ const DoctorReg = ({ history }) => {
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined" error={!validateName(state.lastName)}>
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Last Name</InputLabel>
                             <OutlinedInput
-                                // id="outlined-adornment-password"
+                                // id="outlined-adornment-password" 
                                 type='text'
                                 value={state.lastName}
                                 onChange={handleChange('lastName')}
@@ -169,54 +205,22 @@ const DoctorReg = ({ history }) => {
                             {!validateName(state.lastName) && <FormHelperText id="component-error-text">Name cannot contain numbers</FormHelperText>}
                         </FormControl>
                     </Grid>
-                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Doctor Registration Number</InputLabel>
-                        <OutlinedInput
-                            // id="outlined-adornment-password"
-                            type='text'
-                            value={state.regNum}
-                            onChange={handleChange('regNum')}
-                            labelWidth={200}
-                        />
-                    </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined" error={!validateEmail(state.emailId)}>
+                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined" style={{ marginBottom: 20 }} error={!validateEmail(state.emailId)}>
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Email Address</InputLabel>
                         <OutlinedInput
                             // id="outlined-adornment-password"
                             type='text'
                             value={state.emailId}
                             onChange={handleChange('emailId')}
-                            labelWidth={145}
+                            labelWidth={105}
                         />
                         {!validateEmail(state.emailId) && <FormHelperText id="component-error-text">Please check email format</FormHelperText>}
                     </FormControl>
-                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
-                        <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Password</InputLabel>
-                        <OutlinedInput
-                            id="outlined-adornment-password"
-                            type={state.showPassword ? 'text' : 'password'}
-                            value={state.password}
-                            onChange={handleChange('password')}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                    >
-                                        {state.showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                            labelWidth={70}
-                        />
-                    </FormControl>
-                    <Grid container direction="row" justify="center" alignItems="center">
+
+                    <Grid container direction="row" justify="center" alignItems="center" style={{ marginBottom: 10 }}>
                         <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined" error={!validateNum(state.phoneNum)}>
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Phone Number</InputLabel>
                             <OutlinedInput
-                                // id="outlined-adornment-password"
                                 type='text'
                                 value={state.phoneNum}
                                 onChange={handleChange('phoneNum')}
@@ -229,15 +233,10 @@ const DoctorReg = ({ history }) => {
                             <KeyboardDatePicker
                                 className={clsx(classes.margin, classes.textFieldTwo)}
                                 disableToolbar
-                                error={false}
-                                inputVariant='outlined'
                                 variant="inline"
                                 format="MM/dd/yyyy"
-                                error={false}
-                                helperText=''
                                 // margin="normal"
                                 id="date-picker-inline"
-                                defaultValue='MM/DD/YYYY'
                                 label="Date of Birth"
                                 value={state.dob}
                                 onChange={handleDateChange}
@@ -247,19 +246,6 @@ const DoctorReg = ({ history }) => {
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
-                    {/* <form className={classes.container} noValidate>
-                            <TextField
-                                id="date"
-                                label="Birthday"
-                                type="date"
-                                defaultValue="2017-05-24"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </form> */}
-
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Address</InputLabel>
                         <OutlinedInput
@@ -269,41 +255,48 @@ const DoctorReg = ({ history }) => {
                             onChange={handleChange('address')}
                             labelWidth={60}
                         />
+
                     </FormControl>
                     <Grid container direction="row" justify="center" alignItems="center" style={{ marginTop: '5%' }}>
-                    <Link to={'/login'} style={{ textDecoration: 'none' }}>
-                            <Button variant="text" size="large" className={clsx(classes.margin, classes.signInBtn)} color="primary">
-                                Sign in instead
-                            </Button>
-                        </Link>
+
+                        <Button variant="contained" size="large" style={{ backgroundColor: '#F2F6F8', color: '#3C4161' }} className={clsx(classes.margin, classes.registerBtn)}
+                            onClick={() =>
+                                history.push({
+                                    pathname: '/patient',
+                                    state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                                })
+                            }>
+                            Cancel
+                    </Button>
+
                         <Button variant="contained" size="large" className={clsx(classes.margin, classes.registerBtn)} color="primary"
-                        disabled={state.emailId.length == 0 || state.firstName.length == 0 || state.lastName.length == 0 || state.phoneNum.length == 0 || state.password.length == 0 || state.address.length == 0}
-                        onClick={() =>
-                            validateEmail(state.emailId) && validateName(state.firstName) && validateName(state.lastName) && validateNum(state.phoneNum) ?
-                                registerDoctor(state.emailId, state.firstName, state.lastName, state.password, state.dob, state.phoneNum, state.address, state.regNum).
-
-                                    then(async function (response) {
-                                        if (response.token) {
-                                            let patientData = await getForwardedAssessmentData();
-                                            history.push({
-                                                pathname: '/doctor',
-                                                state: { detail: response, patientData }
-                                            })
-
-                                        } else window.alert(response.message)
-
-                                    })
-                                : handleClickError()
-                        }>
-                            Register
+                            disabled={state.emailId.length == 0 || state.firstName.length == 0 || state.lastName.length == 0 || state.phoneNum.length == 0 || state.address.length == 0}
+                            onClick={() =>
+                                validateEmail(state.emailId) && validateName(state.firstName) && validateName(state.lastName) && validateNum(state.phoneNum) ?
+                                    updatePatient(state.emailId, state.firstName, state.lastName, state.dob, state.phoneNum, state.address).
+                                        then(async function (response) {
+                                            if (response.token) {
+                                                handleClick()
+                                                let assessmentData = await getPreviousAssessmentData();
+                                                setState({ ...state, assessmentData })
+                                            } else window.alert(response.message)
+                                        })
+                                    :
+                                    handleClickError()
+                            }>
+                            Save
                     </Button>
                     </Grid>
                 </Grid >
             </Grid>
-
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success">
+                    Profile updated successfully.
+            </Alert>
+            </Snackbar>
             <Snackbar open={error} autoHideDuration={4000} onClose={handleCloseError}>
                 <Alert onClose={handleCloseError} severity="error">
-                    Please complete the form and try again.
+                    Please check your email and try again.
             </Alert>
             </Snackbar>
         </Grid >
@@ -312,7 +305,7 @@ const DoctorReg = ({ history }) => {
 }
 
 
-export default DoctorReg;
+export default UpdatePatient;
 
 
 const useStyles = makeStyles((theme) => ({
@@ -328,7 +321,7 @@ const useStyles = makeStyles((theme) => ({
         letterSpacing: 0.4
     },
     link: {
-        textDecoration: 'none', color: 'white', fontFamily: 'product_sansregular'
+        textDecoration: 'none', color: 'white', fontFamily: 'product_sansbold'
     },
     navTitle: {
         color: 'white',
@@ -341,15 +334,15 @@ const useStyles = makeStyles((theme) => ({
     navText: {
         color: 'white',
         margin: '5%',
-        marginLeft: '20%',
-        fontFamily: 'product_sans_blackregular'
+        marginLeft: '12%',
+        fontFamily: 'product_sansbold'
         // marginTop: '15%'
     },
     navBot: {
         color: 'white',
         margin: '5%',
-        marginLeft: '12%',
-        marginTop: '50%',
+        marginLeft: '15%',
+        marginTop: '60%',
         fontFamily: 'product_sans_blackregular'
 
     },
@@ -369,8 +362,10 @@ const useStyles = makeStyles((theme) => ({
         boxShadow: 'none',
         fontFamily: 'product_sans_lightregular',
         textTransform: 'capitalize',
-        paddingHorizontal: '5%',
-        width: '20%',
+        paddingHorizontal: '8%',
+        paddingTop: '2%',
+        paddingBottom: '2%',
+        width: '25%',
         fontSize: 19
 
     },

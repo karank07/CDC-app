@@ -17,6 +17,8 @@ import { styles } from '@material-ui/pickers/views/Calendar/Calendar';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import moment from 'moment';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
@@ -29,31 +31,21 @@ import { getPreviousAssessmentData, logout, cancelAppointment } from '../../api/
 import back from '../../assets/Images/Subtract.svg';
 import pds1 from '../../assets/Images/pds1.png'
 import pds2 from '../../assets/Images/pds2.png'
-
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const PatientDS = ({ history }) => {
     const classes = useStyles();
+
     const [state, setState] = React.useState({
         firstName: history.location.state.detail.firstName,
         lastName: history.location.state.detail.lastName,
         dob: history.location.state.detail.dateOfBirth,
-        assessmentData: history.location.state.assesmentData,
+        assessmentData: history.location.state.assessmentData,
         index: 1
     });
-    //  {/* {!state.assessmentData.length > 0 && ('appointment' in state.assessmentData[0]) && state.assessmentData[0].appointment.length == 0 && */ }
-    // const fetchMyAPI = async () => {
-    //     let response = await getPreviousAssessmentData();
-    //     await setState({ ...state, assessmentData: response })
-    // }
-    // useEffect(() => {
-    //     fetchMyAPI()
-    // }, [])
-    // useEffect(() => {
-    //     console.log("test")
-    //     // let response = getAssessmentData(history.location.state.detail._id, history.location.state.detail.token);
-    //     // console.log("res", response)
-    //     // setState({ ...state, assessmentData: response })
-    // }, []);
-    console.log("My", state.assessmentData)
+
+
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
@@ -68,24 +60,63 @@ const PatientDS = ({ history }) => {
                         container
                         direction="column"
                         justify="flex-start"
-                        style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
-                    >
+                        style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}>
 
                         <Typography className={classes.navTitle} variant="h3" gutterBottom>
-                            <Link to={'/patient'} style={{ textDecoration: 'none', color: 'white' }}>CDC</Link></Typography>
+                            <Link to={{
+                                pathname: '/patient',
+                                state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                            }}
+                                style={{ textDecoration: 'none', color: 'white' }}>
+                                CDC
+                            </Link>
+                        </Typography>
+
                         <Typography style={{ marginTop: '30%' }} className={classes.navText} variant="h6" gutterBottom>
-                            <Link to={'/patient'} className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>Dashboard</Link></Typography>
+                            <Link to={{
+                                pathname: '/patient',
+                                state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                            }}
+                                className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>
+                                Dashboard
+                            </Link>
+                        </Typography>
+
                         {state.assessmentData.length > 0 && (state.assessmentData[0].isReviewed != false && state.assessmentData[0].appointment.length == 0) &&
                             <Typography className={classes.navText} variant="h6" gutterBottom>
-                                <Link to={{ pathname: '/Self-assessment', state: { detail: history.location.state.detail, assesmentData: state.assessmentData } }} className={classes.link}>Take self assessment</Link></Typography>}
+                                <Link
+                                    to={{
+                                        pathname: '/Self-assessment',
+                                        state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                                    }}
+                                    className={classes.link}>Take self assessment
+                                </Link>
+                            </Typography>
+                        }
 
                         <Typography className={classes.navText} variant="h6" gutterBottom>
-                            <Link style={{ color: '#C0C0C0' }} className={classes.link}>Personal details</Link></Typography>
-                        <Typography className={classes.navText} variant="h6" gutterBottom>
-                            <Link style={{ color: '#C0C0C0' }} className={classes.link}>About Us</Link>
+                            <Link
+                                to={{
+                                    pathname: '/update-patient',
+                                    state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
+                                }}
+                                style={{ textDecoration: 'none', color: 'white' }}
+                                className={classes.link}>
+                                Personal details
+                            </Link>
                         </Typography>
+
+                        <Typography className={classes.navText} variant="h6" gutterBottom>
+                            <Link style={{ color: '#C0C0C0' }} className={classes.link}>
+                                About Us
+                                </Link>
+                        </Typography>
+
                         <Typography className={classes.navBot} variant="h6" gutterBottom>
-                            <Link to={'/'} onClick={() => logout()} className={classes.link}>Logout</Link></Typography>
+                            <Link to={'/'} onClick={() => logout()} className={classes.link}>
+                                Logout
+                                </Link>
+                        </Typography>
 
                     </Grid>
                 </div>
@@ -100,11 +131,11 @@ const PatientDS = ({ history }) => {
                         <Grid
                             container
                             direction="row">
-                            <Typography variant="h2" gutterBottom className={classes.title}>
+                            <Typography variant="h2" className={classes.title}>
                                 Hello, {state.firstName}
                             </Typography>
                             <Typography variant="h6" gutterBottom style={{ color: '#9296A6' }} className={classes.text}>
-                                Welcome to your personal dashboard! Here, you can see your scheduled appointmet, cancel that appointment and take self assesment for covid-19 symptoms.
+                                Welcome to your personal dashboard! Here, you can see your scheduled appointmet, cancel that appointment and take self assessment for covid-19 symptoms.
                         </Typography>
                         </Grid>
                     </Grid>
@@ -129,7 +160,7 @@ const PatientDS = ({ history }) => {
                                         overflow: 'visible',
                                         color: '#3C4161',
                                     }}>Hey, You have got an appointment with {(state.assessmentData[0].appointment[0].doctorName || state.assessmentData[0].appointment[0].nurseName)} on
-                            {moment(state.assessmentData[0].appointment[0].scheduledAt).format(' Do MMMM, YYYY')}
+                            {moment(state.assessmentData[0].appointment[0].scheduledAt).format(' Do MMMM, YYYY hh:mm A')}
                                     </Typography>
                                     <Grid container>
                                         <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)}
@@ -137,8 +168,8 @@ const PatientDS = ({ history }) => {
                                             color="primary"
                                             onClick={() => cancelAppointment(state.assessmentData[0].appointment[0]._id).
                                                 then(async function (response) {
-                                                    let assesmentData = await getPreviousAssessmentData();
-                                                    setState({ ...state, assessmentData: assesmentData });
+                                                    let assessmentData = await getPreviousAssessmentData();
+                                                    setState({ ...state, assessmentData: assessmentData });
                                                 })}
                                         >
                                             Cancel appointment
@@ -175,7 +206,7 @@ const PatientDS = ({ history }) => {
                                             style={state.assessmentData.length > 0 && state.assessmentData[0].isReviewed == false ? { borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%', backgroundColor: '#8e8e8e', color: 'white' } : { borderRadius: 10, boxShadow: 'none', marginLeft: '15%', width: '25%', backgroundColor: '#3C4161', color: 'white' }}
                                             onClick={() => history.push({
                                                 pathname: '/Self-assessment',
-                                                state: { detail: history.location.state.detail, assesmentData: state.assessmentData }
+                                                state: { detail: history.location.state.detail, assessmentData: state.assessmentData }
                                             })}
                                         >
                                             Take Self Assessment

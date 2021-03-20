@@ -19,7 +19,8 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CheckRoundedIcon from '@material-ui/icons/CheckRounded';
@@ -35,8 +36,29 @@ import three from '../assets/Images/3.png';
 import four from '../assets/Images/4.png';
 import { postAssessment, getPreviousAssessmentData } from '../api/Api';
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 const SaTool = ({ history }) => {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = async (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+        let assessmentData = await getPreviousAssessmentData();
+        history.push({
+            pathname: '/patient',
+            state: { detail: history.location.state.detail, assessmentData: assessmentData }
+        })
+
+    };
     const [state, setState] = React.useState({
         difficultyBreathing: '',
         age: "",
@@ -57,8 +79,8 @@ const SaTool = ({ history }) => {
         event.preventDefault();
     };
     useEffect(() => {
-        if (history.location.state.assesmentData.length > 0 && history.location.state.assesmentData[0].isReviewed == false ) {
-            history.push({ pathname: '/patient', state: { detail: history.location.state.detail, assesmentData: history.location.state.assesmentData } })
+        if (history.location.state.assessmentData.length > 0 && (history.location.state.assessmentData[0].isReviewed == false)) {
+            history.push({ pathname: '/patient', state: { detail: history.location.state.detail, assessmentData: history.location.state.assessmentData } })
         }
     }, [])
     return (
@@ -88,9 +110,9 @@ const SaTool = ({ history }) => {
                 <AppBar position="fixed" color='transparent' elevation={0}>
                     <Toolbar>
 
-                        <Link to={{ pathname: '/patient', state: { detail: history.location.state.detail, assesmentData: history.location.state.assesmentData } }} style={{ textDecoration: 'none', color: '#364161' }}>
+                        <Link to={{ pathname: '/patient', state: { detail: history.location.state.detail, assessmentData: history.location.state.assessmentData } }} style={{ textDecoration: 'none', color: '#364161' }}>
                             <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon></Link>
-                        <Typography variant="h5" className={classes.text}><Link to={{ pathname: '/patient', state: { detail: history.location.state.detail, assesmentData: history.location.state.assesmentData } }} style={{ textDecoration: 'none', color: '#364161' }}>Home</Link>
+                        <Typography variant="h5" className={classes.text}><Link to={{ pathname: '/patient', state: { detail: history.location.state.detail, assessmentData: history.location.state.assessmentData } }} style={{ textDecoration: 'none', color: '#364161' }}>Home</Link>
                         </Typography>
 
                     </Toolbar>
@@ -449,13 +471,9 @@ const SaTool = ({ history }) => {
                             onClick={() =>
                                 postAssessment(state.difficultyBreathing, state.age, state.symptomsSet1, state.symptomsSet2).
                                     then(async function (response) {
-                                        window.alert('Your assessment has been submitted.')
                                         if (response) {
-                                            let assesmentData = await getPreviousAssessmentData();
-                                            history.push({
-                                                pathname: '/patient',
-                                                state: { detail: history.location.state.detail, assesmentData: assesmentData }
-                                            })
+                                            handleClick()
+
                                         }
                                     })}
                             disabled={state.difficultyBreathing == 'yes' ? false : state.symptomsSet1 == 'yes' ? false : state.symptomsSet2.length == 0}
@@ -466,6 +484,11 @@ const SaTool = ({ history }) => {
 
                 </Grid>
             </Grid>
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success">
+                    Your assessment has been submitted.
+            </Alert>
+            </Snackbar>
         </Grid >
 
     );

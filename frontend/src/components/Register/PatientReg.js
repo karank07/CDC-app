@@ -16,7 +16,9 @@ import TextField from '@material-ui/core/TextField';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import DateFnsUtils from '@date-io/date-fns';
-
+import MuiAlert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
+import FormHelperText from '@material-ui/core/FormHelperText';
 import line from '../../assets/Images/navline.png';
 
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
@@ -25,8 +27,55 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 
 import { registerPatient, getPreviousAssessmentData } from '../../api/Api';
 
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
+function validateName(name) {
+    if (name.length == 0)
+        return true;
+    const re = /^[A-Za-z]+$/;
+    return re.test(String(name).toLowerCase());
+}
+function validateNum(num) {
+    if (num.length == 0)
+        return true;
+    const re = /^[0-9]+$/;
+    return re.test(num);
+}
+
+function validateEmail(email) {
+    if (email.length == 0)
+        return true;
+    const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+}
 const PatientReg = ({ history }) => {
     const classes = useStyles();
+    const [open, setOpen] = React.useState(false);
+
+    const handleClick = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpen(false);
+    };
+    const [error, setError] = React.useState(false);
+
+    const handleClickError = () => {
+        setError(true);
+    };
+
+    const handleCloseError = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setError(false);
+    };
     const [state, setState] = React.useState({
         firstName: "",
         lastName: "",
@@ -34,7 +83,7 @@ const PatientReg = ({ history }) => {
         emailId: "",
         password: "",
         phoneNum: "",
-        dob: new Date('2000-08-18T21:11:54'),
+        dob: '',
         address: "",
 
         showPassword: false
@@ -98,37 +147,42 @@ const PatientReg = ({ history }) => {
                     </Typography>
 
                     <Grid container direction="row" justify="center" alignItems="center">
-                        <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
+                        <FormControl className={clsx(classes.margin, classes.textFieldTwo)}
+                            variant="outlined" error={!validateName(state.firstName)}>
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>First Name</InputLabel>
                             <OutlinedInput
                                 autoFocus
-                                id="outlined-adornment-password"
+                                // id="outlined-adornment-password"
                                 type='text'
                                 value={state.firstName}
                                 onChange={handleChange('firstName')}
                                 labelWidth={80}
                             />
+                            {!validateName(state.firstName) && <FormHelperText id="component-error-text">Name cannot contain numbers</FormHelperText>}
                         </FormControl>
-                        <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
+                        <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined" error={!validateName(state.lastName)}>
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Last Name</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
+                                // id="outlined-adornment-password"
                                 type='text'
                                 value={state.lastName}
                                 onChange={handleChange('lastName')}
                                 labelWidth={80}
                             />
+                            {!validateName(state.lastName) && <FormHelperText id="component-error-text">Name cannot contain numbers</FormHelperText>}
                         </FormControl>
                     </Grid>
-                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
+                    <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined" error={!validateEmail(state.emailId)}>
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Email Address</InputLabel>
                         <OutlinedInput
-                            id="outlined-adornment-password"
+
+                            helperText='Please correct the email format'
                             type='text'
                             value={state.emailId}
                             onChange={handleChange('emailId')}
-                            labelWidth={145}
+                            labelWidth={105}
                         />
+                        {!validateEmail(state.emailId) && <FormHelperText id="component-error-text">Please check email format</FormHelperText>}
                     </FormControl>
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Password</InputLabel>
@@ -153,10 +207,10 @@ const PatientReg = ({ history }) => {
                         />
                     </FormControl>
                     <Grid container direction="row" justify="center" alignItems="center">
-                        <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined">
+                        <FormControl className={clsx(classes.margin, classes.textFieldTwo)} variant="outlined" error={!validateNum(state.phoneNum)}>
                             <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Phone Number</InputLabel>
                             <OutlinedInput
-                                id="outlined-adornment-password"
+                                // id="outlined-adornment-password"
                                 type='text'
 
                                 value={state.phoneNum}
@@ -164,15 +218,18 @@ const PatientReg = ({ history }) => {
                                 labelWidth={110}
 
                             />
+                            {!validateNum(state.phoneNum) && <FormHelperText id="component-error-text">Phone number should not contain alphabets</FormHelperText>}
                         </FormControl>
                         <MuiPickersUtilsProvider utils={DateFnsUtils} >
                             <KeyboardDatePicker
                                 className={clsx(classes.margin, classes.textFieldTwo)}
                                 disableToolbar
                                 inputVariant='outlined'
+                                error={false}
+                                helperText=''
                                 variant="inline"
                                 format="MM/dd/yyyy"
-                                // margin="normal"
+                                defaultValue='MM/DD/YYYY'
                                 id="date-picker-inline"
                                 label="Date of Birth"
                                 value={state.dob}
@@ -183,23 +240,11 @@ const PatientReg = ({ history }) => {
                             />
                         </MuiPickersUtilsProvider>
                     </Grid>
-                    {/* <form className={classes.container} noValidate>
-                            <TextField
-                                id="date"
-                                label="Birthday"
-                                type="date"
-                                defaultValue="2017-05-24"
-                                className={classes.textField}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </form> */}
 
                     <FormControl className={clsx(classes.margin, classes.textField)} variant="outlined">
                         <InputLabel htmlFor="outlined-adornment-password" className={classes.text}>Address</InputLabel>
                         <OutlinedInput
-                            id="outlined-adornment-password"
+                            // id="outlined-adornment-password"
                             type='text'
                             value={state.address}
                             onChange={handleChange('address')}
@@ -213,28 +258,37 @@ const PatientReg = ({ history }) => {
                             </Button>
                         </Link>
                         <Button variant="contained" size="large" className={clsx(classes.margin, classes.registerBtn)} color="primary"
+                            disabled={state.emailId.length == 0 || state.firstName.length == 0 || state.lastName.length == 0 || state.phoneNum.length == 0 || state.password.length == 0 || state.address.length == 0}
                             onClick={() =>
-                                registerPatient(state.emailId, state.firstName, state.lastName, state.password, state.dob, state.phoneNum, state.address).
-                                    then(async function (response) {
-                                        if (response.token) {
-                                            window.alert('Resgisteration successful')
-                                            let assesmentData = await getPreviousAssessmentData();
-                                            if (history.location.state.fromHome)
+                                validateEmail(state.emailId) && validateName(state.firstName) && validateName(state.lastName) && validateNum(state.phoneNum) ?
+                                    registerPatient(state.emailId, state.firstName, state.lastName, state.password, state.dob, state.phoneNum, state.address).
+                                        then(async function (response) {
+                                            if (response.token) {
+                                                let assessmentData = await getPreviousAssessmentData();
                                                 history.push({
-                                                    pathname: '/Self-assessment',
-                                                    state: { detail: response, assesmentData: assesmentData }
+                                                    pathname: '/patient',
+                                                    state: { detail: response, assessmentData: assessmentData }
                                                 })
-                                            else history.push({
-                                                pathname: '/patient',
-                                                state: { detail: response, assesmentData: assesmentData }
-                                            })
-                                        } else window.alert(response.message)
-                                    })}>
+                                            } else window.alert(response.message)
+                                        })
+                                    :
+                                    handleClickError()
+                            }>
                             Register
                     </Button>
                     </Grid>
                 </Grid >
             </Grid>
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error">
+                    Resgisteration successful
+            </Alert>
+            </Snackbar>
+            <Snackbar open={error} autoHideDuration={4000} onClose={handleCloseError}>
+                <Alert onClose={handleCloseError} severity="error">
+                    Please complete the form and try again.
+            </Alert>
+            </Snackbar>
         </Grid >
 
     );

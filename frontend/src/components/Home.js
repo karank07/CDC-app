@@ -68,11 +68,11 @@ const Home = ({ history }) => {
                     direction="row"
                     style={{ marginTop: '4%' }}>
                     <Grid item sm={6}>
-                        <Typography variant="h2" gutterBottom className={classes.title}>
+                        <Typography variant="h2" className={classes.title}>
                             Welcome to CDC
                         </Typography>
                         <Typography variant="h6" gutterBottom style={{ color: '#9296A6' }} className={classes.text}>
-                            CDC provides a self assessment tool for COVID-19 and provides you a faster access to Medical system based on the results. A healthcare professional  could provide faster counsulatation based on the test result.
+                            CDC provides a self assessment tool for COVID-19 and provides you a faster access to Medical system. A healthcare professional could provide faster consultation based on the test result.
                         </Typography>
                     </Grid>
                     <Grid item sm={4} >
@@ -80,7 +80,7 @@ const Home = ({ history }) => {
                         </Grid>
                     </Grid>
                     <Grid item sm={7} >
-                        <Typography variant="h4" gutterBottom style={{ marginTop: '-14%' }} className={classes.title}>
+                        <Typography variant="h4"  style={{ marginTop: '-16%' }} className={classes.title}>
                             COVID-19 Symptom Self-Assessment Tool
                         </Typography>
                         <Typography variant="h6" gutterBottom style={{ color: '#9296A6' }} className={classes.text}>

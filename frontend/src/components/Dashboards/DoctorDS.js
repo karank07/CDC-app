@@ -31,7 +31,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { postReviewAssessment, postScheduleAppointment, getListForReview, logout } from '../../api/Api';
+import { postReviewAssessmentByDr, postScheduleAppointmentByDr, getForwardedAssessmentData, logout } from '../../api/Api';
 
 import back from '../../assets/Images/Subtract.svg';
 import pds1 from '../../assets/Images/pds1.png'
@@ -40,24 +40,11 @@ import list from '../../assets/Images/list.png'
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-
 function createData(name, createdAt) {
     return { name, createdAt };
 }
-const NurseDS = ({ history }) => {
+const DoctorDS = ({ history }) => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
-
-    const handleClick = () => {
-        setOpen(true);
-    };
-
-    const handleClose = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-        setOpen(false);
-    };
     const [openTwo, setOpenTwo] = React.useState(false);
 
     const handleClickTwo = () => {
@@ -73,8 +60,6 @@ const NurseDS = ({ history }) => {
     const [state, setState] = React.useState({
         detail: history.location.state.detail,
         patientData: history.location.state.patientData,
-        forwaded: false,
-        rejected: false,
         index: 0
     });
 
@@ -94,39 +79,48 @@ const NurseDS = ({ history }) => {
                         style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                     >
                         <Typography className={classes.navTitle} variant="h3" gutterBottom>
-                            <Link to={{ pathname: '/nurse', state: { detail: history.location.state.detail,  patientData: state.patientData } }}
-                            className={classes.link}>
+                            <Link to={{
+                                pathname: '/doctor',
+                                state: { detail: history.location.state.detail, patientData: state.patientData }
+                            }} className={classes.link}>
                                 CDC
                             </Link>
                         </Typography>
 
                         <Typography style={{ marginTop: '25%' }} className={classes.navText} variant="h6" gutterBottom>
-                            <Link to={{ pathname: '/nurse', state: { detail: history.location.state.detail,  patientData: state.patientData } }}
-                            className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>
+                            <Link to={{
+                                pathname: '/doctor',
+                                state: { detail: history.location.state.detail, patientData: state.patientData }
+                            }} className={classes.link} style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>
                                 Dashboard
-                                </Link>
+                            </Link>
                         </Typography>
 
                         <Typography className={classes.navText} variant="h6" gutterBottom>
                             <Link to={{
-                            pathname: '/Patient-list',
-                            state: { detail: history.location.state.detail, patientData: state.patientData }}}
-                            className={classes.link}>
-                            List of patients
+                                pathname: '/Patient-list',
+                                state: { detail: history.location.state.detail, patientData: state.patientData }
+                            }} className={classes.link}>
+                                List of patients
                             </Link>
                         </Typography>
 
                         <Typography className={classes.navText} variant="h6" gutterBottom>
-                            <Link to={{ pathname: '/update-nurse', state: { detail: history.location.state.detail,  patientData: state.patientData } }}
+                            <Link to={{
+                                pathname: '/update-doctor',
+                                state: { detail: history.location.state.detail, patientData: state.patientData }
+                            }}
                                 style={{ textDecoration: 'none', color: 'white' }} className={classes.link}>
-                                    Personal details
-                            </Link>
+                                Personal details
+                                    </Link>
                         </Typography>
+
                         <Typography className={classes.navText} variant="h6" gutterBottom>
                             <Link style={{ color: '#C0C0C0' }} className={classes.link}>
                                 About Us
                             </Link>
                         </Typography>
+
                         <Typography className={classes.navBot} variant="h6" gutterBottom>
                             <Link to={'/'} onClick={() => logout()} className={classes.link}>
                                 Logout
@@ -147,11 +141,10 @@ const NurseDS = ({ history }) => {
                             container
                             direction="row" style={{ height: '100%' }}>
                             <Typography variant="h2" gutterBottom className={classes.title}>
-                                Hello, {state.detail.firstName}
+                                Hello, Dr. {state.detail.firstName}
                             </Typography>
                             <Typography variant="h6" gutterBottom style={{ color: '#9296A6', marginTop: '-2%', fontSize: 19 }} className={classes.text}>
-                                Welcome to your personal dashboard! Click on the patient to review their assesments. 
-                                You can also schedule an appointment, forward it to a doctor or reject it, to let the patient know there is nothing to worry.
+                                Welcome to your personal dashboard! Click on the patient to review their assesments. You can also schedule an appointment with a patient or reject it, to let the patient know there is nothing to worry.
                         </Typography>
                         </Grid>
                     </Grid>
@@ -161,16 +154,24 @@ const NurseDS = ({ history }) => {
                         </Typography>
                     </Grid>
                     {state.patientData.length == 0 ?
-                        < Grid container justify='center' alignItems='center' direction='column' 
-                        style={{ marginBottom: 10, width: '95%', height: 500, backgroundColor: '#F2F6F8', borderRadius: 30, }}>
-                            <Typography variant="h5" gutterBottom style={{ color: '#8e8e8e', letterSpacing: 0.7 }} className={classes.text}>
-                                There are no self assesment reports to show.</Typography>
+                        < Grid container justify='center' alignItems='center' direction='column' style={{ marginBottom: 10, width: '95%', height: 500, backgroundColor: '#F2F6F8', borderRadius: 30, }}>
+                            <Typography variant="h5" gutterBottom style={{ color: '#8e8e8e', letterSpacing: 0.7 }} className={classes.text}>There are no self assesment reports to show.</Typography>
                         </ Grid>
                         :
 
                         < Grid container justify='center' alignItems='center' direction='column' style={{ marginBottom: 10, width: '100%', height: 550, backgroundColor: '#F2F6F8', borderRadius: 30, marginTop: 30 }}>
 
                             <Grid container style={{ margin: 10, marginLeft: 20, width: '40%', height: '80%', }}>
+                                {/* <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, marginLeft: 60 }}>
+                                    <Table className={classes.table} size="medium" aria-label="a dense table">
+                                        <TableHead>
+                                            <TableRow style={{ backgroundColor: '#F2F6F8', borderRadius: 10, }}>
+                                                <TableCell className={classes.tableText} style={{ fontFamily: 'product_sans_blackregular' }} >Name</TableCell>
+                                                <TableCell align="right" className={classes.tableText} style={{ fontFamily: 'product_sans_blackregular' }}>Assessment date</TableCell>
+                                            </TableRow>
+                                        </TableHead>
+                                    </Table>
+                                </TableContainer> */}
                                 <TableContainer component={Paper} elevation={0} style={{ borderRadius: 15, height: '100%' }}>
                                     <Table className={classes.table} size="medium" aria-label="a dense table">
                                         <TableHead>
@@ -235,38 +236,23 @@ const NurseDS = ({ history }) => {
                                 <Grid container direction='row' justify='center' alignItems='center' style={{ paddingLeft: 22, paddingRight: 22, marginTop: '-4%' }}>
                                     <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
                                         style={{
-                                            textTransform: ' none', boxShadow: 'none', width: '40%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10, lineHeight: 1.3
+                                            textTransform: ' none', boxShadow: 'none', width: '40%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10, lineHeight: 1.3, padding: 10
                                         }}
                                         onClick={() => history.push({
-                                            pathname: '/schedule-appointment',
+                                            pathname: '/schedule-appointment-doctor',
                                             state: { detail: history.location.state.detail, patientData: state.patientData, name: state.patientData[state.index].name, id: state.patientData[state.index].assessment._id }
                                         })}
                                         color="primary">
-                                        Schedule an<br /> appointment
+                                        Schedule an appointment
                                         </Button>
+
                                     <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
-                                        style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10, lineHeight: 1.3 }}
-                                        onClick={() => postReviewAssessment(true, false, false, state.patientData[state.index].assessment._id).
-                                            then(async function (response) {
-                                                if (response.assessment.isForwarded) {
-                                                    
-                                                    handleClick()
-                                                    let patientData = await getListForReview();
-                                                    setState({ ...state, index: 0, patientData: patientData })
-                                                }
-                                            }
-                                            )}
-                                        color="primary">
-                                        Forwad to a Doctor
-                                         </Button>
-                                    <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
-                                        style={{ textTransform: ' none', boxShadow: 'none', width: '20%', borderRadius: 10, padding: 13 }}
-                                        onClick={() => postReviewAssessment(false, true, true, state.patientData[state.index].assessment._id).
+                                        style={{ textTransform: ' none', boxShadow: 'none', width: '25%', borderRadius: 10, }}
+                                        onClick={() => postReviewAssessmentByDr(true, true, state.patientData[state.index].assessment._id).
                                             then(async function (response) {
                                                 if (response.assessment.isRejected) {
-                                                    
                                                     handleClickTwo()
-                                                    let patientData = await getListForReview();
+                                                    let patientData = await getForwardedAssessmentData();
                                                     setState({ ...state, index: 0, patientData: patientData })
                                                 }
                                             }
@@ -282,12 +268,6 @@ const NurseDS = ({ history }) => {
                     {/* </Grid> */}
                 </Grid>
             </Grid>
-            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
-                <Alert onClose={handleClose} severity="success">
-                     Appointment has been successfully forwarded to a Doctor.
-                    
-                </Alert>
-            </Snackbar>
             <Snackbar open={openTwo} autoHideDuration={4000} onClose={handleCloseTwo}>
                 <Alert onClose={handleCloseTwo} severity="success">
                     Appointment has been successfully rejected and the patient will be notified.
@@ -298,7 +278,7 @@ const NurseDS = ({ history }) => {
     );
 }
 
-export default NurseDS;
+export default DoctorDS;
 
 
 const useStyles = makeStyles((theme) => ({

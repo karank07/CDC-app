@@ -29,30 +29,27 @@ import moment from 'moment';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { getPatientList, logout } from '../api/Api';
+import { getPatientList, logout, getPatientListForDr } from '../api/Api';
 
 import back from '../assets/Images/Subtract.svg';
 import pds1 from '../assets/Images/pds1.png'
 
-const testrows = [
-    createData('Frozen yoghurt', 159),
-    createData('Ice cream sandwich', 237,),
-    createData('Eclair', 262,),
-    createData('Cupcake', 305,),
-    createData('Gingerbread', 356),
-];
 function createData(name, dateOfBirth, email, phone, address) {
     return { name, dateOfBirth, email, phone, address };
 }
 const PatientList = ({ history }) => {
     const classes = useStyles();
     const [state, setState] = React.useState({
-        // firstName: history.location.state.detail.firstName,
-        // lastName: history.location.state.detail.lastName,
+        detail: history.location.state.detail,
+        patientData: history.location.state.patientData,
         patientList: []
     });
     const fetchMyAPI = async () => {
-        let response = await getPatientList();
+        let response;
+        if (state.detail.type == 'doctor') {
+            response = await getPatientListForDr();
+        }
+        else response = await getPatientList();
         await setState({ ...state, patientList: response })
     }
     useEffect(() => {
@@ -81,28 +78,58 @@ const PatientList = ({ history }) => {
                                 style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
                             >
                                 <Typography className={classes.navTitle} variant="h3" gutterBottom>
-                                    <Link to={'/'} className={classes.link}>CDC</Link></Typography>
+                                    <Link to={state.detail.type == 'nurse' ? { pathname: '/nurse', state: { detail: history.location.state.detail, patientData: state.patientData } }
+                                        : {
+                                            pathname: '/doctor',
+                                            state: { detail: history.location.state.detail, patientData: state.patientData }
+                                        }}
+                                        className={classes.link}>
+                                        CDC
+                            </Link>
+                                </Typography>
+
                                 <Typography style={{ marginTop: '25%' }} className={classes.navText} variant="h6" gutterBottom>
-                                    <Link to={{
-                                        pathname: '/nurse',
-                                        state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
-                                    }}
+                                    <Link to={state.detail.type == 'nurse' ? { pathname: '/nurse', state: { detail: history.location.state.detail, patientData: state.patientData } }
+                                        : {
+                                            pathname: '/doctor',
+                                            state: { detail: history.location.state.detail, patientData: state.patientData }
+                                        }}
                                         className={classes.link} >
                                         Dashboard
-                                        </Link>
+                                </Link>
                                 </Typography>
-                                <Typography className={classes.navText} variant="h6" gutterBottom><Link
-                                    style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}
-                                    to={{
+
+                                <Typography className={classes.navText} variant="h6" gutterBottom>
+                                    <Link to={{
                                         pathname: '/Patient-list',
-                                        state: { detail: history.location.state.detail, patientData: history.location.state.patientData }
-                                    }} className={classes.link}>List of patients</Link></Typography>
+                                        state: { detail: history.location.state.detail, patientData: state.patientData }
+                                    }}
+                                        className={classes.link}
+                                        style={{ borderBottom: 'solid 3px', paddingBottom: 7, borderRadius: 2 }}>
+                                        List of patients
+                            </Link>
+                                </Typography>
+
                                 <Typography className={classes.navText} variant="h6" gutterBottom>
-                                    <Link style={{ color: '#C0C0C0' }} className={classes.link}>Personal details</Link></Typography>
+                                    <Link to={state.detail.type == 'nurse' ?
+                                        { pathname: '/update-nurse', state: { detail: history.location.state.detail, patientData: state.patientData } }
+                                        : {
+                                            pathname: '/update-doctor', state: { detail: history.location.state.detail, patientData: state.patientData }
+                                        }}
+                                        style={{ textDecoration: 'none', color: 'white' }} className={classes.link}>
+                                        Personal details
+                            </Link>
+                                </Typography>
                                 <Typography className={classes.navText} variant="h6" gutterBottom>
-                                    <Link style={{ color: '#C0C0C0' }} className={classes.link}>About Us</Link></Typography>
+                                    <Link style={{ color: '#C0C0C0' }} className={classes.link}>
+                                        About Us
+                            </Link>
+                                </Typography>
                                 <Typography className={classes.navBot} variant="h6" gutterBottom>
-                                    <Link to={'/'} className={classes.link} onClick={() => logout()}>Logout</Link></Typography>
+                                    <Link to={'/'} onClick={() => logout()} className={classes.link}>
+                                        Logout
+                            </Link>
+                                </Typography>
 
                             </Grid>
                         </div>
@@ -231,7 +258,7 @@ const useStyles = makeStyles((theme) => ({
         color: 'white',
         margin: '5%',
         marginLeft: '15%',
-        marginTop: '40%',
+        marginTop: '50%',
         fontFamily: 'product_sans_blackregular'
 
     },

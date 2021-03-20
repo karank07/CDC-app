@@ -33,7 +33,7 @@ import Snackbar from '@material-ui/core/Snackbar';
 import Visibility from '@material-ui/icons/Visibility';
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { postScheduleAppointment, getListForReview, postReviewAssessment } from '../api/Api';
+import { postReviewAssessmentByDr, getForwardedAssessmentData, postScheduleAppointmentByDr } from '../api/Api';
 
 import back from '../assets/Images/Subtract.svg';
 import pds1 from '../assets/Images/pds1.png'
@@ -41,7 +41,7 @@ import pds1 from '../assets/Images/pds1.png'
 function Alert(props) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
-const AppointmentScheduler = ({ history }) => {
+const AppointmentSchedulerDoctor = ({ history }) => {
     const [open, setOpen] = React.useState(false);
     const [error, setError] = React.useState(false);
 
@@ -57,10 +57,10 @@ const AppointmentScheduler = ({ history }) => {
             return;
         }
         setOpen(false);
-        let isReviewed = await postReviewAssessment(false, false, true, history.location.state.id)
-        let patientData = await getListForReview();
+        let isReviewed = await postReviewAssessmentByDr(false, true, history.location.state.id)
+        let patientData = await getForwardedAssessmentData();
         history.push({
-            pathname: '/nurse',
+            pathname: '/doctor',
             state: { detail: history.location.state.detail, patientData }
         })
     };
@@ -80,7 +80,7 @@ const AppointmentScheduler = ({ history }) => {
         setState({ ...state, date: event.target.value });
     };
 
-
+    
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
@@ -136,7 +136,6 @@ const AppointmentScheduler = ({ history }) => {
 
                             <TextField
                                 id="date"
-                                // label="Next appointment"
                                 type="datetime-local"
                                 variant='outlined'
                                 InputProps={{
@@ -144,7 +143,7 @@ const AppointmentScheduler = ({ history }) => {
                                         input: classes.textDate,
                                     },
                                 }}
-                                inputProps={{ min: moment(Date.now()).format('YYYY-MM-DDTHH:mm') }}
+                                inputProps={{ min: moment(Date.now()).format('YYYY-MM-DDTHH:mm')}}
                                 value={state.date}
                                 className={classes.textField}
                                 onChange={handleChange()}
@@ -154,7 +153,7 @@ const AppointmentScheduler = ({ history }) => {
                             />
                             <Button variant="outlined" size="large" className={clsx(classes.margin, classes.loginBtn)} disableElevation
                                 style={{ textTransform: ' none', boxShadow: 'none', width: '30%', backgroundColor: '#3C4161', color: 'white', borderRadius: 10, marginTop: 30 }}
-                                onClick={() => postScheduleAppointment(state.date, history.location.state.id).
+                                onClick={() => postScheduleAppointmentByDr(state.date, history.location.state.id).
                                     then(async function (response) {
 
                                         if (response.message == true) {
@@ -192,7 +191,7 @@ const AppointmentScheduler = ({ history }) => {
     );
 }
 
-export default AppointmentScheduler;
+export default AppointmentSchedulerDoctor;
 
 
 const useStyles = makeStyles((theme) => ({
