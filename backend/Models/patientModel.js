@@ -29,6 +29,15 @@ const assessmentSchema = mongoose.Schema(
     name:{
       type:String,
     },
+    closeContact:{
+      type:String,
+    },
+    tested:{
+      type:String,
+    },
+    travelHistory:{
+      type:String,
+    },
     difficultyBreathing: {
       type: String,
     },

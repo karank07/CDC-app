@@ -123,6 +123,9 @@ const registerPatient = asyncHandler(async (req, res) => {
 const postPatientAssessment = asyncHandler(async (req, res) => {
   const patient = await Patient.findById(req.user._id);
   const newAssessmentData = {
+    closeContact: req.body.closeContact,
+    tested:req.body.tested,
+    travelHistory:req.body.travelHistory,
     difficultyBreathing: req.body.difficultyBreathing,
     age: req.body.age,
     symptomsSet1: req.body.symptomsSet1,
