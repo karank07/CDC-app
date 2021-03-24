@@ -205,6 +205,24 @@ const NurseDS = ({ history }) => {
                                             </TableRow>
                                         </TableHead>
                                         <TableBody >
+                                        <TableRow >
+                                                <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }} width='70%'>
+                                                Close contact with a confirmed or probable case of COVID-19
+                                                </TableCell>
+                                                <TableCell align="right" className={classes.description} style={{ borderBottom: 'none', textTransform: 'capitalize', fontFamily: 'product_sansbold' }}>{state.patientData[state.index].assessment.closeContact}</TableCell>
+                                            </TableRow>
+                                            <TableRow >
+                                                <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }} width='70%'>
+                                                Tested for COVID-19
+                                                </TableCell>
+                                                <TableCell align="right" className={classes.description} style={{ borderBottom: 'none', textTransform: 'capitalize', fontFamily: 'product_sansbold' }}>{state.patientData[state.index].assessment.tested}</TableCell>
+                                            </TableRow>
+                                            <TableRow >
+                                                <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }} width='70%'>
+                                                Travelled outside of Canada within the last 14 days
+                                                </TableCell>
+                                                <TableCell align="right" className={classes.description} style={{ borderBottom: 'none', textTransform: 'capitalize', fontFamily: 'product_sansbold' }}>{state.patientData[state.index].assessment.travelHistory}</TableCell>
+                                            </TableRow>
                                             <TableRow >
                                                 <TableCell component="th" scope="row" className={classes.description} style={{ borderBottom: 'none' }} width='70%'>
                                                     Trouble in breathing

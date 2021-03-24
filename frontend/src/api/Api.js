@@ -65,8 +65,11 @@ export async function getPatientList() {
   return responseData;
 }
 
-export async function postAssessment(difficultyBreathing, age, symptomsSet1, symptomsSet2) {
+export async function postAssessment(closeContact, tested, travelHistory, difficultyBreathing, age, symptomsSet1, symptomsSet2) {
   let data = {
+    closeContact,
+    tested,
+    travelHistory,
     difficultyBreathing,
     age,
     symptomsSet1,

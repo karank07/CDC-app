@@ -60,6 +60,9 @@ const SaTool = ({ history }) => {
 
     };
     const [state, setState] = React.useState({
+        closeContact: '',
+        tested: '',
+        travelHistory: '',
         difficultyBreathing: '',
         age: "",
         symptomsSet1: '',
@@ -87,25 +90,6 @@ const SaTool = ({ history }) => {
         <Grid
             container
             className={classes.root}>
-            {/* <Grid item xs={false} sm={3} >
-                <div style={{ height: '100%' }}>
-                    <Grid
-                        container
-                        direction="column"
-                        justify="flex-start"
-                        style={{ backgroundImage: `url(${back})`, backgroundRepeat: 'no-repeat', height: '100%', margin: 0 }}
-                    >
-                        <div >
-                            <Grid container direction='row' className={classes.navBot}>
-                                <Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>
-                                    <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon></Link>
-                                <Typography variant="h5" className={classes.text}><Link to={'/'} style={{ textDecoration: 'none', color: 'white' }}>Home</Link>
-                                </Typography>
-                            </Grid>
-                        </div>
-                    </Grid>
-                </div>
-            </Grid> */}
             <Grid item sm={12}>
                 <AppBar position="fixed" color='transparent' elevation={0}>
                     <Toolbar>
@@ -124,6 +108,80 @@ const SaTool = ({ history }) => {
                     alignContent="center"
                     style={{ marginTop: '8%', }}>
                     <Grid item sm={8}>
+                        <Typography variant="h6" gutterBottom className={classes.text}>
+                            Have you been in close contact with a confirmed or probable case of COVID-19
+                        </Typography>
+                        <Grid container justify="center" alignItems="center" style={{ margin: 20 }}>
+
+                            <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                style={state.closeContact == 'yes' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                color="primary"
+                                startIcon={state.closeContact == 'yes' ? <CheckRoundedIcon fontSize='large' color='#28c37f' /> : null}
+                                onClick={() =>
+                                    setState({ ...state, closeContact: 'yes' })
+                                }>
+                                Yes
+                             </Button>
+
+                            <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                color="primary"
+                                style={state.closeContact == 'no' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                startIcon={state.closeContact == 'no' ? <CheckRoundedIcon /> : null}
+                                onClick={() =>
+                                    setState({ ...state, closeContact: 'no' })
+                                }>
+                                No
+                        </Button>
+                        </Grid>
+                        <Typography variant="h6" gutterBottom className={classes.text}>
+                            Have you been tested for COVID-19
+                        </Typography>
+                        <Grid container justify="center" alignItems="center" style={{ margin: 20 }}>
+                            <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                style={state.tested == 'yes' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                color="primary"
+                                startIcon={state.tested == 'yes' ? <CheckRoundedIcon fontSize='large' color='#28c37f' /> : null}
+                                onClick={() =>
+                                    setState({ ...state, tested: 'yes' })
+                                }>
+                                Yes
+                             </Button>
+
+                            <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                color="primary"
+                                style={state.tested == 'no' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                startIcon={state.tested == 'no' ? <CheckRoundedIcon /> : null}
+                                onClick={() =>
+                                    setState({ ...state, tested: 'no' })
+                                }>
+                                No
+                        </Button>
+                        </Grid>
+                        <Typography variant="h6" gutterBottom className={classes.text}>
+                            Have you or someone close to you travelled outside of Canada within the last 14 days
+                        </Typography>
+                        <Grid container justify="center" alignItems="center" style={{ margin: 20 }}>
+                            <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                style={state.travelHistory == 'yes' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                color="primary"
+                                startIcon={state.travelHistory == 'yes' ? <CheckRoundedIcon fontSize='large' color='#28c37f' /> : null}
+                                onClick={() =>
+                                    setState({ ...state, travelHistory: 'yes' })
+                                }>
+                                Yes
+                             </Button>
+
+                            <Button variant="contained" size="large" className={clsx(classes.margin, classes.loginBtn)}
+                                color="primary"
+                                style={state.travelHistory == 'no' ? { backgroundColor: '#3C76EF', } : { backgroundColor: '#8DADF0', }}
+                                startIcon={state.travelHistory == 'no' ? <CheckRoundedIcon /> : null}
+                                onClick={() =>
+                                    setState({ ...state, travelHistory: 'no' })
+                                }>
+                                No
+                        </Button>
+                        </Grid>
+
                         <Typography variant="h6" gutterBottom className={classes.text}>
                             Are you having difficulty breathing? For example, do you feel like you’re out of breath or suffocating?
                         </Typography>
@@ -469,14 +527,13 @@ const SaTool = ({ history }) => {
                             color="primary"
                             style={{ width: '20%' }}
                             onClick={() =>
-                                postAssessment(state.difficultyBreathing, state.age, state.symptomsSet1, state.symptomsSet2).
+                                postAssessment(state.closeContact, state.tested, state.travelHistory, state.difficultyBreathing, state.age, state.symptomsSet1, state.symptomsSet2).
                                     then(async function (response) {
                                         if (response) {
                                             handleClick()
-
                                         }
                                     })}
-                            disabled={state.difficultyBreathing == 'yes' ? false : state.symptomsSet1 == 'yes' ? false : state.symptomsSet2.length == 0}
+                            disabled={(state.difficultyBreathing == 'yes' ? false : state.symptomsSet1 == 'yes' ? false : state.symptomsSet2.length == 0) || (state.closeContact == '' || state.tested == '' || state.travelHistory == '')}
                         >
                             Submit
                              </Button>
