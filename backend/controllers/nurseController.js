@@ -192,7 +192,7 @@ const reviewAssessment = asyncHandler(async (req, res) => {
 const scheduleAppointment = asyncHandler(async (req, res) => {
   const patient = await Patient.findOne({ "assessments._id": req.params.id });
   const newAppointment = {
-    nurse: "" + req.user._id,
+    nurse: req.user._id,
     nurseName: "" + req.user.firstName + " " + req.user.lastName,
     scheduledAt: moment(req.body.date).format(),
   };
@@ -217,6 +217,24 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc getting list of appointments
+//@route POST /api/nurses/appointment-list
+//@access Protected
+const getListOfAppointments = asyncHandler(async (req, res) => {
+  const patients = await Patient.find({ "assessments.appointment.nurse":req.user._id });
+  if (patients.length !== 0) {
+    res.json(patients.map(p=>{
+      return {
+        "._id":p._id,
+        "name":""+p.firstName+" "+p.lastName,
+        "appointment":p.assessments[0].appointment[0].scheduledAt
+      }
+    }))
+  } else {
+    res.json([]);
+  }
+});
+
 export {
   getNurseProfile,
   registerNurse,
@@ -224,5 +242,6 @@ export {
   reviewAssessment,
   scheduleAppointment,
   getPatientList,
-  updateNurseProfile
+  updateNurseProfile,
+  getListOfAppointments
 };

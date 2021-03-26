@@ -1,6 +1,7 @@
 import express from "express";
 import {
   getForwardedAssessments,
+  getListOfAppointments,
   getPatientList,
   registerDoctor,
   reviewForwardedAssessment,
@@ -22,4 +23,5 @@ router
   .route("/schedule-appointment/:id")
   .post(protect, doctorAdmin, scheduleAppointment);
 router.route("/patient-list").get(protect, doctorAdmin, getPatientList);
+router.route("/appointment-list").get(protect, doctorAdmin, getListOfAppointments)
 export default router;
