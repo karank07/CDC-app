@@ -35,4 +35,22 @@ const getDoctorList = asyncHandler(async (req, res) => {
     res.json(doctorList)
 })
 
-export {getPatientList, getNurseList, getDoctorList}
+//@desc delete a user
+//@route DELETE /api/admins/delete-user/:id
+//@access Protected admin
+const deleteUser = asyncHandler(async (req, res) => {
+  const user = (await Patient.findById(req.params.id)) ||
+  (await Nurse.findById(req.params.id)) ||
+  (await Doctor.findById(req.params.id))
+  if(user){
+    await user.remove()
+    res.json({success:true})
+  }
+  else{
+    res.status(404);
+    throw new Error('User not found')
+  }
+})
+
+
+export {getPatientList, getNurseList, getDoctorList,deleteUser}
