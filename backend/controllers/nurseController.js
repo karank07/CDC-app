@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Nurse from "../Models/nurseModel.js";
 import Patient from "../Models/patientModel.js";
-import moment from 'moment'
+import moment from "moment";
 
 //@desc get nurse profile
 //@route GET /api/nurses/profile
@@ -36,7 +36,8 @@ const updateNurseProfile = asyncHandler(async (req, res) => {
     user.lastName = req.body.lastName || user.lastName;
     user.phone = req.body.phone || user.phone;
     user.address = req.body.address || user.address;
-    user.dateOfBirth = moment(req.body.dateOfBirth).format() || user.dateOfBirth;
+    user.dateOfBirth =
+      moment(req.body.dateOfBirth).format() || user.dateOfBirth;
     user.email = req.body.email || user.email;
 
     const updatedUser = await user.save();
@@ -92,7 +93,7 @@ const registerNurse = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Field required");
   }
-  dateOfBirth=moment(dateOfBirth).format()
+  dateOfBirth = moment(dateOfBirth).format();
   const nurse = await Nurse.create({
     firstName,
     lastName,
@@ -127,35 +128,38 @@ const registerNurse = asyncHandler(async (req, res) => {
 //@access Protected nurseAdmin
 const getPatientList = asyncHandler(async (req, res) => {
   const keyword = req.query.keyword
-  ? {
-      name: {
-        $regex: req.query.keyword,
-        $options: 'i',
-      },
-    }
-  : {}
-  const patientList = await Patient.find({...keyword}).select("-password")
-  res.json(patientList)
-})
+    ? {
+        name: {
+          $regex: req.query.keyword,
+          $options: "i",
+        },
+      }
+    : {};
+  const patientList = await Patient.find({ ...keyword }).select("-password");
+  res.json(patientList);
+});
 
 //@desc get list of patients to review assessments
 //@route GET /api/nurses/assessments-for-review
 //@access Protected (Nurse or Doctor)
 const getAssessmentsToReview = asyncHandler(async (req, res) => {
-  const allPatients = await Patient.find().select('-password');
+  const allPatients = await Patient.find().select("-password");
   const patients = allPatients.filter(
     (patient, i) =>
       patient.assessments.length !== 0 &&
-      patient.assessments[0].isReviewed === false && patient.assessments[0].isForwarded === false
+      patient.assessments[0].isReviewed === false &&
+      patient.assessments[0].isForwarded === false
   );
   if (patients.length !== 0) {
-    res.json(patients.map(p=>{
-      return {
-        "._id":p._id,
-        "name":""+p.firstName+" "+p.lastName,
-        "assessment":p.assessments[0]
-      }
-    }))
+    res.json(
+      patients.map((p) => {
+        return {
+          "._id": p._id,
+          name: "" + p.firstName + " " + p.lastName,
+          assessment: p.assessments[0],
+        };
+      })
+    );
   } else {
     res.json([]);
   }
@@ -204,16 +208,15 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
       res.json({
         "patient._id": patient._id,
         appointment: updatedPatient.assessments[i].appointment[0],
-        "message": true
+        message: true,
       });
     } else {
       res.status(400);
       throw new Error("not scheduled");
     }
-  }
-  else{
-    res.status(404)
-    throw new Error("Assessment not found")
+  } else {
+    res.status(404);
+    throw new Error("Assessment not found");
   }
 });
 
@@ -221,15 +224,22 @@ const scheduleAppointment = asyncHandler(async (req, res) => {
 //@route POST /api/nurses/appointment-list
 //@access Protected
 const getListOfAppointments = asyncHandler(async (req, res) => {
-  const patients = await Patient.find({ "assessments.appointment.nurse":req.user._id });
+  const patients = await Patient.find({
+    "assessments.appointment.nurse": req.user._id,
+    "assessments.appointment.scheduledAt": {
+      $gte: moment(Date.now()).format(),
+    },
+  });
   if (patients.length !== 0) {
-    res.json(patients.map(p=>{
-      return {
-        "._id":p._id,
-        "name":""+p.firstName+" "+p.lastName,
-        "appointment":p.assessments[0].appointment[0].scheduledAt
-      }
-    }))
+    res.json(
+      patients.map((p) => {
+        return {
+          "._id": p._id,
+          name: "" + p.firstName + " " + p.lastName,
+          appointment: p.assessments[0].appointment[0].scheduledAt,
+        };
+      })
+    );
   } else {
     res.json([]);
   }
@@ -243,5 +253,5 @@ export {
   scheduleAppointment,
   getPatientList,
   updateNurseProfile,
-  getListOfAppointments
+  getListOfAppointments,
 };

@@ -200,15 +200,22 @@ const getPatientList = asyncHandler(async (req, res) => {
 //@route POST /api/doctors/appointment-list
 //@access Protected
 const getListOfAppointments = asyncHandler(async (req, res) => {
-  const patients = await Patient.find({ "assessments.appointment.doctor":req.user._id });
+  const patients = await Patient.find({
+    "assessments.appointment.doctor": req.user._id,
+    "assessments.appointment.scheduledAt": {
+      $gte: moment(Date.now()).format(),
+    },
+  });
   if (patients.length !== 0) {
-    res.json(patients.map(p=>{
-      return {
-        "._id":p._id,
-        "name":""+p.firstName+" "+p.lastName,
-        "appointment":p.assessments[0].appointment[0].scheduledAt
-      }
-    }))
+    res.json(
+      patients.map((p) => {
+        return {
+          "._id": p._id,
+          name: "" + p.firstName + " " + p.lastName,
+          appointment: moment(p.assessments[0].appointment[0].scheduledAt).format(),
+        };
+      })
+    );
   } else {
     res.json([]);
   }
@@ -221,5 +228,5 @@ export {
   scheduleAppointment,
   getPatientList,
   updateDoctorProfile,
-  getListOfAppointments
+  getListOfAppointments,
 };
