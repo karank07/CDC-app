@@ -59,7 +59,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 const getReport = asyncHandler(async (req, res) => {
   const from = req.query.from
   const to = req.query.to
-  const patientList = await Patient.countDocuments({"assessments.createdAt":{$gte: from, $lte: to}});
+  const patientList = await Patient.countDocuments({"assessments.createdAt":{$gte: from, $lt: to}});
   res.json(patientList);
 });
 // moment(Date.now()).format("YYYY-MM-DD")
