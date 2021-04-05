@@ -61,8 +61,7 @@ const assessmentSchema = mongoose.Schema(
       type: Boolean,
     },
     doctor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctors",
+      type: String
     },
     appointment: [appointmentSchema],
   },

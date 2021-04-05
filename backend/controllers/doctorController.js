@@ -111,7 +111,8 @@ const getForwardedAssessments = asyncHandler(async (req, res) => {
     (patient, i) =>
       patient.assessments.length !== 0 &&
       patient.assessments[0].isReviewed === false &&
-      patient.assessments[0].isForwarded === true
+      patient.assessments[0].isForwarded === true &&
+      patient.assessments[0].doctor == req.user._id
   );
   if (patients.length !== 0) {
     res.json(
