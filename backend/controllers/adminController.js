@@ -57,7 +57,8 @@ const deleteUser = asyncHandler(async (req, res) => {
 //@route GET /api/admins/report
 //@access Protected admin
 const getReport = asyncHandler(async (req, res) => {
-  const {from, to} = req.body
+  const from = req.query.from
+  const to = req.query.to
   const patientList = await Patient.countDocuments({"assessments.createdAt":{$gte: from, $lte: to}});
   res.json(patientList);
 });
