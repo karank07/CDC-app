@@ -213,6 +213,8 @@ const getListOfAppointments = asyncHandler(async (req, res) => {
           "._id": p._id,
           name: "" + p.firstName + " " + p.lastName,
           appointment: moment(p.assessments[0].appointment[0].scheduledAt).format(),
+          email: p.email,
+          phone: p.phone,
         };
       })
     );

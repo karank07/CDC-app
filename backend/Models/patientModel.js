@@ -1,42 +1,40 @@
 import mongoose from "mongoose";
-import bcrypt from 'bcryptjs';
+import bcrypt from "bcryptjs";
 
-const appointmentSchema = mongoose.Schema(
-  {
-   nurse:{
+const appointmentSchema = mongoose.Schema({
+  nurse: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Nurses'
-   },
-   nurseName:{
-     type:String
-   },
-   doctor:{
+    ref: "Nurses",
+  },
+  nurseName: {
+    type: String,
+  },
+  doctor: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Doctors'
-   },
-   doctorName:{
-    type:String
+    ref: "Doctors",
   },
-   scheduledAt:{
-       type: Date,
-       required:true,
-   },
+  doctorName: {
+    type: String,
   },
-);
+  scheduledAt: {
+    type: Date,
+    required: true,
+  },
+});
 
 const assessmentSchema = mongoose.Schema(
   {
-    name:{
-      type:String,
+    name: {
+      type: String,
     },
-    closeContact:{
-      type:String,
+    closeContact: {
+      type: String,
     },
-    tested:{
-      type:String,
+    tested: {
+      type: String,
     },
-    travelHistory:{
-      type:String,
+    travelHistory: {
+      type: String,
     },
     difficultyBreathing: {
       type: String,
@@ -50,17 +48,21 @@ const assessmentSchema = mongoose.Schema(
     symptomsSet2: {
       type: String,
     },
-    isReviewed:{
+    isReviewed: {
       type: Boolean,
       required: true,
-      default: false
+      default: false,
     },
-    isForwarded:{
+    isForwarded: {
       type: Boolean,
-      default: false
+      default: false,
     },
-    isRejected:{
-      type: Boolean
+    isRejected: {
+      type: Boolean,
+    },
+    doctor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctors",
     },
     appointment: [appointmentSchema],
   },
@@ -107,14 +109,14 @@ patientSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-patientSchema.pre('save',async function(next) {
-    if(!this.isModified('password')){
-      next()
-    }
-  
-    const salt = await bcrypt.genSalt(10)
-    this.password = await bcrypt.hash(this.password, salt)
-  })
+patientSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    next();
+  }
+
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 const Patient = mongoose.model("Patients", patientSchema);
 

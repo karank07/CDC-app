@@ -1,6 +1,7 @@
 import asyncHandler from "express-async-handler";
 import generateToken from "../utils/generateToken.js";
 import Nurse from "../Models/nurseModel.js";
+import Doctor from "../Models/doctorModel.js";
 import Patient from "../Models/patientModel.js";
 import moment from "moment";
 
@@ -165,17 +166,35 @@ const getAssessmentsToReview = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc Get list of doctors
+//@route GET /api/nurses/doctor-list
+//@access Protected nurse
+const getDoctorList = asyncHandler(async (req, res) => {
+  const doctorList = await Doctor.find().select("-password");
+  res.json(
+    doctorList.map((d) => {
+      return {
+        _id: d._id,
+        name: d.firstName + " " + d.lastName,
+      };
+    })
+  );
+});
+
 //@desc review the selected assessment
 //@route POST /api/nurses/review-assessments/:id
 //@access Protected
 const reviewAssessment = asyncHandler(async (req, res) => {
   const patient = await Patient.findOne({ "assessments._id": req.params.id });
-  const { isRejected, isForwarded, isReviewed } = req.body;
+  const { isRejected, isForwarded, isReviewed, doctor } = req.body;
   if (patient) {
     const i = patient.assessments.findIndex((x) => x._id == req.params.id);
     patient.assessments[i].isReviewed = isReviewed || false;
     patient.assessments[i].isRejected = isRejected || false;
     patient.assessments[i].isForwarded = isForwarded || false;
+    if (doctor !== null) {
+      patient.assessments[i].doctor = doctor;
+    }
     const reviewedPatient = await patient.save();
     if (reviewedPatient) {
       res.json({
@@ -236,7 +255,11 @@ const getListOfAppointments = asyncHandler(async (req, res) => {
         return {
           "._id": p._id,
           name: "" + p.firstName + " " + p.lastName,
-          appointment: p.assessments[0].appointment[0].scheduledAt,
+          appointment: moment(
+            p.assessments[0].appointment[0].scheduledAt
+          ).format(),
+          email: p.email,
+          phone: p.phone,
         };
       })
     );
@@ -254,4 +277,5 @@ export {
   getPatientList,
   updateNurseProfile,
   getListOfAppointments,
+  getDoctorList,
 };
