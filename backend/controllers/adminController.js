@@ -57,10 +57,15 @@ const deleteUser = asyncHandler(async (req, res) => {
 //@route GET /api/admins/report
 //@access Protected admin
 const getReport = asyncHandler(async (req, res) => {
-  const from = req.query.from
-  const to = req.query.to
-  const patientList = await Patient.countDocuments({"assessments.createdAt":{$gte: from, $lt: to}});
-  res.json(patientList);
+  const from = req.query.from;
+  const to = req.query.to;
+  const patientCount = await Patient.countDocuments({
+    "assessments.createdAt": {
+      $gte: moment(from).format(),
+      $lte: moment(to).format("YYYY-MM-DDT23:59:59.999+00:00"),
+    },
+  });
+  res.json(patientCount);
 });
-// moment(Date.now()).format("YYYY-MM-DD")
+// moment(Date.now()).format("YYYY-MM-DDT23:59:59.999+00:00")
 export { getPatientList, getNurseList, getDoctorList, deleteUser, getReport };
