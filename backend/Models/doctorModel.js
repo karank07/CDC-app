@@ -40,7 +40,7 @@ const doctorSchema = mongoose.Schema(
     }]
   },
   {
-    timestamps: true,
+    timestamps: {currentTime : ()=> moment(Date.now()).format("YYYY-MM-DD") }
   }
 );
 

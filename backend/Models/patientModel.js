@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import moment from "moment"
 
 const appointmentSchema = mongoose.Schema({
   nurse: {
@@ -65,7 +66,7 @@ const assessmentSchema = mongoose.Schema(
     },
     appointment: [appointmentSchema],
   },
-  { timestamps: true }
+  { timestamps: {currentTime : ()=> moment(Date.now()).format("YYYY-MM-DD") }}
 );
 
 const patientSchema = mongoose.Schema(
@@ -100,7 +101,7 @@ const patientSchema = mongoose.Schema(
     assessments: [assessmentSchema],
   },
   {
-    timestamps: true,
+    timestamps: {currentTime : ()=> moment(Date.now()).format("YYYY-MM-DD") }
   }
 );
 

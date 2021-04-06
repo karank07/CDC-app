@@ -42,7 +42,7 @@ const nurseSchema = mongoose.Schema(
     ],
   },
   {
-    timestamps: true,
+    timestamps: {currentTime : ()=> moment(Date.now()).format("YYYY-MM-DD") }
   }
 );
 
