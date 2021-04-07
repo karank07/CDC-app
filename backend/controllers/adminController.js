@@ -61,11 +61,12 @@ const getReport = asyncHandler(async (req, res) => {
   const to = req.query.to;
   const patientCount = await Patient.countDocuments({
     "assessments.createdAt": {
-      $gte: moment(from).format(),
-      $lte: moment(to).format("YYYY-MM-DDT23:59:59.999+00:00"),
+      $gte: moment(from).format("YYYY-MM-DD"),
+      $lte:moment(to).format("YYYY-MM-DD"),
     },
   });
-  res.json({"count":patientCount});
+  res.json({"count":patientCount})
+  
 });
 // moment(Date.now()).format("YYYY-MM-DDT23:59:59.999+00:00")
 export { getPatientList, getNurseList, getDoctorList, deleteUser, getReport };
