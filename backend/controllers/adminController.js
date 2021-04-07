@@ -65,7 +65,7 @@ const getReport = asyncHandler(async (req, res) => {
       $lte: moment(to).format("YYYY-MM-DDT23:59:59.999+00:00"),
     },
   });
-  res.json(patientCount);
+  res.json({"count":patientCount});
 });
 // moment(Date.now()).format("YYYY-MM-DDT23:59:59.999+00:00")
 export { getPatientList, getNurseList, getDoctorList, deleteUser, getReport };
