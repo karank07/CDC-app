@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import moment from 'moment'
 
 const nurseSchema = mongoose.Schema(
   {
