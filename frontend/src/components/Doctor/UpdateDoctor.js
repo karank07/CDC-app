@@ -74,6 +74,7 @@ const UpdateDoctor = ({ history }) => {
     setError(false);
   };
   const [state, setState] = React.useState({
+    detail: history.location.state.detail,
     firstName: history.location.state.detail.firstName,
     lastName: history.location.state.detail.lastName,
 
@@ -114,7 +115,7 @@ const UpdateDoctor = ({ history }) => {
                 to={{
                   pathname: "/doctor",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -130,7 +131,7 @@ const UpdateDoctor = ({ history }) => {
                 to={{
                   pathname: "/doctor",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -145,7 +146,7 @@ const UpdateDoctor = ({ history }) => {
                 to={{
                   pathname: "/upcoming-appointment-doc",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -160,7 +161,7 @@ const UpdateDoctor = ({ history }) => {
                 to={{
                   pathname: "/patient-list-doc",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -176,7 +177,7 @@ const UpdateDoctor = ({ history }) => {
                 to={{
                   pathname: "/update-doctor",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -352,7 +353,7 @@ const UpdateDoctor = ({ history }) => {
                 history.push({
                   pathname: "/doctor",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -390,7 +391,7 @@ const UpdateDoctor = ({ history }) => {
                       if (response.token) {
                         handleClick();
                         let patientData = await getForwardedAssessmentData();
-                        setState({ ...state, patientData });
+                        setState({ ...state, detail: response, patientData });
                       } else window.alert(response.message);
                     })
                   : handleClickError()

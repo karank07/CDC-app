@@ -247,7 +247,7 @@ const Appointments = ({ history }) => {
                             {moment(row.appointment).format("DD-MM-YYYY")}
                           </TableCell>
                           <TableCell align="right" className={classes.tableText}>
-                            {moment(row.appointment).format("HH:mm a")}
+                            {moment(row.appointment).format("HH:mm")}
                           </TableCell>
                           <TableCell align="right" className={classes.tableText}>
                             {row.name}

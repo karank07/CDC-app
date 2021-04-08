@@ -50,9 +50,9 @@ const PatientList = ({ history }) => {
     response = await getPatientList();
     await setState({ ...state, patientList: response });
   };
-  useEffect(() => {
-    fetchMyAPI();
-  }, []);
+  // useEffect(() => {
+  //   fetchMyAPI();
+  // }, []);
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };

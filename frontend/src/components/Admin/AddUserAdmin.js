@@ -33,7 +33,16 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/picker
 import Visibility from "@material-ui/icons/Visibility";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
-import { registerDoctor, registerNurse, registerPatient, logout } from "../../api/Api";
+import {
+  registerDoctor,
+  registerNurse,
+  registerPatient,
+  logout,
+  getPatientListAdmin,
+  getNurseListAdmin,
+  getDoctorListAdmin,
+  getReport,
+} from "../../api/Api";
 
 import back from "../../assets/Images/Subtract.svg";
 import pds1 from "../../assets/Images/pds1.png";
@@ -89,11 +98,13 @@ const AdminDS = ({ history }) => {
     }
     setOpenTwo(false);
   };
+
   const [state, setState] = React.useState({
     detail: history.location.state.detail,
     patientList: history.location.state.patientList,
     nurseList: history.location.state.nurseList,
     doctorList: history.location.state.doctorList,
+    report: history.location.state.report,
     firstName: "",
     lastName: "",
 
@@ -140,7 +151,7 @@ const AdminDS = ({ history }) => {
                     patientList: state.patientList,
                     doctorList: state.doctorList,
                     nurseList: state.nurseList,
-                    report: history.location.state.report,
+                    report: state.report,
                   },
                 }}
                 className={classes.link}>
@@ -157,7 +168,7 @@ const AdminDS = ({ history }) => {
                     patientList: state.patientList,
                     doctorList: state.doctorList,
                     nurseList: state.nurseList,
-                    report: history.location.state.report,
+                    report: state.report,
                   },
                 }}
                 className={classes.link}>
@@ -174,7 +185,7 @@ const AdminDS = ({ history }) => {
                     patientList: state.patientList,
                     doctorList: state.doctorList,
                     nurseList: state.nurseList,
-                    report: history.location.state.report,
+                    report: state.report,
                   },
                 }}
                 style={{ borderBottom: "solid 3px", paddingBottom: 7, borderRadius: 2 }}
@@ -238,7 +249,20 @@ const AdminDS = ({ history }) => {
                         }
                       : { color: "#3C4161", backgroundColor: "white" }
                   }
-                  onClick={() => setState({ ...state, selected: "patient" })}>
+                  onClick={() =>
+                    setState({
+                      ...state,
+                      selected: "patient",
+                      emailId: "",
+                      firstName: "",
+                      lastName: "",
+                      phoneNum: "",
+                      dob: "",
+                      address: "",
+                      password: "",
+                      regNum: "",
+                    })
+                  }>
                   A Patient
                 </Button>
                 <Button
@@ -257,7 +281,20 @@ const AdminDS = ({ history }) => {
                         }
                       : { color: "#3C4161", backgroundColor: "white" }
                   }
-                  onClick={() => setState({ ...state, selected: "nurse" })}>
+                  onClick={() =>
+                    setState({
+                      ...state,
+                      selected: "nurse",
+                      emailId: "",
+                      firstName: "",
+                      lastName: "",
+                      phoneNum: "",
+                      dob: "",
+                      address: "",
+                      password: "",
+                      regNum: "",
+                    })
+                  }>
                   A Nurse
                 </Button>
                 <Button
@@ -276,7 +313,20 @@ const AdminDS = ({ history }) => {
                         }
                       : { color: "#3C4161", backgroundColor: "white" }
                   }
-                  onClick={() => setState({ ...state, selected: "doctor" })}>
+                  onClick={() =>
+                    setState({
+                      ...state,
+                      selected: "doctor",
+                      emailId: "",
+                      firstName: "",
+                      lastName: "",
+                      phoneNum: "",
+                      dob: "",
+                      address: "",
+                      password: "",
+                      regNum: "",
+                    })
+                  }>
                   A Doctor
                 </Button>
               </Grid>
@@ -459,7 +509,7 @@ const AdminDS = ({ history }) => {
                         patientList: state.patientList,
                         doctorList: state.doctorList,
                         nurseList: state.nurseList,
-                        report: history.location.state.report,
+                        report: state.report,
                       },
                     }}
                     style={{ textDecoration: "none" }}>
@@ -497,13 +547,33 @@ const AdminDS = ({ history }) => {
                               state.password,
                               state.dob,
                               state.phoneNum,
-                              state.address
+                              state.address,
+                              false
                             ).then(async function (response) {
                               if (response.token) {
-                                alert("Done");
+                                handleClick();
+                                let from = moment(new Date()).format("YYYY-MM-DD");
+                                let patientList = await getPatientListAdmin();
+                                let nurseList = await getNurseListAdmin();
+                                let doctorList = await getDoctorListAdmin();
+                                let report = await getReport(from, from);
+                                setState({
+                                  ...state,
+                                  patientList,
+                                  nurseList,
+                                  doctorList,
+                                  report: report.count,
+                                  emailId: "",
+                                  firstName: "",
+                                  lastName: "",
+                                  phoneNum: "",
+                                  dob: "",
+                                  address: "",
+                                  password: "",
+                                });
                               } else window.alert(response.message);
                             })
-                          : handleClick()
+                          : handleClickTwo()
                         : state.selected == "nurse"
                         ? validateEmail(state.emailId) &&
                           validateName(state.firstName) &&
@@ -517,13 +587,34 @@ const AdminDS = ({ history }) => {
                               state.dob,
                               state.phoneNum,
                               state.address,
-                              state.regNum
+                              state.regNum,
+                              false
                             ).then(async function (response) {
                               if (response.token) {
-                                alert("Done");
+                                handleClick();
+                                let from = moment(new Date()).format("YYYY-MM-DD");
+                                let patientList = await getPatientListAdmin();
+                                let nurseList = await getNurseListAdmin();
+                                let doctorList = await getDoctorListAdmin();
+                                let report = await getReport(from, from);
+                                setState({
+                                  ...state,
+                                  patientList,
+                                  nurseList,
+                                  doctorList,
+                                  report: report.count,
+                                  emailId: "",
+                                  firstName: "",
+                                  lastName: "",
+                                  phoneNum: "",
+                                  dob: "",
+                                  address: "",
+                                  password: "",
+                                  regNum: "",
+                                });
                               } else window.alert(response.message);
                             })
-                          : handleClick()
+                          : handleClickTwo()
                         : validateEmail(state.emailId) &&
                           validateName(state.firstName) &&
                           validateName(state.lastName) &&
@@ -536,13 +627,34 @@ const AdminDS = ({ history }) => {
                             state.dob,
                             state.phoneNum,
                             state.address,
-                            state.regNum
+                            state.regNum,
+                            false
                           ).then(async function (response) {
                             if (response.token) {
-                              alert("Done");
+                              handleClick();
+                              let from = moment(new Date()).format("YYYY-MM-DD");
+                              let patientList = await getPatientListAdmin();
+                              let nurseList = await getNurseListAdmin();
+                              let doctorList = await getDoctorListAdmin();
+                              let report = await getReport(from, from);
+                              setState({
+                                ...state,
+                                patientList,
+                                nurseList,
+                                doctorList,
+                                report: report.count,
+                                emailId: "",
+                                firstName: "",
+                                lastName: "",
+                                phoneNum: "",
+                                dob: "",
+                                address: "",
+                                password: "",
+                                regNum: "",
+                              });
                             } else window.alert(response.message);
                           })
-                        : handleClick()
+                        : handleClickTwo()
                     }>
                     Add User
                   </Button>
@@ -554,12 +666,12 @@ const AdminDS = ({ history }) => {
       </Grid>
       <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          Appointment has been successfully forwarded to a Doctor.
+          User has been successfully created.
         </Alert>
       </Snackbar>
       <Snackbar open={openTwo} autoHideDuration={4000} onClose={handleCloseTwo}>
-        <Alert onClose={handleCloseTwo} severity="success">
-          Appointment has been successfully rejected and the patient will be notified.
+        <Alert onClose={handleCloseTwo} severity="error">
+          Please check all fields and try again.
         </Alert>
       </Snackbar>
     </Grid>

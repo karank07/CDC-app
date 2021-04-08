@@ -1,4 +1,5 @@
 export { default as Home } from './Home';
+export { default as AboutUs } from './AboutUs';
 export { default as Login } from './Login';
 export { default as PatientReg } from './Patient/PatientReg';
 export { default as NurseReg } from './Nurse/NurseReg';

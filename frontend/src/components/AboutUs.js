@@ -22,7 +22,7 @@ import Visibility from "@material-ui/icons/Visibility";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 import back from "../assets/Images/Subtract.svg";
-import homeImg from "../assets/Images/home.png";
+import aboutImg from "../assets/Images/about.jpg";
 import circularProgress from "../assets/Images/circular_progress.png";
 import one from "../assets/Images/1.png";
 import two from "../assets/Images/2.png";
@@ -50,146 +50,127 @@ const Home = ({ history }) => {
             </Link>
           </Typography>
           <Typography style={{ marginTop: "50%" }} className={classes.navText} variant="h6" gutterBottom>
-            <Link
-              to={{ pathname: "/login" }}
-              style={{ textDecoration: "none", color: "white" }}>
+            <Link to={{ pathname: "/login" }} style={{ textDecoration: "none", color: "white" }}>
               Login
             </Link>
           </Typography>
           <Typography className={classes.navText} variant="h6" gutterBottom>
-            <Link
-              to={{ pathname: "/login" }}
-              style={{ textDecoration: "none", color: "white" }}>
+            <Link to={{ pathname: "/login" }} style={{ textDecoration: "none", color: "white" }}>
               For Nurse
             </Link>
           </Typography>
           <Typography className={classes.navText} variant="h6" gutterBottom>
-            <Link
-              to={{ pathname: "/login" }}
-              style={{ textDecoration: "none", color: "white" }}>
+            <Link to={{ pathname: "/login" }} style={{ textDecoration: "none", color: "white" }}>
               For Doctor
             </Link>
           </Typography>
           <Typography className={classes.navText} variant="h6" gutterBottom>
-            <Link to={"/about-us"} style={{ textDecoration: "none", color: "white" }}>
+            <Link
+              style={{
+                borderBottom: "solid 3px",
+                paddingBottom: 7,
+                borderRadius: 2,
+                textDecoration: "none",
+                color: "white",
+              }}>
               About Us
             </Link>
           </Typography>
+          <Grid container direction="row" className={classes.navBot}>
+            <Link to={"/"} style={{ textDecoration: "none", color: "white" }}>
+              <ArrowBackIosIcon fontSize="large"></ArrowBackIosIcon>
+            </Link>
+            <Typography variant="h5" className={classes.text}>
+              <Link to={"/"} style={{ textDecoration: "none", color: "white" }}>
+                Home
+              </Link>
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
 
-      <Grid item sm={9} style={{ marginLeft: "-3%" }}>
+      <Grid item sm={9} style={{ marginLeft: "-3%", height: 500 }}>
         <Grid container direction="row" style={{ marginTop: "4%" }}>
           <Grid item sm={6}>
             <Typography variant="h2" className={classes.title}>
-              Welcome to CDC
+              About Us
+            </Typography>
+            <Typography variant="h6" gutterBottom style={{ marginTop: "10%" }} className={classes.text}>
+              CDC provides easy and efficient way to self assess oneself for COVID-19.
             </Typography>
             <Typography variant="h6" gutterBottom style={{ color: "#9296A6" }} className={classes.text}>
               CDC provides a self assessment tool for COVID-19 and provides you a faster access to Medical system. A
               healthcare professional could provide faster consultation based on the test result.
             </Typography>
           </Grid>
-          <Grid item sm={4}>
+          <Grid item sm={6}>
             <Grid
               container
               style={{
-                marginTop: "-15%",
-                marginLeft: "40%",
-                backgroundImage: `url(${homeImg})`,
+                marginTop: "15%",
+                marginLeft: "8%",
+                backgroundImage: `url(${aboutImg})`,
                 backgroundRepeat: "no-repeat",
-                height: 429,
+                height: "200%",
               }}></Grid>
           </Grid>
-          <Grid item sm={7}>
-            <Typography variant="h4" style={{ marginTop: "-16%" }} className={classes.title}>
-              COVID-19 Symptom Self-Assessment Tool
+          <Grid item sm={6}>
+            <Typography variant="h6" gutterBottom style={{ marginTop: "10%" }} className={classes.text}>
+              Platform which connects a patient to a healthcare professional online in a very easy way
             </Typography>
             <Typography variant="h6" gutterBottom style={{ color: "#9296A6" }} className={classes.text}>
-              If one or more symptoms persist for more than 24 hours, proceed with self-assessment.
+              No need to go anywhere for assessing your symptoms. Use our self-assessment tool and get it assessed by a
+              healthcare professional from the comfort of your home. CDC provides an easy and efficient way for a
+              professional to schedule an appointment with you based on their opinion about your self-assessment report.
             </Typography>
           </Grid>
-          <Grid item sm={10}>
-            <Grid container justify="space-between" alignItems="center" style={{ marginTop: "4%" }}>
-              <Card className={classes.paper}>
-                <CardContent style={{ height: "100%", justifyContent: "center", alignItems: "center" }}>
-                  <CardMedia style={{ height: 109, width: 37, marginLeft: "42%" }} image={one} title="Fever" />
-                  <Typography variant="body1" className={classes.cardTitle}>
-                    Fever
-                  </Typography>
-                  <Typography variant="body2" className={classes.cardText}>
-                    Oral temperature of 38.1 °C (100.6 °F) and above
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card className={classes.paper}>
-                <CardContent style={{ height: "100%", justifyContent: "center", alignItems: "center" }}>
-                  <CardMedia
-                    style={{ height: 108, width: 112, marginLeft: "25%" }}
-                    image={two}
-                    title="Genral symptoms"
-                  />
-                  <Typography variant="body1" className={classes.cardTitle}>
-                    Genral symptoms
-                  </Typography>
-                  <Typography variant="body2" className={classes.cardText}>
-                    loss of smell or appetite, fatigue or muscle pain
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card className={classes.paper}>
-                <CardContent style={{ height: "100%", justifyContent: "center", alignItems: "center" }}>
-                  <CardMedia
-                    style={{ height: 106, width: 100, alignSelf: "center", marginLeft: "25%" }}
-                    image={three}
-                    title="Respiratory symptoms"
-                  />
-                  <Typography variant="body1" className={classes.cardTitle} style={{ marginTop: "-2%" }}>
-                    Respiratory symptoms
-                  </Typography>
-                  <Typography variant="body2" className={classes.cardText}>
-                    Cough, difficulty in breathing, Sore throat, Runny nose
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card className={classes.paper}>
-                <CardContent style={{ height: "100%", justifyContent: "center", alignItems: "center" }}>
-                  <CardMedia
-                    style={{ height: 83, width: 65, marginLeft: "35%", marginTop: "3%" }}
-                    image={four}
-                    title="Gastrointestinal symptoms"
-                  />
-                  <Typography variant="body1" className={classes.cardTitle} style={{ marginTop: "8%" }}>
-                    Gastrointestinal symptoms
-                  </Typography>
-                  <Typography variant="body2" className={classes.cardText}>
-                    Nausea, Vomiting, Diarrhea, Stomach aches
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-            <Grid container justify="center" alignItems="center" style={{ marginTop: "5%" }}>
-              <Button
-                variant="contained"
-                size="large"
-                className={clsx(classes.margin, classes.loginBtn)}
-                style={{ boxShadow: "none" }}
-                color="primary"
-                onClick={() => {
-                  if (checkIfLogin()) history.push("/self-assessment");
-                  else history.push({ pathname: "/login" });
-                }}>
-                Take Self Assessment
-              </Button>
-              <img src={circularProgress} alt="circularProgress" />
-              <Button
-                variant="contained"
-                size="large"
-                className={clsx(classes.margin, classes.loginBtn)}
-                color="primary"
-                disabled>
-                Get help from a doctor
-              </Button>
-            </Grid>
+        </Grid>
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          style={{
+            backgroundColor: "rgba(242, 246, 248, 0.58)",
+            // borderRadius: 8,
+            marginLeft: "-6.15%",
+            height: 80,
+            position: "absolute",
+            bottom: 0,
+            width: "90%",
+          }}>
+          <Grid
+            container
+            style={{
+              height: 48,
+              borderTopLeftRadius: 12,
+              borderBottomRightRadius: 12,
+              width: 20,
+              marginLeft: "-5%",
+              backgroundColor: "#3C4161",
+            }}></Grid>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+            style={{ height: 48, width: 400, borderBottomRightRadius: 12, backgroundColor: "white" }}>
+            <Typography variant="h6" className={classes.title}>
+              Design and Developed By
+            </Typography>
+          </Grid>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+            style={{
+              height: 48,
+              width: 120,
+              borderBottomRightRadius: 12,
+              borderTopRightRadius: 12,
+              backgroundColor: "#3C4161",
+            }}>
+            <Typography variant="h6" style={{ color: "white" }} className={classes.title}>
+              Group F
+            </Typography>
           </Grid>
         </Grid>
       </Grid>
@@ -240,9 +221,9 @@ const useStyles = makeStyles((theme) => ({
     bottom: 10,
     color: "white",
     margin: "5%",
-    marginLeft: "12%",
+    marginLeft: "4%",
     marginTop: "50%",
-    fontFamily: "product_sans_blackregular",
+    fontFamily: "product_sansbold",
   },
   loginBtn: {
     // color:'#3C76EF'

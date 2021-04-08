@@ -74,6 +74,7 @@ const UpdatePatient = ({ history }) => {
     setError(false);
   };
   const [state, setState] = React.useState({
+    detail: history.location.state.detail,
     firstName: history.location.state.detail.firstName,
     lastName: history.location.state.detail.lastName,
 
@@ -111,7 +112,7 @@ const UpdatePatient = ({ history }) => {
               <Link
                 to={{
                   pathname: "/patient",
-                  state: { detail: history.location.state.detail, assessmentData: state.assessmentData },
+                  state: { detail: state.detail, assessmentData: state.assessmentData },
                 }}
                 style={{ textDecoration: "none", color: "white" }}>
                 CDC
@@ -122,7 +123,7 @@ const UpdatePatient = ({ history }) => {
               <Link
                 to={{
                   pathname: "/patient",
-                  state: { detail: history.location.state.detail, assessmentData: state.assessmentData },
+                  state: { detail: state.detail, assessmentData: state.assessmentData },
                 }}
                 className={classes.link}>
                 Dashboard
@@ -133,7 +134,7 @@ const UpdatePatient = ({ history }) => {
               <Link
                 to={{
                   pathname: "/update-patient",
-                  state: { detail: history.location.state.detail, assessmentData: state.assessmentData },
+                  state: { detail: state.detail, assessmentData: state.assessmentData },
                 }}
                 style={{ borderBottom: "solid 3px", paddingBottom: 7, borderRadius: 2 }}
                 className={classes.link}>
@@ -277,7 +278,7 @@ const UpdatePatient = ({ history }) => {
               onClick={() =>
                 history.push({
                   pathname: "/patient",
-                  state: { detail: history.location.state.detail, assessmentData: state.assessmentData },
+                  state: { detail: state.detail, assessmentData: state.assessmentData },
                 })
               }>
               Cancel
@@ -311,7 +312,7 @@ const UpdatePatient = ({ history }) => {
                       if (response.token) {
                         handleClick();
                         let assessmentData = await getPreviousAssessmentData();
-                        setState({ ...state, assessmentData });
+                        setState({ ...state, detail: response, assessmentData });
                       } else window.alert(response.message);
                     })
                   : handleClickError()

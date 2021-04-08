@@ -67,14 +67,22 @@ const AdminDS = ({ history }) => {
   const fetchAPI = async () => {
     let response;
     response = await getReport(state.from, state.to);
-    await setState({ ...state, report: response });
+    await setState({ ...state, report: response.count });
   };
   const [open, setOpen] = React.useState(false);
-  const handleChangeFrom = (prop) => (event) => {
+
+  const handleChangeFrom = (prop) => async (event) => {
     setState({ ...state, from: event.target.value });
+    let response;
+    response = await getReport(event.target.value, state.to);
+    await setState({ ...state, from: event.target.value, report: response.count });
   };
-  const handleChangeTo = (prop) => (event) => {
-    setState({ ...state, to: event.target.value });
+  const handleChangeTo = (prop) => async (event) => {
+    // let date = moment(event.target.value, "YYYY-MM-DD");
+    await setState({ ...state, to: event.target.value });
+    let response;
+    response = await getReport(state.from, event.target.value);
+    await setState({ ...state, to: event.target.value, report: response.count });
   };
   const handleClick = () => {
     setOpen(true);
@@ -102,9 +110,8 @@ const AdminDS = ({ history }) => {
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
-  useEffect(() => {
-    fetchAPI();
-  }, [state.to]);
+  useEffect(() => {}, [state.report]);
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={false} sm={3}>
@@ -214,7 +221,7 @@ const AdminDS = ({ history }) => {
                       <Typography
                         variant="h6"
                         gutterBottom
-                        style={{ color: "#9296A6", marginTop: "-2%", fontSize: 14 }}
+                        style={{ color: "#3C4161", marginTop: "-2%", fontSize: 16 }}
                         className={classes.text}>
                         From:
                       </Typography>
@@ -227,7 +234,7 @@ const AdminDS = ({ history }) => {
                             input: classes.textDate,
                           },
                         }}
-                        inputProps={{ min: "2021-02-01" }}
+                        inputProps={{ min: "2021-02-01", max: state.to }}
                         value={state.from}
                         className={classes.textField}
                         onChange={handleChangeFrom()}
@@ -240,7 +247,7 @@ const AdminDS = ({ history }) => {
                       <Typography
                         variant="h6"
                         gutterBottom
-                        style={{ color: "#9296A6", marginTop: "-2%", fontSize: 14 }}
+                        style={{ color: "#3C4161", marginTop: "-2%", fontSize: 16 }}
                         className={classes.text}>
                         To:
                       </Typography>
@@ -253,7 +260,7 @@ const AdminDS = ({ history }) => {
                             input: classes.textDate,
                           },
                         }}
-                        inputProps={{ min: "2021-02-01" }}
+                        inputProps={{ min: state.from, max: currDate }}
                         value={state.to}
                         className={classes.textField}
                         onChange={handleChangeTo()}
@@ -266,21 +273,25 @@ const AdminDS = ({ history }) => {
                       padAngle={({ datum }) => datum.y}
                       innerRadius={120}
                       colorScale={["#3C4161", "#3C76EF"]}
-                      height="450"
-                      width="700"
+                      height={450}
+                      width={700}
                       labelComponent={<VictoryLabel renderInPortal />}
                       // padding="10"
                       style={{
                         parent: { overflow: "visible" },
-                        labels: {
-                          fontSize: 19,
-                          fill: "#9296A6",
-                          padding: 30,
-                        },
+                        labels:
+                          state.report > 0 && state.patientList.length != state.report
+                            ? {
+                                fontFamily: "product_sansregular",
+                                fontSize: 19,
+                                fill: "#9296A6",
+                                padding: 40,
+                              }
+                            : { fontSize: 0 },
                       }}
                       data={[
                         { x: "assessment taken", y: state.report },
-                        { x: "did not take assessment", y: state.patientList.length - state.report },
+                        { x: "assessment not taken", y: state.patientList.length - state.report },
                       ]}
                     />
                   </Grid>
@@ -312,7 +323,16 @@ const AdminDS = ({ history }) => {
                           : { color: "#3C4161", backgroundColor: "white" }
                       }
                       onClick={async () => {
-                        await setState({ ...state, selected: "daily", from: currDate, to: currDate });
+                        let response;
+                        response = await getReport(currDate, currDate);
+                        await setState({ ...state, report: response.count });
+                        await setState({
+                          ...state,
+                          report: response.count,
+                          selected: "daily",
+                          from: currDate,
+                          to: currDate,
+                        });
                       }}>
                       Today
                     </Button>
@@ -333,8 +353,14 @@ const AdminDS = ({ history }) => {
                           : { color: "#3C4161", backgroundColor: "white" }
                       }
                       onClick={async () => {
+                        let response;
+                        let from = moment(currDate, "YYYY-MM-DD").subtract("days", 7).format("YYYY-MM-DD");
+                        let to = currDate;
+                        response = await getReport(from, to);
+                        await setState({ ...state, report: response.count });
                         await setState({
                           ...state,
+                          report: response.count,
                           selected: "weekly",
                           to: currDate,
                           from: moment(currDate, "YYYY-MM-DD").subtract("days", 7).format("YYYY-MM-DD"),
@@ -358,14 +384,20 @@ const AdminDS = ({ history }) => {
                             }
                           : { color: "#3C4161", backgroundColor: "white" }
                       }
-                      onClick={() =>
+                      onClick={async () => {
+                        let from = moment(currDate, "YYYY-MM-DD").subtract("months", 1).format("YYYY-MM-DD");
+                        let to = currDate;
+                        let response;
+                        response = await getReport(from, to);
+                        await setState({ ...state, report: response.count });
                         setState({
                           ...state,
+                          report: response.count,
                           selected: "monthly",
                           to: currDate,
                           from: moment(currDate, "YYYY-MM-DD").subtract("months", 1).format("YYYY-MM-DD"),
-                        })
-                      }>
+                        });
+                      }}>
                       This Month
                     </Button>
                   </Grid>
@@ -385,22 +417,38 @@ const AdminDS = ({ history }) => {
                       justify="center"
                       container
                       style={{
-                        height: 110,
-                        width: "55%",
+                        height: 90,
+                        width: "75%",
                         backgroundColor: "white",
+                        border: "4px solid #3C76EF",
                         margin: 20,
+                        marginLeft: 0,
                         marginRight: 0,
                         borderRadius: 20,
                       }}>
                       <Typography
-                        variant="h6"
-                        gutterBottom
+                        variant="h5"
                         className={classes.text}
-                        style={{ padding: 20, textAlign: "center", color: "#3C4161", fontFamily: "product_sansbold" }}>
-                        Number of Registered Patients
+                        style={{
+                          textAlign: "center",
+                          color: "#3C4161",
+                          fontFamily: "product_sansbold",
+                        }}>
+                        Registered Patients
+                      </Typography>
+                      <Typography
+                        variant="h2"
+                        className={classes.text}
+                        style={{
+                          marginLeft: 40,
+                          textAlign: "center",
+                          color: "#3C4161",
+                          fontFamily: "product_sansbold",
+                        }}>
+                        {state.patientList.length}
                       </Typography>
                     </Grid>
-                    <Grid
+                    {/* <Grid
                       container
                       alignItems="center"
                       justify="center"
@@ -422,7 +470,7 @@ const AdminDS = ({ history }) => {
                         style={{ padding: 20, textAlign: "center", color: "#3C4161", fontFamily: "product_sansbold" }}>
                         {state.patientList.length}
                       </Typography>
-                    </Grid>
+                    </Grid> */}
                   </Grid>
                   <Grid container direction="row" alignItems="center" justify="center">
                     <Grid
@@ -438,10 +486,9 @@ const AdminDS = ({ history }) => {
                         borderBottomLeftRadius: 15,
                       }}>
                       <Typography
-                        variant="h4"
-                        gutterBottom
+                        variant="h2"
                         className={classes.text}
-                        style={{ padding: 20, textAlign: "center", color: "white", fontFamily: "product_sansbold" }}>
+                        style={{ textAlign: "center", color: "white", fontFamily: "product_sansbold" }}>
                         {state.report}
                       </Typography>
                     </Grid>
@@ -458,10 +505,13 @@ const AdminDS = ({ history }) => {
                         borderRadius: 20,
                       }}>
                       <Typography
-                        variant="h6"
-                        gutterBottom
+                        variant="h5"
                         className={classes.text}
-                        style={{ padding: 20, textAlign: "center", color: "#3C4161", fontFamily: "product_sansbold" }}>
+                        style={{
+                          textAlign: "center",
+                          color: "#3C4161",
+                          fontFamily: "product_sansregular",
+                        }}>
                         Patients who took Self-assessment
                       </Typography>
                     </Grid>
@@ -481,10 +531,13 @@ const AdminDS = ({ history }) => {
                         borderRadius: 20,
                       }}>
                       <Typography
-                        variant="h6"
-                        gutterBottom
+                        variant="h5"
                         className={classes.text}
-                        style={{ padding: 20, textAlign: "center", color: "#3C4161", fontFamily: "product_sansbold" }}>
+                        style={{
+                          textAlign: "center",
+                          color: "#3C4161",
+                          fontFamily: "product_sansregular",
+                        }}>
                         Patients who have not taken assessment
                       </Typography>
                     </Grid>
@@ -501,10 +554,9 @@ const AdminDS = ({ history }) => {
                         borderBottomRightRadius: 15,
                       }}>
                       <Typography
-                        variant="h4"
-                        gutterBottom
+                        variant="h2"
                         className={classes.text}
-                        style={{ padding: 20, textAlign: "center", color: "white", fontFamily: "product_sansbold" }}>
+                        style={{ textAlign: "center", color: "white", fontFamily: "product_sansbold" }}>
                         {state.patientList.length - state.report}
                       </Typography>
                     </Grid>

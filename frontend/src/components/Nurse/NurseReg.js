@@ -24,6 +24,7 @@ import back from "../../assets/Images/Subtract.svg";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 
 import { registerNurse, getListForReview, getAppointmentList, getPatientList } from "../../api/Api";
+import moment from "moment";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -322,7 +323,9 @@ const NurseReg = ({ history }) => {
                 state.lastName.length == 0 ||
                 state.phoneNum.length == 0 ||
                 state.password.length == 0 ||
-                state.address.length == 0
+                state.address.length == 0 ||
+                state.regNum == 0 ||
+                !moment(state.dob).isValid()
               }
               onClick={() =>
                 validateEmail(state.emailId) &&
@@ -337,7 +340,8 @@ const NurseReg = ({ history }) => {
                       state.dob,
                       state.phoneNum,
                       state.address,
-                      state.regNum
+                      state.regNum,
+                      true
                     ).then(async function (response) {
                       if (response.token) {
                         let patientData = await getListForReview();

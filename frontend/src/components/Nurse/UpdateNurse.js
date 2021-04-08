@@ -73,6 +73,7 @@ const UpdateNurse = ({ history }) => {
     setError(false);
   };
   const [state, setState] = React.useState({
+    detail: history.location.state.detail,
     firstName: history.location.state.detail.firstName,
     lastName: history.location.state.detail.lastName,
 
@@ -114,7 +115,7 @@ const UpdateNurse = ({ history }) => {
                 to={{
                   pathname: "/nurse",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -130,7 +131,7 @@ const UpdateNurse = ({ history }) => {
                 to={{
                   pathname: "/nurse",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -146,7 +147,7 @@ const UpdateNurse = ({ history }) => {
                 to={{
                   pathname: "/upcoming-appointment",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -161,7 +162,7 @@ const UpdateNurse = ({ history }) => {
                 to={{
                   pathname: "/Patient-list",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -177,7 +178,7 @@ const UpdateNurse = ({ history }) => {
                 to={{
                   pathname: "/update-nurse",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -363,7 +364,7 @@ const UpdateNurse = ({ history }) => {
                 history.push({
                   pathname: "/nurse",
                   state: {
-                    detail: history.location.state.detail,
+                    detail: state.detail,
                     patientData: state.patientData,
                     patientList: state.patientList,
                     appointmentList: state.appointmentList,
@@ -401,7 +402,7 @@ const UpdateNurse = ({ history }) => {
                       if (response.token) {
                         handleClick();
                         let patientData = await getListForReview();
-                        setState({ ...state, patientData });
+                        setState({ ...state, detail: response, patientData });
                       } else window.alert(response.message);
                     })
                   : handleClickError()

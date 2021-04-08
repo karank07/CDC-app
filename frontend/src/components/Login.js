@@ -100,7 +100,6 @@ const Login = ({ history }) => {
                 <Link
                   to={{
                     pathname: "/patient-register",
-                    state: { fromHome: history.location.state.fromHome },
                   }}
                   className={classes.link}>
                   Patient
@@ -185,22 +184,14 @@ const Login = ({ history }) => {
               loginPatient(state.userId, state.password).then(async function (response) {
                 if (response.token && response.type == "patient") {
                   let assessmentData = await getPreviousAssessmentData();
-                  if (history.location.state.fromHome)
-                    history.push({
-                      pathname: "/Self-assessment",
-                      state: {
-                        detail: response,
-                        assessmentData: assessmentData,
-                      },
-                    });
-                  else
-                    history.push({
-                      pathname: "/patient",
-                      state: {
-                        detail: response,
-                        assessmentData: assessmentData,
-                      },
-                    });
+
+                  history.push({
+                    pathname: "/patient",
+                    state: {
+                      detail: response,
+                      assessmentData: assessmentData,
+                    },
+                  });
                 } else if (response.token && response.type == "nurse") {
                   let patientData = await getListForReview();
                   let appointmentList = await getAppointmentList();
@@ -211,11 +202,11 @@ const Login = ({ history }) => {
                   });
                 } else if (response.token && response.type == "admin") {
                   let from = moment(new Date()).format("YYYY-MM-DD");
-                  let to = moment(from, "YYYY-MM-DD").add("days", 1).format("YYYY-MM-DD");
+
                   let patientList = await getPatientListAdmin();
                   let nurseList = await getNurseListAdmin();
                   let doctorList = await getDoctorListAdmin();
-                  let report = await getReport(from, to);
+                  let report = await getReport(from, from);
                   history.push({
                     pathname: "/admin",
                     state: {
@@ -223,7 +214,7 @@ const Login = ({ history }) => {
                       patientList,
                       nurseList,
                       doctorList,
-                      report: report,
+                      report: report.count,
                     },
                   });
                 } else if (response.token && response.type == "doctor") {

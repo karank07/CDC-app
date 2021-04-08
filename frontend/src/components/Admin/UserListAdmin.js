@@ -27,11 +27,16 @@ import Paper from "@material-ui/core/Paper";
 import moment from "moment";
 import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 import Visibility from "@material-ui/icons/Visibility";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
-import { deleteUser, postScheduleAppointment, getListForReview, logout } from "../../api/Api";
+import { deleteUser, postScheduleAppointment, getListForReview, logout, getReport } from "../../api/Api";
 
 import back from "../../assets/Images/Subtract.svg";
 import pds1 from "../../assets/Images/pds1.png";
@@ -41,13 +46,70 @@ function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 
-function createData(name, createdAt) {
-  return { name, createdAt };
-}
 const UserListAdmin = ({ history }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const [state, setState] = React.useState({
+    detail: history.location.state.detail,
+    patientList: history.location.state.patientList,
+    nurseList: history.location.state.nurseList,
+    doctorList: history.location.state.doctorList,
+    report: history.location.state.report,
+    selected: "patient",
+    index: 0,
+  });
+  const deletUser = () => {
+    deleteUser(
+      state.selected == "patient"
+        ? state.patientList[state.index]._id
+        : state.selected == "nurse"
+        ? state.nurseList[state.index]._id
+        : state.doctorList[state.index]._id
+    ).then(async function (response) {
+      if (response.success == true) {
+        if (state.selected == "patient") {
+          let from = moment(new Date()).format("YYYY-MM-DD");
+          let report = await getReport(from, from);
+          let tempList = state.patientList;
+          tempList.splice(state.index, 1);
+          setState({
+            ...state,
+            report: report.count,
+            patientList: tempList,
+          });
+        } else if (state.selected == "nurse") {
+          let tempList = state.nurseList;
+          tempList.splice(state.index, 1);
+          setState({
+            ...state,
+            nurseList: tempList,
+          });
+        } else {
+          let tempList = state.doctorList;
+          tempList.splice(state.index, 1);
+          setState({
+            ...state,
+            doctorList: tempList,
+          });
+        }
+        handleClick();
+      }
+    });
+    setOpenDialog(false);
+  };
+  const handleClickOpenDialog = async (index) => {
+    setOpenDialog(true);
+    await setState({ ...state, index });
+  };
 
+  const handleCloseDialogTrue = () => {
+    setOpenDialog(false);
+  };
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+    setState({ ...state });
+  };
   const handleClick = () => {
     setOpen(true);
   };
@@ -70,18 +132,11 @@ const UserListAdmin = ({ history }) => {
     }
     setOpenTwo(false);
   };
-  const [state, setState] = React.useState({
-    detail: history.location.state.detail,
-    patientList: history.location.state.patientList,
-    nurseList: history.location.state.nurseList,
-    doctorList: history.location.state.doctorList,
-    selected: "patient",
-    index: 0,
-  });
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault();
   };
+
   return (
     <Grid container className={classes.root}>
       <Grid item xs={false} sm={3}>
@@ -105,7 +160,7 @@ const UserListAdmin = ({ history }) => {
                     patientList: state.patientList,
                     doctorList: state.doctorList,
                     nurseList: state.nurseList,
-                    report: history.location.state.report,
+                    report: state.report,
                   },
                 }}
                 className={classes.link}>
@@ -122,7 +177,7 @@ const UserListAdmin = ({ history }) => {
                     patientList: state.patientList,
                     doctorList: state.doctorList,
                     nurseList: state.nurseList,
-                    report: history.location.state.report,
+                    report: state.report,
                   },
                 }}
                 className={classes.link}>
@@ -139,7 +194,7 @@ const UserListAdmin = ({ history }) => {
                     patientList: state.patientList,
                     doctorList: state.doctorList,
                     nurseList: state.nurseList,
-                    report: history.location.state.report,
+                    report: state.report,
                   },
                 }}
                 className={classes.link}
@@ -160,7 +215,6 @@ const UserListAdmin = ({ history }) => {
           </Grid>
         </div>
       </Grid>
-
       <Grid item sm={9} style={{ marginLeft: "-3%", height: "100%" }}>
         <Grid container direction="row" style={{ marginTop: "4%", height: 850 }}>
           <Grid item sm={11} style={{ height: 650 }}>
@@ -202,7 +256,7 @@ const UserListAdmin = ({ history }) => {
                         patientList: state.patientList,
                         doctorList: state.doctorList,
                         nurseList: state.nurseList,
-                        report: history.location.state.report,
+                        report: state.report,
                       },
                     })
                   }>
@@ -343,7 +397,7 @@ const UserListAdmin = ({ history }) => {
                           </TableHead>
                           <TableBody>
                             {state.patientList.map((row, index) => (
-                              <TableRow key={row.name}>
+                              <TableRow key={row._id}>
                                 <TableCell component="th" scope="row" className={classes.tableText}>
                                   {row.firstName + " " + row.lastName}
                                 </TableCell>
@@ -367,18 +421,9 @@ const UserListAdmin = ({ history }) => {
                                     color="primary"
                                     style={{ width: 120, backgroundColor: "#F72626", fontSize: 14 }}
                                     className={classes.loginBtn}
-                                    onClick={() =>
-                                      deleteUser(row._id).then(async function (response) {
-                                        if (response.success == true) {
-                                          alert("Done");
-                                          let patient_list = state.patientList;
-                                          setState({
-                                            patientList: patient_list.splice(index, 1),
-                                          });
-                                          console.log(state.patientList);
-                                        }
-                                      })
-                                    }>
+                                    onClick={() => {
+                                      handleClickOpenDialog(index);
+                                    }}>
                                     Delete User
                                   </Button>
                                 </TableCell>
@@ -390,120 +435,6 @@ const UserListAdmin = ({ history }) => {
                     </Grid>
                   </Grid>
                 )
-                // state.patientList.map((row, index) => (
-                //   <Grid
-                //     key={row}
-                //     container
-                //     direction="column"
-                //     style={{
-                //       height: "20%",
-                //       backgroundColor: "white",
-                //       borderRadius: 12,
-                //       margin: 2,
-                //       padding: 20,
-                //       maxWidth: 1100,
-                //     }}>
-                //     <Grid container direction="row">
-                //       <Grid container>
-                //         <Typography
-                //           style={{
-                //             color: "#3C4161",
-                //             fontSize: 19,
-                //             fontFamily: "product_sansbold",
-                //             maxWidth: 1100,
-                //           }}
-                //           className={classes.listText}>
-                //           Name
-                //         </Typography>
-                //         <Typography style={{ color: "#3C4161", fontSize: 19 }} className={classes.listText}>
-                //           &nbsp;{row.firstName} {row.lastName}
-                //         </Typography>
-                //       </Grid>
-                //       <Grid container>
-                //         <Typography
-                //           style={{
-                //             color: "#3C4161",
-                //             fontSize: 19,
-                //             fontFamily: "product_sansbold",
-                //           }}
-                //           className={classes.listText}>
-                //           &nbsp;Date of Birth
-                //         </Typography>
-                //         <Typography style={{ color: "#3C4161", fontSize: 19 }} className={classes.listText}>
-                //           &nbsp;{moment(row.dateOfBirth).format("DD-MM-YYYY")}
-                //         </Typography>
-                //       </Grid>
-                //     </Grid>
-                //     <Grid container direction="row">
-                //       <Grid container>
-                //         <Typography
-                //           style={{
-                //             color: "#3C4161",
-                //             fontSize: 19,
-                //             fontFamily: "product_sansbold",
-                //           }}
-                //           className={classes.listText}>
-                //           Email ID
-                //         </Typography>
-                //         <Typography style={{ color: "#3C4161", fontSize: 19 }} className={classes.listText}>
-                //           &nbsp;{row.email}
-                //         </Typography>
-                //       </Grid>
-                //       <Grid container>
-                //         <Typography
-                //           style={{
-                //             color: "#3C4161",
-                //             fontSize: 19,
-                //             fontFamily: "product_sansbold",
-                //           }}
-                //           className={classes.listText}>
-                //           &nbsp;Contact Number
-                //         </Typography>
-                //         <Typography style={{ color: "#3C4161", fontSize: 19 }} className={classes.listText}>
-                //           &nbsp;{row.phone}
-                //         </Typography>
-                //       </Grid>
-                //     </Grid>
-                //     <Grid container direction="row">
-                //       <Grid container>
-                //         <Typography
-                //           style={{
-                //             color: "#3C4161",
-                //             fontSize: 19,
-                //             fontFamily: "product_sansbold",
-                //           }}
-                //           className={classes.listText}>
-                //           Address
-                //         </Typography>
-                //         <Typography style={{ color: "#3C4161", fontSize: 19 }} className={classes.listText}>
-                //           &nbsp;{row.address}
-                //         </Typography>
-                //       </Grid>
-                //     </Grid>
-
-                //     <Button
-                //       variant="contained"
-                //       size="large"
-                //       disableElevation
-                //       color="primary"
-                //       style={{ width: 200, backgroundColor: "#F72626" }}
-                //       className={classes.loginBtn}
-                //       onClick={() =>
-                //         deleteUser(row._id).then(async function (response) {
-                //           if (response.success == true) {
-                //             alert("Done");
-                //             let patient_list = state.patientList;
-                //             setState({
-                //               patientList: patient_list.splice(index, 1),
-                //             });
-                //             console.log(state.patientList);
-                //           }
-                //         })
-                //       }>
-                //       Delete User
-                //     </Button>
-                //   </Grid>
-                // ))
               )}
               {state.selected == "nurse" && state.nurseList.length == 0 ? (
                 <Typography
@@ -571,7 +502,7 @@ const UserListAdmin = ({ history }) => {
                           </TableHead>
                           <TableBody>
                             {state.nurseList.map((row, index) => (
-                              <TableRow key={row.name}>
+                              <TableRow key={row._id}>
                                 <TableCell component="th" scope="row" className={classes.tableText}>
                                   {row.registrationNum}
                                 </TableCell>
@@ -598,18 +529,9 @@ const UserListAdmin = ({ history }) => {
                                     color="primary"
                                     style={{ width: 110, backgroundColor: "#F72626", fontSize: 12 }}
                                     className={classes.loginBtn}
-                                    onClick={() =>
-                                      deleteUser(row._id).then(async function (response) {
-                                        if (response.success == true) {
-                                          alert("Done");
-                                          let patient_list = state.patientList;
-                                          setState({
-                                            patientList: patient_list.splice(index, 1),
-                                          });
-                                          console.log(state.patientList);
-                                        }
-                                      })
-                                    }>
+                                    onClick={() => {
+                                      handleClickOpenDialog(index);
+                                    }}>
                                     Delete User
                                   </Button>
                                 </TableCell>
@@ -688,7 +610,7 @@ const UserListAdmin = ({ history }) => {
                           </TableHead>
                           <TableBody>
                             {state.doctorList.map((row, index) => (
-                              <TableRow key={row.name}>
+                              <TableRow key={row._id}>
                                 <TableCell component="th" scope="row" className={classes.tableText}>
                                   {row.registrationNum}
                                 </TableCell>
@@ -715,18 +637,9 @@ const UserListAdmin = ({ history }) => {
                                     color="primary"
                                     style={{ width: 110, backgroundColor: "#F72626", fontSize: 12 }}
                                     className={classes.loginBtn}
-                                    onClick={() =>
-                                      deleteUser(row._id).then(async function (response) {
-                                        if (response.success == true) {
-                                          alert("Done");
-                                          let patient_list = state.patientList;
-                                          setState({
-                                            patientList: patient_list.splice(index, 1),
-                                          });
-                                          console.log(state.patientList);
-                                        }
-                                      })
-                                    }>
+                                    onClick={() => {
+                                      handleClickOpenDialog(index);
+                                    }}>
                                     Delete User
                                   </Button>
                                 </TableCell>
@@ -743,9 +656,30 @@ const UserListAdmin = ({ history }) => {
           </Grid>
         </Grid>
       </Grid>
+      <Dialog
+        open={openDialog}
+        onClose={handleClickOpenDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description">
+        <DialogTitle id="alert-dialog-title">{"Delete User?"}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure want to permanently delete this user?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={deletUser} color="primary">
+            Yes
+          </Button>
+          <Button onClick={handleCloseDialog} color="primary" autoFocus>
+            No
+          </Button>
+        </DialogActions>
+      </Dialog>
+      {/* //snackbar */}
       <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success">
-          Appointment has been successfully forwarded to a Doctor.
+          User has been successfully deleted.
         </Alert>
       </Snackbar>
       <Snackbar open={openTwo} autoHideDuration={4000} onClose={handleCloseTwo}>

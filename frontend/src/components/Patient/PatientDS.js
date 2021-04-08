@@ -265,7 +265,7 @@ const PatientDS = ({ history }) => {
                           Assessment taken on
                         </Typography>
                         <Typography variant="body1" className={classes.cardTitle}>
-                          {moment(data.createdAt).format("DD-MMMM-YYYY")}
+                          {moment(data.createdAt).utc().format("DD-MMMM-YYYY")}
                         </Typography>
                         <Typography variant="body2" className={classes.cardText} style={{ marginTop: "15%" }}>
                           Result

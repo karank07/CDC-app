@@ -23,6 +23,7 @@ import {
   AppointmentsDoctor,
   AppointmentsNurse,
   PatientListDoc,
+  AboutUs,
 } from "./components";
 
 class App extends React.Component {
@@ -36,6 +37,7 @@ class App extends React.Component {
             marginTop: 0,
           }}>
           <Route path="/" component={Home} exact />
+          <Route path="/about-us" component={AboutUs} exact />
           <Route path="/login" component={Login} exact />
           <Route path="/patient-register" component={PatientReg} exact />
           <Route path="/patient" component={PatientDS} exact />

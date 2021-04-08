@@ -33,7 +33,13 @@ import Snackbar from "@material-ui/core/Snackbar";
 import Visibility from "@material-ui/icons/Visibility";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
-import { postScheduleAppointment, getListForReview, postReviewAssessment, getAppointmentList } from "../../api/Api";
+import {
+  postScheduleAppointment,
+  getListForReview,
+  postReviewAssessment,
+  getAppointmentList,
+  getPatientList,
+} from "../../api/Api";
 
 import back from "../../assets/Images/Subtract.svg";
 import pds1 from "../../assets/Images/pds1.png";
@@ -60,9 +66,10 @@ const AppointmentScheduler = ({ history }) => {
 
     let patientData = await getListForReview();
     let appointmentList = await getAppointmentList();
+    // let patientList = await getPatientList();
     history.push({
       pathname: "/nurse",
-      state: { detail: history.location.state.detail, patientData, appointmentList },
+      state: { detail: history.location.state.detail, patientData, patientList: state.patientList, appointmentList },
     });
   };
 
@@ -75,7 +82,7 @@ const AppointmentScheduler = ({ history }) => {
   const classes = useStyles();
   const [state, setState] = React.useState({
     date: moment(Date.now()).format("YYYY-MM-DDTHH:mm"),
-    patientList: [],
+    patientList: history.location.state.patientList,
     appointmentList: history.location.state.appointmentList,
   });
   const handleChange = (prop) => (event) => {
@@ -199,7 +206,7 @@ const AppointmentScheduler = ({ history }) => {
                 onClick={() =>
                   postScheduleAppointment(state.date, history.location.state.id).then(async function (response) {
                     if (response.message == true) {
-                      let isReviewed = await postReviewAssessment(false, false, true, history.location.state.id);
+                      let isReviewed = await postReviewAssessment(false, false, true, null, history.location.state.id);
                       handleClick();
                       // let isReviewed = await postReviewAssessment(false, false, true, history.location.state.id)
                       // let patientData = await getListForReview();

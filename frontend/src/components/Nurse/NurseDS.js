@@ -175,7 +175,7 @@ const NurseDS = ({ history }) => {
                 className={classes.link}>
                 Personal details
               </Link>
-            </Typography>          
+            </Typography>
             <Typography className={classes.navBot} variant="h6" gutterBottom>
               <Link to={"/"} onClick={() => logout()} className={classes.link}>
                 Logout
@@ -273,7 +273,7 @@ const NurseDS = ({ history }) => {
                             </Button>
                           </TableCell>
                           <TableCell align="right" className={classes.tableText}>
-                            {moment(row.assessment.createdAt).format("DD-MM-YYYY")}
+                            {moment(row.assessment.createdAt).utc().format("DD-MM-YYYY")}
                           </TableCell>
                         </TableRow>
                       ))}
@@ -520,15 +520,19 @@ const NurseDS = ({ history }) => {
                           padding: 13,
                         }}
                         onClick={() =>
-                          postReviewAssessment(false, true, true, state.patientData[state.index].assessment._id).then(
-                            async function (response) {
-                              if (response.assessment.isRejected) {
-                                handleClickTwo();
-                                let patientData = await getListForReview();
-                                setState({ ...state, index: 0, patientData: patientData });
-                              }
+                          postReviewAssessment(
+                            false,
+                            true,
+                            true,
+                            null,
+                            state.patientData[state.index].assessment._id
+                          ).then(async function (response) {
+                            if (response.assessment.isRejected) {
+                              handleClickTwo();
+                              let patientData = await getListForReview();
+                              setState({ ...state, index: 0, patientData: patientData });
                             }
-                          )
+                          })
                         }
                         color="primary">
                         Reject

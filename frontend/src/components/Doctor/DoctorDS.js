@@ -269,7 +269,7 @@ const DoctorDS = ({ history }) => {
                             </Button>
                           </TableCell>
                           <TableCell align="right" className={classes.tableText}>
-                            {moment(row.assessment.createdAt).format("DD-MM-YYYY")}
+                            {moment(row.assessment.createdAt).utc().format("DD-MM-YYYY")}
                           </TableCell>
                         </TableRow>
                       ))}

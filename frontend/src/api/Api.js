@@ -39,7 +39,7 @@ import {
 let token = null;
 
 //------------------------------------------PATIENT------------------------------------------------------------------------------------
-export async function registerPatient(email, firstName, lastName, password, dateOfBirth, phone, address) {
+export async function registerPatient(email, firstName, lastName, password, dateOfBirth, phone, address, fromUser) {
   let responseData;
   let data = {
     email,
@@ -51,7 +51,10 @@ export async function registerPatient(email, firstName, lastName, password, date
     address,
   };
   responseData = await postRequest(PATIENT_REGISTER, data);
-  token = await responseData.token;
+  if (fromUser) {
+    token = await responseData.token;
+    // alert("t change");
+  }
   return responseData;
 }
 
@@ -169,7 +172,8 @@ export async function registerNurse(
   dateOfBirth,
   phone,
   address,
-  registrationNum
+  registrationNum,
+  fromUser
 ) {
   let responseData;
   let data = {
@@ -183,7 +187,7 @@ export async function registerNurse(
     registrationNum,
   };
   responseData = await postRequest(NURSE_REGISTER, data);
-  token = await responseData.token;
+  if (fromUser) token = await responseData.token;
   return responseData;
 }
 
@@ -196,7 +200,8 @@ export async function registerDoctor(
   dateOfBirth,
   phone,
   address,
-  registrationNum
+  registrationNum,
+  fromUser
 ) {
   let responseData;
   let data = {
@@ -210,7 +215,7 @@ export async function registerDoctor(
     registrationNum,
   };
   responseData = await postRequest(DOCTOR_REGISTER, data);
-  token = responseData.token;
+  if (fromUser) token = await responseData.token;
   return responseData;
 }
 export async function updateDoctor(email, firstName, lastName, dateOfBirth, phone, address) {
@@ -281,6 +286,10 @@ export async function getDoctorListAdmin() {
 export async function deleteUser(id) {
   let responseData = await deleteRequest(DELETE_USER + "/" + id, token);
   return responseData;
+  // let respone = {
+  //   success: true,
+  // };
+  // return respone;
 }
 
 //------------------------------------------------ALL USERS---------------------------------------------------------------------------------

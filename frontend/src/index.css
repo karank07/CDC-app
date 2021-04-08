@@ -3,7 +3,18 @@
   -ms-overflow-style: none;
   /* font-family: 'product_sansregular'; */
 }
-
+input[type="date"]::-webkit-calendar-picker-indicator {
+  /* display: none; */
+  color: rgb(255, 255, 255);
+    opacity: 1;
+    display: block;
+    margin-top: 1ch;
+    background: url("./assets/Images/Vector.png") no-repeat;
+    width: 20px;
+    height: 20px;
+    border-width: thin;
+  -webkit-appearance: none;
+}
 ::-webkit-scrollbar {
   display: none;
 }
