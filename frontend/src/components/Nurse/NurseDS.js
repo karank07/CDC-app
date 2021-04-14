@@ -289,7 +289,7 @@ const NurseDS = ({ history }) => {
                     <TableContainer
                       component={Paper}
                       elevation={0}
-                      style={{ borderRadius: 15, margin: 20, marginBottom: -10, padding: 4, height: "80%" }}>
+                      style={{ borderRadius: 15, margin: 20, marginBottom: -8, padding: 4, height: "80%" }}>
                       <Table className={classes.table} size="medium" aria-label="a dense table">
                         <TableHead>
                           <TableRow style={{ borderRadius: 10 }}>
@@ -453,7 +453,7 @@ const NurseDS = ({ history }) => {
                       direction="row"
                       justify="center"
                       alignItems="center"
-                      style={{ paddingLeft: 22, paddingRight: 22, marginTop: "-4%" }}>
+                      style={{ paddingLeft: 22, paddingRight: 22, marginTop: "1%" }}>
                       <Button
                         variant="outlined"
                         size="large"
@@ -568,15 +568,14 @@ const NurseDS = ({ history }) => {
                       </Typography>
                       <Grid item style={{ width: "60%", height: "100%", marginTop: 30 }}>
                         <Grid container style={{ backgroundColor: "#F2F6F8", padding: 14, borderRadius: 10 }}>
-                          <TableContainer component={Paper} elevation={0} style={{}}>
+                          <TableContainer component={Paper} elevation={0} style={{ height: 250 }}>
                             <Table className={classes.table} size="medium" aria-label="a dense table">
                               <TableBody>
                                 {state.doctorList.map((row, index) => (
                                   <TableRow
-                                    style={state.docIndex == index ? { borderLeft: "solid 15px #364161" } : null}>
+                                    style={state.docIndex == index ? { borderLeft: "solid 12px #364161" } : null}>
                                     <TableCell
                                       className={classes.description}
-                                      colSpan={1}
                                       style={{ textAlign: "center", fontFamily: "product_sansbold", fontSize: 18 }}>
                                       <Button
                                         className={classes.tableText}

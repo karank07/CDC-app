@@ -423,7 +423,7 @@ const DoctorDS = ({ history }) => {
                   direction="row"
                   justify="center"
                   alignItems="center"
-                  style={{ paddingLeft: 22, paddingRight: 22, marginTop: "-4%" }}>
+                  style={{ paddingLeft: 22, paddingRight: 22, marginTop: "1%" }}>
                   <Button
                     variant="outlined"
                     size="large"
