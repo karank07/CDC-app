@@ -8,15 +8,7 @@ import moment from "moment";
 //@route GET /api/admins/patient-list
 //@access Protected admin
 const getPatientList = asyncHandler(async (req, res) => {
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
-      }
-    : {};
-  const patientList = await Patient.find({ ...keyword }).select("-password");
+  const patientList = await Patient.find().select("-password");
   res.json(patientList);
 });
 
@@ -45,8 +37,23 @@ const deleteUser = asyncHandler(async (req, res) => {
     (await Nurse.findById(req.params.id)) ||
     (await Doctor.findById(req.params.id));
   if (user) {
+    if (user.registrationNum && user.registrationNum.startsWith("N")) {
+      const patients = await Patient.find({"assessments.appointment.nurse":req.params.id})
+      patients.map((p)=>{
+        p.assessments[0].appointment=[]
+        p.save()
+      })
+    }
+    if (user.registrationNum && user.registrationNum.startsWith("D")) {
+      const patients = await Patient.find({"assessments.appointment.doctor":req.params.id})
+      patients.map((p)=>{
+        p.assessments[0].appointment=[]
+        p.save()
+      })
+    }
     await user.remove();
     res.json({ success: true });
+    
   } else {
     res.status(404);
     throw new Error("User not found");
@@ -62,11 +69,10 @@ const getReport = asyncHandler(async (req, res) => {
   const patientCount = await Patient.countDocuments({
     "assessments.createdAt": {
       $gte: moment(from).format("YYYY-MM-DD"),
-      $lte:moment(to).format("YYYY-MM-DD"),
+      $lte: moment(to).format("YYYY-MM-DD"),
     },
   });
-  res.json({"count":patientCount})
-  
+  res.json({ count: patientCount });
 });
 // moment(Date.now()).format("YYYY-MM-DDT23:59:59.999+00:00")
 export { getPatientList, getNurseList, getDoctorList, deleteUser, getReport };
