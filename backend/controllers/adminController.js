@@ -41,6 +41,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       const patients = await Patient.find({"assessments.appointment.nurse":req.params.id})
       patients.map((p)=>{
         p.assessments[0].appointment=[]
+        p.assessments[0].isReviewed = false
         p.save()
       })
     }
@@ -48,6 +49,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       const patients = await Patient.find({"assessments.appointment.doctor":req.params.id})
       patients.map((p)=>{
         p.assessments[0].appointment=[]
+        p.assessments[0].isReviewed = false
         p.save()
       })
     }
