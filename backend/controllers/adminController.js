@@ -50,6 +50,7 @@ const deleteUser = asyncHandler(async (req, res) => {
       patients.map((p)=>{
         p.assessments[0].appointment=[]
         p.assessments[0].isReviewed = false
+        p.assessments[0].isForwarded = false
         p.save()
       })
     }
