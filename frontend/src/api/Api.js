@@ -41,8 +41,9 @@ let token = null;
 //------------------------------------------PATIENT------------------------------------------------------------------------------------
 export async function registerPatient(email, firstName, lastName, password, dateOfBirth, phone, address, fromUser) {
   let responseData;
+  let newEmail = email.toLowerCase();
   let data = {
-    email,
+    email: newEmail,
     firstName,
     lastName,
     password,
@@ -175,9 +176,10 @@ export async function registerNurse(
   registrationNum,
   fromUser
 ) {
+  let newEmail = email.toLowerCase();
   let responseData;
   let data = {
-    email,
+    email: newEmail,
     firstName,
     lastName,
     password,
@@ -203,9 +205,10 @@ export async function registerDoctor(
   registrationNum,
   fromUser
 ) {
+  let newEmail = email.toLowerCase();
   let responseData;
   let data = {
-    email,
+    email: newEmail,
     firstName,
     lastName,
     password,
@@ -303,8 +306,9 @@ export function logout() {
 
 export async function loginPatient(email, password) {
   let responseData;
+  let newEmail = email.toLowerCase();
   let data = {
-    email,
+    email: newEmail,
     password,
   };
   responseData = await postRequest(LOGIN, data);

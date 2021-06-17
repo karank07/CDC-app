@@ -27,7 +27,7 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/picker
 
 import { registerPatient, getPreviousAssessmentData } from "../../api/Api";
 import moment from "moment";
-
+const currDate = moment(new Date()).format("MM/DD/YYYY");
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
@@ -264,6 +264,7 @@ const PatientReg = ({ history }) => {
             </FormControl>
             <MuiPickersUtilsProvider utils={DateFnsUtils}>
               <KeyboardDatePicker
+                maxDate={"04/15/2021"}
                 className={clsx(classes.margin, classes.textFieldTwo)}
                 disableToolbar
                 inputVariant="outlined"

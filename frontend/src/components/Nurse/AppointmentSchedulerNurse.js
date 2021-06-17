@@ -112,7 +112,8 @@ const AppointmentScheduler = ({ history }) => {
                   pathname: "/nurse",
                   state: {
                     detail: history.location.state.detail,
-                    patientData: state.patientList,
+                    patientData: history.location.state.patientData,
+                    patientList: state.patientList,
                     appointmentList: state.appointmentList,
                   },
                 }}
@@ -123,10 +124,26 @@ const AppointmentScheduler = ({ history }) => {
             <Typography className={classes.navText} variant="h6" gutterBottom>
               <Link
                 to={{
+                  pathname: "/upcoming-appointment",
+                  state: {
+                    detail: history.location.state.detail,
+                    patientData: history.location.state.patientData,
+                    patientList: state.patientList,
+                    appointmentList: state.appointmentList,
+                  },
+                }}
+                className={classes.link}>
+                Appointments
+              </Link>
+            </Typography>
+            <Typography className={classes.navText} variant="h6" gutterBottom>
+              <Link
+                to={{
                   pathname: "/Patient-list",
                   state: {
                     detail: history.location.state.detail,
-                    patientData: state.patientList,
+                    patientData: history.location.state.patientData,
+                    patientList: state.patientList,
                     appointmentList: state.appointmentList,
                   },
                 }}

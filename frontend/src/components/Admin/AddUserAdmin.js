@@ -15,23 +15,12 @@ import TextField from "@material-ui/core/TextField";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { styles } from "@material-ui/pickers/views/Calendar/Calendar";
 import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
 import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import DateFnsUtils from "@date-io/date-fns";
-import Paper from "@material-ui/core/Paper";
 import moment from "moment";
-import MuiAlert from "@material-ui/lab/Alert";
 import Snackbar from "@material-ui/core/Snackbar";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
 import Visibility from "@material-ui/icons/Visibility";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 
 import {
   registerDoctor,
@@ -45,15 +34,10 @@ import {
 } from "../../api/Api";
 
 import back from "../../assets/Images/Subtract.svg";
-import pds1 from "../../assets/Images/pds1.png";
 import list from "../../assets/Images/list.png";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
-
-function createData(name, createdAt) {
-  return { name, createdAt };
 }
 
 function validateName(name) {
@@ -75,7 +59,6 @@ function validateEmail(email) {
 const AdminDS = ({ history }) => {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-
   const handleClick = () => {
     setOpen(true);
   };
@@ -107,7 +90,6 @@ const AdminDS = ({ history }) => {
     report: history.location.state.report,
     firstName: "",
     lastName: "",
-
     emailId: "",
     password: "",
     phoneNum: "",
@@ -699,35 +681,13 @@ const useStyles = makeStyles((theme) => ({
     color: "#3c4161",
     letterSpacing: 0.4,
   },
-  description: {
-    color: "#000000",
-    fontSize: 18,
-    marginHorizontal: 20,
-    fontFamily: "product_sans_lightregular",
-  },
   listText: {
     fontFamily: "product_sansregular",
     letterSpacing: 0.5,
     lineHeight: 1.3,
   },
-  tableText: {
-    textTransform: "capitalize",
-    color: "#3C4161",
-    fontSize: 20,
-    textAlign: "center",
-    fontFamily: "product_sansregular",
-  },
   table: {
     mixWidth: 450,
-  },
-  paper: {
-    height: 230,
-    width: 230,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#F2F6F8",
-    boxShadow: "none",
   },
   registerBtn: {
     // color:'#3C76EF'
@@ -796,22 +756,7 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
-  textField: {
-    width: "50ch",
-  },
-  cardTitle: {
-    marginTop: "8%",
-    color: "#3C4161",
-    textAlign: "center",
-    fontWeight: "bold",
-    fontFamily: "product_sans_blackregular",
-  },
-  cardText: {
-    color: "#3C4161",
-    textAlign: "center",
-    marginTop: "2%",
-    fontFamily: "product_sansregular",
-  },
+
   textFieldTwo: {
     width: "30ch",
   },
